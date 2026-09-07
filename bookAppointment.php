@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+
 if (empty($_SESSION['user_id'])) {
     header('Location: account.php?mode=login&redirect=book-appointment');
     exit;
@@ -70,7 +74,7 @@ if ($status === 'success' && $id) {
                     <i class="bi bi-handbag"></i>
                 </button>
 
-                <a href="account/account.php" class="icon-btn account-btn" aria-label="Account">
+                <a href="account.php" class="icon-btn account-btn" aria-label="Account">
                     <i class="bi bi-person-fill"></i>
                 </a>
             </div>

@@ -1051,3 +1051,227 @@ ul {
 .book-again-note {
     margin-top: 22px;
 }
+/* LOGGED-IN ACCOUNT MENU */
+.account-menu {
+    position: relative;
+}
+
+.account-menu-toggle {
+    cursor: pointer;
+}
+
+.account-dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    width: 230px;
+    padding: 10px;
+    border: 1px solid #D5C5BF;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(59, 36, 24, .12);
+}
+
+.account-dropdown[hidden] {
+    display: none;
+}
+
+.account-dropdown-header {
+    padding: 9px 10px 12px;
+    border-bottom: 1px solid #E7DAD5;
+}
+
+.account-dropdown-header span {
+    display: block;
+    margin-bottom: 3px;
+    color: #6E5044;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .6px;
+}
+
+.account-dropdown-header strong {
+    display: block;
+    overflow: hidden;
+    color: var(--font-color);
+    font-size: 14px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.account-dropdown > a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 10px;
+    border-radius: 9px;
+    color: var(--font-color);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.account-dropdown > a:hover {
+    background: var(--primary-bg-color);
+    color: var(--primary-color);
+}
+
+.account-dropdown > a i {
+    width: 18px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.account-dropdown-divider {
+    height: 1px;
+    margin: 6px 0;
+    background: #E7DAD5;
+}
+
+.account-dropdown .logout-link {
+    color: #9B3A3A;
+}
+
+.account-dropdown .logout-link:hover {
+    color: #9B3A3A;
+    background: #FBE9E7;
+}
+
+.password-hint {
+    color: #6E5044;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.account-dashboard {
+    min-height: 100vh;
+    padding: 140px 30px 80px;
+    background: var(--primary-bg-color);
+}
+
+.account-dashboard-box {
+    width: 100%;
+    max-width: 1050px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 25px;
+}
+
+.account-sidebar,
+.account-content {
+    border: 1px solid #D5C5BF;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(59, 36, 24, .06);
+}
+
+.account-sidebar {
+    align-self: start;
+    padding: 24px 18px;
+}
+
+.account-sidebar h1 {
+    margin-bottom: 3px;
+    font-family: var(--font-heading);
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.account-sidebar > p {
+    margin-bottom: 20px;
+    color: #6E5044;
+    font-size: 12px;
+}
+
+.account-sidebar > a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+    padding: 11px 12px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.account-sidebar > a:hover,
+.account-sidebar > a.active {
+    background: var(--primary-bg-color);
+    color: var(--primary-color);
+}
+
+.account-sidebar > a i {
+    width: 18px;
+    text-align: center;
+}
+
+.account-sidebar > .logout-link {
+    margin-top: 10px;
+    color: #9B3A3A;
+}
+
+.account-content {
+    min-height: 420px;
+    padding: 35px;
+}
+
+.account-content h2 {
+    margin-bottom: 6px;
+    font-family: var(--font-heading);
+    font-size: 34px;
+    font-weight: 600;
+}
+
+.account-intro {
+    margin-bottom: 25px;
+    color: #6E5044;
+    font-size: 13px;
+}
+
+.account-edit-form {
+    max-width: 500px;
+}
+
+.empty-state {
+    margin: 25px 0;
+    color: #6E5044;
+    font-size: 13px;
+}
+
+.appointment-list {
+    display: grid;
+    gap: 14px;
+}
+
+.appointment-card {
+    padding: 18px;
+    border: 1px solid #E7DAD5;
+    border-radius: 14px;
+    background: var(--primary-bg-color);
+}
+
+.appointment-card > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 7px 0;
+    font-size: 12px;
+}
+
+.appointment-card span {
+    color: #6E5044;
+}
+
+.appointment-card strong {
+    text-align: right;
+}
+
+@media (max-width: 800px) {
+    .account-dashboard-box {
+        grid-template-columns: 1fr;
+    }
+
+    .account-sidebar {
+        width: 100%;
+    }
+}

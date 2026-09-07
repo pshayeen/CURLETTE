@@ -1,5 +1,8 @@
 <?php
 session_start();
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 $isLoggedIn = !empty($_SESSION['user_id']);
 $username   = $_SESSION['username'] ?? '';
 
@@ -51,12 +54,31 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
                 </button>
 
                 <?php if ($isLoggedIn): ?>
-                    <a href="account.php" class="icon-btn account-btn" aria-label="Account, <?= htmlspecialchars($username) ?>">
-                        <i class="bi bi-person-fill"></i>
-                    </a>
-                    <a href="logout.php" class="icon-btn logout-btn" aria-label="Log out" title="Log out">
-                        <i class="bi bi-box-arrow-right"></i>
-                    </a>
+                    <div class="account-menu">
+                        <button type="button" class="icon-btn account-btn account-menu-toggle"
+                                aria-label="Account menu" aria-expanded="false" aria-haspopup="true">
+                            <i class="bi bi-person-fill"></i>
+                        </button>
+                        <div class="account-dropdown" hidden>
+                            <div class="account-dropdown-header">
+                                <span>ACCOUNT</span>
+                                <strong><?= htmlspecialchars($username, ENT_QUOTES, 'UTF-8') ?></strong>
+                            </div>
+                            <a href="account.php?view=account">
+                                <i class="bi bi-person"></i>
+                                <span>My Account</span>
+                            </a>
+                            <a href="account.php?view=appointments">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>My Appointments</span>
+                            </a>
+                            <div class="account-dropdown-divider"></div>
+                            <a href="logout.php" class="logout-link">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Log Out</span>
+                            </a>
+                        </div>
+                    </div>
                 <?php else: ?>
                     <a href="account.php" class="icon-btn account-btn js-account-trigger" aria-label="Account">
                         <i class="bi bi-person"></i>
@@ -743,7 +765,7 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
 
                 <div class="form-group">
                     <label for="modal-login-password">Password</label>
-                    <input type="password" id="modal-login-password" name="password" required>
+                    <input type="password" id="modal-login-password" name="password" autocomplete="new-password" required>
                 </div>
 
                 <button type="submit" class="btn-main auth-submit">LOG IN</button>
@@ -770,12 +792,13 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
 
                 <div class="form-group">
                     <label for="modal-signup-password">Password</label>
-                    <input type="password" id="modal-signup-password" name="password" required>
+                    <input type="password" id="modal-signup-password" name="password" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}" title="Password must be at least 8 characters and include a letter, a number, and a special character." required>
+                    <small class="password-hint">At least 8 characters, with a letter, a number, and a special character.</small>
                 </div>
 
                 <div class="form-group">
                     <label for="modal-signup-confirm">Confirm Password</label>
-                    <input type="password" id="modal-signup-confirm" name="confirm_password" required>
+                    <input type="password" id="modal-signup-confirm" name="confirm_password" autocomplete="new-password" required>
                 </div>
 
                 <button type="submit" class="btn-main auth-submit">CREATE ACCOUNT</button>

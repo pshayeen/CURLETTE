@@ -53,7 +53,23 @@ function validateUsernameFormat(string $value): ?string
 
 function validatePasswordStrength(string $value): ?string
 {
-    return strlen($value) >= 8 ? null : "Password must be at least 8 characters.";
+    if (strlen($value) < 8) {
+        return "Password must be at least 8 characters.";
+    }
+
+    if (!preg_match('/[A-Za-z]/', $value)) {
+        return "Password must include at least one letter.";
+    }
+
+    if (!preg_match('/[0-9]/', $value)) {
+        return "Password must include at least one number.";
+    }
+
+    if (!preg_match('/[^A-Za-z0-9]/', $value)) {
+        return "Password must include at least one special character.";
+    }
+
+    return null;
 }
 
 function validateSignupInput(array $post): array

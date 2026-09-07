@@ -20,5 +20,5 @@ function isAllowedRedirect(string $key): bool
 function resolveRedirectTarget(string $key): string
 {
     $map = getRedirectMap();
-    return $map[$key] ?? ' index.php';
+    return $map[$key] ?? 'index.php';
 }

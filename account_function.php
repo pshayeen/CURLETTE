@@ -1,27 +1,20 @@
 <?php
-
 session_start();
 
 require 'database/config.php';
 require 'validation.php';
 require 'redirects.php';
 
-/**
- * The modal on index.php submits this form over fetch() with an
- * X-Requested-With header, so it gets a JSON response instead of a
- * redirect. The plain <form> fallback on account.php (no JS) keeps
- * getting the original redirect-based behaviour.
- */
 function wantsJson(): bool
 {
     $requestedWith = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? '';
-    $accept        = $_SERVER['HTTP_ACCEPT'] ?? '';
+    $accept = $_SERVER['HTTP_ACCEPT'] ?? '';
 
     return strtolower($requestedWith) === 'xmlhttprequest'
         || str_contains($accept, 'application/json');
 }
 
-function sendError(string $mode, string $message, string $redirectQuery): void
+function redirectError(string $mode, string $message, string $redirectQuery = ''): never
 {
     if (wantsJson()) {
         header('Content-Type: application/json');
@@ -33,106 +26,130 @@ function sendError(string $mode, string $message, string $redirectQuery): void
     exit;
 }
 
-function sendSuccess(string $redirectTarget): void
+function redirectSuccess(string $target): never
 {
     if (wantsJson()) {
         header('Content-Type: application/json');
-        echo json_encode(['success' => true, 'redirect' => $redirectTarget]);
+        echo json_encode(['success' => true, 'redirect' => $target]);
         exit;
     }
 
-    header('Location: ' . $redirectTarget);
+    header('Location: ' . $target);
     exit;
 }
 
 $redirectKey = (string) ($_POST['redirect'] ?? '');
-$redirect    = isAllowedRedirect($redirectKey) ? $redirectKey : '';
-$redirectQuery = $redirect !== '' ? '&redirect=' . $redirect : '';
-
-$authSuccess = false;
+$redirect = isAllowedRedirect($redirectKey) ? $redirectKey : '';
+$redirectQuery = $redirect !== '' ? '&redirect=' . urlencode($redirect) : '';
 
 if (isset($_POST['login'])) {
-
     $result = validateLoginInput($_POST);
-    $errors = $result['errors'];
 
-    if (!empty($errors)) {
-        sendError('login', implode(' ', $errors), $redirectQuery);
+    if ($result['errors']) {
+        redirectError('login', implode(' ', $result['errors']), $redirectQuery);
     }
 
-    $email    = $result['data']['email'];
-    $password = $result['data']['password'];
-
-    $pdo  = getConnection();
-    $stmt = $pdo->prepare(
-        'SELECT id, username, password_hash FROM user_account WHERE email = ?'
-    );
-    $stmt->execute([$email]);
-
+    $pdo = getConnection();
+    $stmt = $pdo->prepare('SELECT id, username, password_hash FROM user_account WHERE email = ? LIMIT 1');
+    $stmt->execute([$result['data']['email']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$user || !password_verify($password, $user['password_hash'])) {
-        sendError('login', 'Incorrect email or password.', $redirectQuery);
+    if (!$user || !password_verify($result['data']['password'], $user['password_hash'])) {
+        redirectError('login', 'Incorrect email or password.', $redirectQuery);
     }
 
     session_regenerate_id(true);
-    $_SESSION['user_id']  = $user['id'];
+    $_SESSION['user_id'] = (int) $user['id'];
     $_SESSION['username'] = $user['username'];
-    $authSuccess = true;
 
-} elseif (isset($_POST['signup'])) {
+    redirectSuccess(resolveRedirectTarget($redirect));
+}
 
+if (isset($_POST['signup'])) {
     $result = validateSignupInput($_POST);
-    $errors = $result['errors'];
 
-    if (!empty($errors)) {
-        sendError('signup', implode(' ', $errors), $redirectQuery);
+    if ($result['errors']) {
+        redirectError('signup', implode(' ', $result['errors']), $redirectQuery);
     }
 
     $username = $result['data']['username'];
-    $email    = $result['data']['email'];
+    $email = $result['data']['email'];
 
     try {
         $pdo = getConnection();
+        $check = $pdo->prepare('SELECT id FROM user_account WHERE email = ? OR username = ? LIMIT 1');
+        $check->execute([$email, $username]);
 
-        $checkStmt = $pdo->prepare(
-            'SELECT id FROM user_account WHERE email = ? OR username = ?'
-        );
-        $checkStmt->execute([$email, $username]);
-
-        if ($checkStmt->fetch(PDO::FETCH_ASSOC)) {
-            sendError('signup', 'That username or email is already registered.', $redirectQuery);
+        if ($check->fetch(PDO::FETCH_ASSOC)) {
+            redirectError('signup', 'That username or email is already registered.', $redirectQuery);
         }
 
         $passwordHash = password_hash($result['data']['password'], PASSWORD_DEFAULT);
-
-        $sql = "INSERT INTO user_account (username, email, password_hash)
-                VALUES (:username, :email, :password_hash)";
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':username', $username);
-        $stmt->bindValue(':email', $email);
-        $stmt->bindValue(':password_hash', $passwordHash);
-        $stmt->execute();
+        $stmt = $pdo->prepare(
+            'INSERT INTO user_account (username, email, password_hash)
+             VALUES (:username, :email, :password_hash)'
+        );
+        $stmt->execute([
+            ':username' => $username,
+            ':email' => $email,
+            ':password_hash' => $passwordHash
+        ]);
 
         session_regenerate_id(true);
-        $_SESSION['user_id']  = $pdo->lastInsertId();
+        $_SESSION['user_id'] = (int) $pdo->lastInsertId();
         $_SESSION['username'] = $username;
-        $authSuccess = true;
-    } catch (PDOException $e) {
-        sendError('signup', 'Something went wrong. Please try again.', $redirectQuery);
-    }
 
-} else {
-    if (wantsJson()) {
-        header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => 'Invalid request.']);
+        redirectSuccess(resolveRedirectTarget($redirect));
+    } catch (PDOException $e) {
+        redirectError('signup', 'Something went wrong. Please try again.', $redirectQuery);
+    }
+}
+
+if (isset($_POST['update_account'])) {
+    if (empty($_SESSION['user_id'])) {
+        header('Location: account.php?mode=login');
         exit;
     }
-    header('Location: account.php');
-    exit;
+
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $errors = array_filter([
+        validateRequired($username, 'Username'),
+        validateUsernameFormat($username),
+        validateRequired($email, 'Email'),
+        validateEmailFormat($email),
+    ]);
+
+    if ($errors) {
+        header('Location: my-account.php?view=account&status=error&message=' . urlencode(implode(' ', $errors)));
+        exit;
+    }
+
+    try {
+        $pdo = getConnection();
+        $check = $pdo->prepare(
+            'SELECT id FROM user_account
+             WHERE (email = ? OR username = ?) AND id <> ?
+             LIMIT 1'
+        );
+        $check->execute([$email, $username, (int) $_SESSION['user_id']]);
+
+        if ($check->fetch(PDO::FETCH_ASSOC)) {
+            header('Location: my-account.php?view=account&status=error&message=' . urlencode('That username or email is already registered.'));
+            exit;
+        }
+
+        $stmt = $pdo->prepare('UPDATE user_account SET username = ?, email = ? WHERE id = ?');
+        $stmt->execute([$username, $email, (int) $_SESSION['user_id']]);
+        $_SESSION['username'] = $username;
+
+        header('Location: my-account.php?view=account&status=success');
+        exit;
+    } catch (PDOException $e) {
+        header('Location: my-account.php?view=account&status=error&message=' . urlencode('Something went wrong. Please try again.'));
+        exit;
+    }
 }
 
-if ($authSuccess) {
-    sendSuccess(resolveRedirectTarget($redirect));
-}
+header('Location: account.php');
+exit;
