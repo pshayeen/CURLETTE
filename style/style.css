@@ -116,6 +116,10 @@ ul {
     color: var(--primary-color);
 }
 
+.logout-btn:hover {
+    color: #9B3A3A;
+}
+
 
 /* BUTTONS */
 
@@ -134,6 +138,8 @@ ul {
 .btn-main {
     background: var(--primary-color);
     color: var(--primary-bg-color);
+    border: none; 
+    cursor: pointer; 
 }
 
 .btn-main:hover {
@@ -794,8 +800,6 @@ ul {
 }
 
 
-
-
 @keyframes TestimonialScroll {
     from {
         transform: translateX(0);
@@ -808,3 +812,242 @@ ul {
 
 
 
+/* ACCOUNT MODAL */
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(59, 36, 24, .45);
+    backdrop-filter: blur(2px);
+}
+
+.modal-overlay.is-open {
+    display: flex;
+}
+
+.modal-box {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modal-pop .18s ease-out;
+}
+
+@keyframes modal-pop {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--font-color);
+    font-size: 14px;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.modal-close:hover {
+    background: var(--primary-bg-color);
+}
+
+.modal-box .auth-tabs button.auth-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    font-family: var(--font-body);
+}
+
+@media (max-width: 480px) {
+    .modal-box {
+        padding: 32px 24px 28px;
+    }
+}
+
+/* ACCOUNT*/
+
+.auth {
+    min-height: 100vh;
+    padding: 150px 20px 80px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    background: var(--primary-bg-color);
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 38px 36px 34px;
+    border: 1px solid #D5C5BF;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: 0 10px 30px rgba(59, 36, 24, .07);
+}
+
+.auth-tabs {
+    display: flex;
+    margin-bottom: 26px;
+    border-bottom: 1px solid #E7DAD5;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 0 0 12px;
+    text-align: center;
+    color: var(--font-color);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    border-bottom: 2px solid transparent;
+    transform: translateY(1px);
+    transition: color .2s ease, border-color .2s ease;
+}
+
+.auth-tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.auth-title {
+    margin-bottom: 6px;
+    font-family: var(--font-heading);
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.auth-sub {
+    margin-bottom: 22px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #6E5044;
+}
+
+.auth-context {
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: var(--secondary-color);
+    color: var(--font-color);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.auth-success {
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #E7F3E5;
+    color: #3C6E3F;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.auth-error {
+    margin-bottom: 18px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: #FBE9E7;
+    color: #9B3A3A;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .3px;
+    color: var(--font-color);
+}
+
+.form-group input,
+.form-group select {
+    min-height: 42px;
+    padding: 0 14px;
+    border: 1px solid #D5C5BF;
+    border-radius: 10px;
+    background: var(--primary-bg-color);
+    color: var(--font-color);
+    font-family: var(--font-body);
+    font-size: 13px;
+    outline: none;
+    transition: border-color .2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: var(--primary-color);
+}
+
+.auth-submit {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 6px;
+    font-size: 12px;
+}
+
+.booking-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 6px;
+    padding: 18px 20px;
+    border-radius: 14px;
+    background: var(--primary-bg-color);
+}
+
+.booking-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.booking-row span {
+    color: #6E5044;
+}
+
+.booking-row strong {
+    text-align: right;
+}
+
+
+.book-again-note {
+    margin-top: 22px;
+}
