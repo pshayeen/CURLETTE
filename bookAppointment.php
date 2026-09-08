@@ -76,11 +76,23 @@ if ($status === 'success' && $id) {
                     <p>Confirmation #<?= htmlspecialchars((string) $id, ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
                 <div class="booking-summary booking-summary-grid">
-                    <div><span>Service</span><strong><?= htmlspecialchars($booking['service'], ENT_QUOTES, 'UTF-8') ?></strong></div>
-                    <div><span>Date</span><strong><?= htmlspecialchars(date('F j, Y', strtotime($booking['appointment_date'])), ENT_QUOTES, 'UTF-8') ?></strong></div>
-                    <div><span>Time</span><strong><?= htmlspecialchars(date('g:i A', strtotime($booking['appointment_time'])), ENT_QUOTES, 'UTF-8') ?></strong></div>
+                    <div>
+                        <span>Service</span>
+                        <strong><?= htmlspecialchars($booking['service'], ENT_QUOTES, 'UTF-8') ?></strong>
+                    </div>
+                    <div>
+                        <span>Date</span>
+                        <strong><?= htmlspecialchars(date('F j, Y', strtotime($booking['appointment_date'])), ENT_QUOTES, 'UTF-8') ?></strong>
+                    </div>
+                    <div>
+                        <span>Time</span>
+                        <strong><?= htmlspecialchars(date('g:i A', strtotime($booking['appointment_time'])), ENT_QUOTES, 'UTF-8') ?></strong>
+                    </div>
                     <?php if (!empty($booking['notes'])): ?>
-                        <div><span>Notes</span><strong><?= htmlspecialchars($booking['notes'], ENT_QUOTES, 'UTF-8') ?></strong></div>
+                        <div>
+                            <span>Notes</span>
+                            <strong><?= htmlspecialchars($booking['notes'], ENT_QUOTES, 'UTF-8') ?></strong>
+                        </div>
                     <?php endif; ?>
                 </div>
                 <a href="bookAppointment.php" class="btn-outline booking-again-btn">BOOK ANOTHER</a>

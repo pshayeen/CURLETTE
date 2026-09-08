@@ -1,13 +1,13 @@
 <?php
 
-// Targets are relative to actions/, the only place resolveRedirectTarget() is called from.
+// Targets are relative to forms/, the only place resolveRedirectTarget() is called from.
 function getRedirectMap(): array
 {
     return [
         'home'             => '../index.php#home',
         'services'         => '../services.php',
         'products'         => '../products.php',
-        'about'            => '../index.php#about',
+        'about'            => '../about.php',
         'contact'          => '../index.php#contact',
         'book-appointment' => '../bookAppointment.php',
         'cart'             => '../cart.php',

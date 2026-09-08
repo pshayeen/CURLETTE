@@ -23,7 +23,7 @@ function navClass(string $key, string $navActive): string
                 <li><a href="index.php#home" class="<?= navClass('home', $navActive) ?>">HOME</a></li>
                 <li><a href="services.php" class="<?= navClass('services', $navActive) ?>">SERVICES</a></li>
                 <li><a href="products.php" class="<?= navClass('products', $navActive) ?>">PRODUCTS</a></li>
-                <li><a href="index.php#about" class="<?= navClass('about', $navActive) ?>">ABOUT US</a></li>
+                <li><a href="about.php" class="<?= navClass('about', $navActive) ?>">ABOUT US</a></li>
                 <li><a href="index.php#contact" class="<?= navClass('contact', $navActive) ?>">CONTACT</a></li>
             </ul>
 
@@ -63,7 +63,7 @@ function navClass(string $key, string $navActive): string
                                 <span>My Appointments</span>
                             </a>
                             <div class="account-dropdown-divider"></div>
-                            <a href="actions/logout.php" class="logout-link">
+                            <a href="forms/logout.php" class="logout-link">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Log Out</span>
                             </a>

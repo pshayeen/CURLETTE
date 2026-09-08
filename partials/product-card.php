@@ -24,7 +24,7 @@ $inStock  = (int) ($product['stock_quantity'] ?? 0) > 0;
         </button>
 
         <?php if ($inStock): ?>
-            <form method="post" action="actions/update-cart.php" class="cart-btn-form">
+            <form method="post" action="forms/update-cart.php" class="cart-btn-form">
                 <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
                 <input type="hidden" name="return_to" value="<?= htmlspecialchars($returnTo, ENT_QUOTES, 'UTF-8') ?>">
                 <button class="cart-btn" type="submit" aria-label="Add <?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?> to cart">
@@ -46,7 +46,7 @@ $inStock  = (int) ($product['stock_quantity'] ?? 0) > 0;
             <strong><?= formatPrice($product['price']) ?></strong>
 
             <?php if ($inStock): ?>
-                <form method="post" action="actions/update-cart.php" class="cart-btn-form">
+                <form method="post" action="forms/update-cart.php" class="cart-btn-form">
                     <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
                     <input type="hidden" name="return_to" value="<?= htmlspecialchars($returnTo, ENT_QUOTES, 'UTF-8') ?>">
                     <button class="cart-btn" type="submit" aria-label="Add <?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?> to cart">

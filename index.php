@@ -207,7 +207,7 @@ $products   = getProducts();
                     understood, and confident in their natural texture.
                 </p>
 
-                <a href="#about" class="btn-outline btn-small">
+                <a href="about.php" class="btn-outline btn-small">
                     LEARN MORE ABOUT US
                 </a>
 
@@ -537,7 +537,7 @@ $products   = getProducts();
                         <div><span>AVAILABILITY</span><strong><?= (int) $product['stock_quantity'] > 0 ? 'In stock' : 'Out of stock' ?></strong></div>
                     </div>
                     <?php if ((int) $product['stock_quantity'] > 0): ?>
-                        <form method="post" action="actions/update-cart.php">
+                        <form method="post" action="forms/update-cart.php">
                             <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
                             <input type="hidden" name="return_to" value="index">
                             <button type="submit" class="btn-main detail-modal-cta">

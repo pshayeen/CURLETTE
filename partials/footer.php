@@ -24,7 +24,7 @@
             <a href="index.php#home">HOME</a>
             <a href="services.php">SERVICES</a>
             <a href="products.php">PRODUCTS</a>
-            <a href="index.php#about">ABOUT US</a>
+            <a href="about.php">ABOUT US</a>
             <a href="index.php#contact">CONTACT</a>
 
         </div>
@@ -43,6 +43,11 @@
         <div class="footer-col">
 
             <h3>CONTACT US</h3>
+
+            <p>
+                <i class="bi bi-geo-alt"></i>
+                123 Curl Street, Cebu City, 6000 Cebu, Philippines
+            </p>
 
             <p>
                 <i class="bi bi-telephone"></i>
