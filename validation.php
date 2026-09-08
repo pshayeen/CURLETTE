@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/data/services.php';
+
 function validateEmailFormat(string $value): ?string
 {
     return filter_var($value, FILTER_VALIDATE_EMAIL) ? null : "Enter a valid email address.";
@@ -8,38 +10,6 @@ function validateEmailFormat(string $value): ?string
 function validateRequired(string $value, string $label): ?string
 {
     return trim($value) === '' ? "$label is required." : null;
-}
-
-function validateIntRange(string $value, string $label, int $min, int $max): ?string
-{
-    $ok = filter_var($value, FILTER_VALIDATE_INT, [
-        'options' => ['min_range' => $min, 'max_range' => $max],
-    ]);
-    return $ok !== false ? null : "$label must be a whole number between $min and $max.";
-}
-
-function validateStudentInput(array $post): array
-{
-    $username = trim($post['username'] ?? '');
-    $email    = trim($post['email'] ?? '');
-    $age      = trim($post['age'] ?? '');
-
-    $errors = array_filter([
-        validateRequired($username, 'Username'),
-        validateEmailFormat($email),
-        validateIntRange($age, 'Age', 1, 120),
-    ]);
-    $errors = array_values($errors);
-
-    if (empty($errors)) {
-        $username = htmlspecialchars($username);
-        $age      = (int) $age;
-    }
-
-    return [
-        'errors' => $errors,
-        'data'   => ['username' => $username, 'email' => $email, 'age' => $age],
-    ];
 }
 
 /* ---------- Account (login / signup) ---------- */
@@ -91,7 +61,7 @@ function validateSignupInput(array $post): array
     $errors = array_values($errors);
 
     if (empty($errors)) {
-        $username = htmlspecialchars($username);
+        $username = htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
     }
 
     return [
@@ -123,9 +93,10 @@ function validateLoginInput(array $post): array
 function validateDateNotPast(string $value, string $label): ?string
 {
     $date = DateTime::createFromFormat('Y-m-d', $value);
-    if (!$date) {
+    if (!$date || $date->format('Y-m-d') !== $value) {
         return "$label must be a valid date.";
     }
+
     $today = new DateTime('today');
     return $date >= $today ? null : "$label cannot be in the past.";
 }
@@ -137,7 +108,17 @@ function validateAppointmentInput(array $post): array
     $time    = trim($post['appointment_time'] ?? '');
     $notes   = trim($post['notes'] ?? '');
 
-    $validServices = ['Curl Consultation', 'Curl Styling', 'Curl Hair Cut', 'Curl Hair Color'];
+    $validServices = array_column(getServices(), 'name');
+
+    $validTimes = [];
+    for ($hour = 9; $hour <= 17; $hour++) {
+        foreach ([0, 30] as $minute) {
+            if ($hour === 17 && $minute > 0) {
+                continue;
+            }
+            $validTimes[] = sprintf('%02d:%02d', $hour, $minute);
+        }
+    }
 
     $errors = array_filter([
         validateRequired($service, 'Service'),
@@ -145,11 +126,13 @@ function validateAppointmentInput(array $post): array
         validateRequired($date, 'Date'),
         $date !== '' ? validateDateNotPast($date, 'Date') : null,
         validateRequired($time, 'Time'),
+        ($time !== '' && !in_array($time, $validTimes, true)) ? "Select a valid appointment time." : null,
+        strlen($notes) > 500 ? "Notes must be 500 characters or less." : null,
     ]);
     $errors = array_values($errors);
 
     if (empty($errors)) {
-        $notes = htmlspecialchars($notes);
+        $notes = htmlspecialchars($notes, ENT_QUOTES, 'UTF-8');
     }
 
     return [

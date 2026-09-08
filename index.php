@@ -1,12 +1,10 @@
 <?php
 session_start();
-header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-header('Pragma: no-cache');
-header('Expires: 0');
+require 'helpers.php';
+
 $isLoggedIn = !empty($_SESSION['user_id']);
 $username   = $_SESSION['username'] ?? '';
-
-$bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redirect=book-appointment';
+$bookHref   = bookHref($isLoggedIn);
 ?>
 
 <!DOCTYPE html>
@@ -30,65 +28,7 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
 
 <body data-logged-in="<?= $isLoggedIn ? '1' : '0' ?>">
 
-<header class="header">
-    <nav class="nav" aria-label="Main navigation">
-        <div class="nav-box">
-
-            <a href="#home" class="logo">
-                <img src="assets/logo.png" alt="Curlette Hair Studio">
-            </a>
-
-            <ul class="nav-links">
-                <li><a href="#home" class="active">HOME</a></li>
-                <li><a href="#services">SERVICES</a></li>
-                <li><a href="#products">PRODUCTS</a></li>
-                <li><a href="#about">ABOUT US</a></li>
-                <li><a href="#contact">CONTACT</a></li>
-            </ul>
-
-            <div class="nav-actions">
-                <a href="<?= $bookHref ?>" class="btn-main js-book-trigger">BOOK AN APPOINTMENT</a>
-
-                <button type="button" class="icon-btn cart-btn-nav" aria-label="Shopping bag">
-                    <i class="bi bi-handbag"></i>
-                </button>
-
-                <?php if ($isLoggedIn): ?>
-                    <div class="account-menu">
-                        <button type="button" class="icon-btn account-btn account-menu-toggle"
-                                aria-label="Account menu" aria-expanded="false" aria-haspopup="true">
-                            <i class="bi bi-person-fill"></i>
-                        </button>
-                        <div class="account-dropdown" hidden>
-                            <div class="account-dropdown-header">
-                                <span>ACCOUNT</span>
-                                <strong><?= htmlspecialchars($username, ENT_QUOTES, 'UTF-8') ?></strong>
-                            </div>
-                            <a href="account.php?view=account">
-                                <i class="bi bi-person"></i>
-                                <span>My Account</span>
-                            </a>
-                            <a href="account.php?view=appointments">
-                                <i class="bi bi-calendar-check"></i>
-                                <span>My Appointments</span>
-                            </a>
-                            <div class="account-dropdown-divider"></div>
-                            <a href="logout.php" class="logout-link">
-                                <i class="bi bi-box-arrow-right"></i>
-                                <span>Log Out</span>
-                            </a>
-                        </div>
-                    </div>
-                <?php else: ?>
-                    <a href="account.php" class="icon-btn account-btn js-account-trigger" aria-label="Account">
-                        <i class="bi bi-person"></i>
-                    </a>
-                <?php endif; ?>
-            </div>
-
-        </div>
-    </nav>
-</header>
+<?php $navActive = 'home'; include 'partials/nav.php'; ?>
 
 <main>
 
@@ -145,7 +85,7 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
 
             <div class="service-grid">
 
-                <article class="service-card">
+                <a href="services.php" class="service-card">
                     <div class="card-img">
                         <img src="assets/service.jpg" alt="Curl consultation">
                     </div>
@@ -155,9 +95,9 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
                         <p>Personalized guidance for your natural curls.</p>
                         <strong>$123</strong>
                     </div>
-                </article>
+                </a>
 
-                <article class="service-card">
+                <a href="services.php" class="service-card">
                     <div class="card-img">
                         <img src="assets/service1.jpg" alt="Curl styling">
                     </div>
@@ -167,9 +107,9 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
                         <p>Professional styling designed for your curl pattern.</p>
                         <strong>$123</strong>
                     </div>
-                </article>
+                </a>
 
-                <article class="service-card">
+                <a href="services.php" class="service-card">
                     <div class="card-img">
                         <img src="assets/service3.jpg" alt="Curly hair cut">
                     </div>
@@ -179,9 +119,9 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
                         <p>A cut shaped specifically for your natural texture.</p>
                         <strong>$123</strong>
                     </div>
-                </article>
+                </a>
 
-                <article class="service-card">
+                <a href="services.php" class="service-card">
                     <div class="card-img">
                         <img src="assets/service2.jpg" alt="Curly hair color">
                     </div>
@@ -191,12 +131,12 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
                         <p>Beautiful color while keeping your curls healthy.</p>
                         <strong>$123</strong>
                     </div>
-                </article>
+                </a>
 
             </div>
 
             <div class="center-btn">
-                <a href="#services" class="btn-outline btn-small">
+                <a href="services.php" class="btn-outline btn-small">
                     VIEW ALL SERVICES
                 </a>
             </div>
@@ -499,12 +439,12 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
 
             </article>
 
-            <!-- DUPLICATES -->
+            <!-- Duplicate set below: required for the seamless infinite marquee (.testimonial-track animates to -50%, so the track needs two identical copies back-to-back) -->
 
-                <article class="testimonial-card">
+            <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c5.jpg" alt="Curlétte client">
+                    <img src="assets/c5.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">
@@ -528,10 +468,10 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
 
             </article>
 
-            <article class="testimonial-card">
+            <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c1.jpg" alt="Curlétte client">
+                    <img src="assets/c1.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">
@@ -555,10 +495,10 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
 
             </article>
 
-            <article class="testimonial-card">
+            <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c2.jpg" alt="Curlétte client">
+                    <img src="assets/c2.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">
@@ -582,10 +522,10 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
 
             </article>
 
-            <article class="testimonial-card">
+            <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c3.jpg" alt="Curlétte client">
+                    <img src="assets/c3.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">
@@ -609,10 +549,10 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
 
             </article>
 
-            <article class="testimonial-card">
+            <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c4.jpg" alt="Curlette client">
+                    <img src="assets/c4.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">
@@ -641,172 +581,13 @@ $bookHref = $isLoggedIn ? 'bookAppointment.php' : 'account.php?mode=login&redire
     </section>
 
 
-    <!-- APPOINTMENT -->
-    <section id="appointment" class="cta">
-
-        <img src="assets/cta-bg.png" alt="" class="cta-bg">
-
-        <div class="cta-overlay"></div>
-        <div class="cta-content">
-
-            <h2>Ready to love your curls?</h2>
-            <p>Book your appointment today!</p>
-
-            <a href="<?= $bookHref ?>" class="btn-main js-book-trigger">
-                BOOK AN APPOINTMENT
-            </a>
-
-        </div>
-
-    </section>
+    <?php include 'partials/cta-banner.php'; ?>
 
 </main>
 
 
-<footer id="contact" class="footer">
-
-    <div class="footer-box">
-
-        <div class="footer-brand">
-
-            <img src="assets/logo.png" alt="Curlette Hair Studio">
-
-            <p>
-                A curly hair studio dedicated to helping you care for,
-                understand, and love your natural curls.
-            </p>
-
-        </div>
-
-
-        <div class="footer-col">
-
-            <h3>QUICK LINKS</h3>
-
-            <a href="#home">HOME</a>
-            <a href="#services">SERVICES</a>
-            <a href="#products">PRODUCTS</a>
-            <a href="#about">ABOUT US</a>
-            <a href="#contact">CONTACT</a>
-
-        </div>
-
-
-        <div class="footer-col">
-
-            <h3>CUSTOMER</h3>
-
-            <a href="account.php">MY ACCOUNT</a>
-            <a href="#">MY ORDERS</a>
-
-        </div>
-
-
-        <div class="footer-col">
-
-            <h3>CONTACT US</h3>
-
-            <p>
-                <i class="bi bi-telephone"></i>
-                0912 345 6789
-            </p>
-
-            <p>
-                <i class="bi bi-envelope"></i>
-                curlettehairstudio@email.com
-            </p>
-
-            <div class="social">
-
-                <a href="#" aria-label="Facebook">
-                    <i class="bi bi-facebook"></i>
-                </a>
-
-                <a href="#" aria-label="Instagram">
-                    <i class="bi bi-instagram"></i>
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</footer>
-
-<!-- ACCOUNT MODAL -->
-<div class="modal-overlay" id="authModal" aria-hidden="true">
-    <div class="modal-box auth-card" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
-
-        <button type="button" class="modal-close" id="authModalClose" aria-label="Close">
-            <i class="bi bi-x-lg"></i>
-        </button>
-
-        <div class="auth-tabs" role="tablist">
-            <button type="button" class="auth-tab active" data-tab="login" role="tab" aria-selected="true">LOG IN</button>
-            <button type="button" class="auth-tab" data-tab="signup" role="tab" aria-selected="false">SIGN UP</button>
-        </div>
-
-        <p class="auth-context" id="authModalContext" hidden></p>
-        <p class="auth-error" id="authModalError" hidden></p>
-
-        <div class="auth-panel" data-panel="login">
-            <h2 class="auth-title" id="authModalTitle">Welcome back.</h2>
-            <p class="auth-sub">Log in to manage your appointments and orders.</p>
-
-            <form action="account_function.php" method="post" class="auth-form" novalidate data-ajax-form>
-                <input type="hidden" name="login" value="1">
-                <input type="hidden" name="redirect" value="" class="js-redirect-field">
-
-                <div class="form-group">
-                    <label for="modal-login-email">Email</label>
-                    <input type="email" id="modal-login-email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="modal-login-password">Password</label>
-                    <input type="password" id="modal-login-password" name="password" autocomplete="new-password" required>
-                </div>
-
-                <button type="submit" class="btn-main auth-submit">LOG IN</button>
-            </form>
-        </div>
-
-        <div class="auth-panel" data-panel="signup" hidden>
-            <h2 class="auth-title">Join Curlétte.</h2>
-            <p class="auth-sub">Create an account to book appointments and shop products.</p>
-
-            <form action="account_function.php" method="post" class="auth-form" novalidate data-ajax-form>
-                <input type="hidden" name="signup" value="1">
-                <input type="hidden" name="redirect" value="" class="js-redirect-field">
-
-                <div class="form-group">
-                    <label for="modal-signup-username">Username</label>
-                    <input type="text" id="modal-signup-username" name="username" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="modal-signup-email">Email</label>
-                    <input type="email" id="modal-signup-email" name="email" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="modal-signup-password">Password</label>
-                    <input type="password" id="modal-signup-password" name="password" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}" title="Password must be at least 8 characters and include a letter, a number, and a special character." required>
-                    <small class="password-hint">At least 8 characters, with a letter, a number, and a special character.</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="modal-signup-confirm">Confirm Password</label>
-                    <input type="password" id="modal-signup-confirm" name="confirm_password" autocomplete="new-password" required>
-                </div>
-
-                <button type="submit" class="btn-main auth-submit">CREATE ACCOUNT</button>
-            </form>
-        </div>
-
-    </div>
-</div>
+<?php include 'partials/footer.php'; ?>
+<?php include 'partials/auth-modal.php'; ?>
 
 <script src="script.js"></script>
 

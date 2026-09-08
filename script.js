@@ -11,13 +11,35 @@ document.addEventListener('DOMContentLoaded', function () {
    
     clearPasswordFields();
 
-    window.addEventListener('pageshow', function () {
+    // Fires on every load, including when the browser restores this page
+    // from the back/forward cache (e.g. hitting Back after logging out).
+    // That's the case a typed-in password can otherwise reappear, so this
+    // is the one place clearing it actually matters.
+    window.addEventListener('pageshow', function (event) {
         clearPasswordFields();
+
+        if (event.persisted) {
+            // Page came from bfcache, not a fresh request — the server-rendered
+            // "logged in" state (nav, account menu, username) may now be stale
+            // if the user logged out in another tab or via this same back nav.
+            // Ask the server for the real status and reload only if it's wrong,
+            // so we don't force a reload on every ordinary back/forward visit.
+            fetch('session_status.php', { cache: 'no-store' })
+                .then(function (response) { return response.json(); })
+                .then(function (data) {
+                    var actuallyLoggedIn = !!data.loggedIn;
+                    var shownAsLoggedIn = body.getAttribute('data-logged-in') === '1';
+                    if (actuallyLoggedIn !== shownAsLoggedIn) {
+                        location.reload();
+                    }
+                })
+                .catch(function () { /* offline or blocked — ignore, non-critical */ });
+        }
     });
 
     document.querySelectorAll('form').forEach(function (form) {
         form.addEventListener('submit', function () {
-           
+
             window.setTimeout(function () {
                 clearPasswordFields(form);
             }, 0);
@@ -202,5 +224,46 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitBtn.textContent = originalLabel;
             });
         });
+    });
+});
+
+/* BOOK APPOINTMENT — service selection */
+document.addEventListener('DOMContentLoaded', function () {
+    var serviceInput = document.getElementById('service');
+    var serviceMessage = document.getElementById('selectedServiceMessage');
+    var selectedServiceName = document.getElementById('selectedServiceName');
+
+    if (!serviceInput) return;
+
+    function selectService(serviceName) {
+        serviceInput.value = serviceName;
+
+        document.querySelectorAll('[data-service-card]').forEach(function (card) {
+            card.classList.toggle('selected', card.getAttribute('data-service-card') === serviceName);
+        });
+
+        if (selectedServiceName) {
+            selectedServiceName.textContent = serviceName;
+        }
+
+        if (serviceMessage) {
+            serviceMessage.hidden = !serviceName;
+        }
+    }
+
+    document.querySelectorAll('[data-service-select]').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+            selectService(trigger.getAttribute('data-service-select'));
+        });
+    });
+
+    document.querySelector('.booking-form')?.addEventListener('submit', function (event) {
+        if (!serviceInput.value) {
+            event.preventDefault();
+            var firstService = document.querySelector('[data-service-card]');
+            if (firstService) {
+                firstService.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
     });
 });

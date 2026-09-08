@@ -1,0 +1,84 @@
+<?php
+/**
+ * Shared site navigation. Expects these variables already set by the including page:
+ *
+ *   $isLoggedIn  bool          whether to render the account dropdown or the login icon
+ *   $username    string        shown in the account dropdown when logged in
+ *   $bookHref    string        link for the "BOOK AN APPOINTMENT" button
+ *   $navActive   string        one of 'home' | 'services' | 'products' | 'about' | 'contact'
+ *                              — controls which link gets the active style. Optional.
+ *   $showBookButton bool       set to false to hide the nav "BOOK AN APPOINTMENT" button
+ *                              (e.g. on the booking page itself, since you're already there). Optional.
+ */
+$navActive = $navActive ?? '';
+$showBookButton = $showBookButton ?? true;
+function navClass(string $key, string $navActive): string
+{
+    return $key === $navActive ? 'active' : '';
+}
+?>
+<header class="header">
+    <nav class="nav" aria-label="Main navigation">
+        <div class="nav-box">
+
+            <a href="index.php#home" class="logo">
+                <img src="assets/logo.png" alt="Curlette Hair Studio">
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="index.php#home" class="<?= navClass('home', $navActive) ?>">HOME</a></li>
+                <li><a href="services.php" class="<?= navClass('services', $navActive) ?>">SERVICES</a></li>
+                <li><a href="index.php#products" class="<?= navClass('products', $navActive) ?>">PRODUCTS</a></li>
+                <li><a href="index.php#about" class="<?= navClass('about', $navActive) ?>">ABOUT US</a></li>
+                <li><a href="index.php#contact" class="<?= navClass('contact', $navActive) ?>">CONTACT</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <?php if ($showBookButton): ?>
+                    <a href="<?= $bookHref ?>" class="btn-main js-book-trigger">BOOK AN APPOINTMENT</a>
+                <?php endif; ?>
+
+                <button type="button" class="icon-btn cart-btn-nav" aria-label="Shopping bag">
+                    <i class="bi bi-handbag"></i>
+                </button>
+
+                <?php if ($isLoggedIn): ?>
+                    <div class="account-menu">
+                        <button type="button" class="icon-btn account-btn account-menu-toggle"
+                                aria-label="Account menu" aria-expanded="false" aria-haspopup="true">
+                            <span class="account-avatar"><?= htmlspecialchars(strtoupper(mb_substr($username !== '' ? $username : 'A', 0, 1)), ENT_QUOTES, 'UTF-8') ?></span>
+                            <i class="bi bi-chevron-down account-caret"></i>
+                        </button>
+                        <div class="account-dropdown" hidden>
+                            <div class="account-dropdown-header">
+                                <span class="account-dropdown-avatar"><?= htmlspecialchars(strtoupper(mb_substr($username !== '' ? $username : 'A', 0, 1)), ENT_QUOTES, 'UTF-8') ?></span>
+                                <div>
+                                    <span class="account-dropdown-label">LOGGED IN AS</span>
+                                    <strong><?= htmlspecialchars($username, ENT_QUOTES, 'UTF-8') ?></strong>
+                                </div>
+                            </div>
+                            <a href="account.php?view=account">
+                                <i class="bi bi-person"></i>
+                                <span>My Account</span>
+                            </a>
+                            <a href="account.php?view=appointments">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>My Appointments</span>
+                            </a>
+                            <div class="account-dropdown-divider"></div>
+                            <a href="logout.php" class="logout-link">
+                                <i class="bi bi-box-arrow-right"></i>
+                                <span>Log Out</span>
+                            </a>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <a href="account.php" class="icon-btn account-btn js-account-trigger" aria-label="Log in or sign up">
+                        <i class="bi bi-person"></i>
+                    </a>
+                <?php endif; ?>
+            </div>
+
+        </div>
+    </nav>
+</header>
