@@ -23,6 +23,7 @@ a {
     z-index: 10;
     background: #fff;
     border-bottom: 1px solid #E7DAD5;
+    box-shadow: 0 4px 20px rgba(var(--font-color-rgb), .04);
 }
 
 .admin-header-inner {
@@ -89,18 +90,53 @@ a {
     font-weight: 700;
 }
 
+.admin-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    font-family: var(--font-heading);
+    font-size: 14px;
+    font-weight: 700;
+}
+
 .admin-link {
     color: #765A50;
     font-size: 13px;
     font-weight: 600;
+    transition: color .2s ease;
 }
 
 .admin-link:hover {
     color: var(--primary-color);
 }
 
-.admin-logout {
-    color: #9B3A3A;
+.admin-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 10px;
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    font-size: 12px;
+    font-weight: 700;
+    transition: background .2s ease, color .2s ease;
+}
+
+.admin-logout-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
 }
 
 /* MAIN LAYOUT */
@@ -157,6 +193,12 @@ a {
     border: 1px solid #E7DAD5;
     border-radius: 18px;
     background: #fff;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 26px rgba(var(--font-color-rgb), .08);
 }
 
 .admin-stat-card .stat-icon {
@@ -245,6 +287,12 @@ a {
     font-size: 11px;
 }
 
+.admin-panel-footer {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #F1E6E1;
+}
+
 /* TABLE */
 
 .admin-table-wrap {
@@ -281,6 +329,14 @@ a {
 
 .admin-table tr:last-child td {
     border-bottom: 0;
+}
+
+.admin-table tbody tr {
+    transition: background .15s ease;
+}
+
+.admin-table tbody tr:hover {
+    background: var(--primary-bg-color);
 }
 
 .admin-table td strong {
@@ -362,6 +418,13 @@ a {
     color: var(--font-color);
     font-family: var(--font-body);
     font-size: 12px;
+    transition: border-color .2s ease;
+}
+
+.admin-status-form select:focus,
+.admin-stock-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
 }
 
 .admin-status-form button {

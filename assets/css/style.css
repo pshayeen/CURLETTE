@@ -157,6 +157,17 @@ ul {
     box-shadow: 0 6px 14px rgba(var(--primary-color-rgb), .3);
 }
 
+/* Logged-out trigger is just the plain icon, no circle fill */
+.js-account-trigger.icon-btn.account-btn {
+    background: none;
+}
+
+.js-account-trigger.icon-btn.account-btn:hover {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    box-shadow: none;
+}
+
 /* Logged-in trigger is a pill (avatar initial + caret), not a plain circle */
 .account-menu-toggle.icon-btn.account-btn {
     width: auto;
@@ -2260,6 +2271,74 @@ ul {
     border-radius: 12px;
     background: var(--primary-bg-color);
     text-align: left;
+}
+
+/* MY APPOINTMENTS / MY ORDERS */
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.status-badge.upcoming,
+.status-badge.placed {
+    background: var(--secondary-color);
+    color: var(--primary-color);
+}
+
+.status-badge.completed,
+.status-badge.fulfilled {
+    background: #DCEFE1;
+    color: #2F7D4F;
+}
+
+.status-badge.cancelled {
+    background: #F6DADA;
+    color: #9B3A3A;
+}
+
+.my-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.my-list-item {
+    padding: 22px 24px;
+    border: 1px solid #EFE3DE;
+    border-radius: 18px;
+    background: #FFFDFC;
+}
+
+.my-list-item-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.my-list-item h3 {
+    margin-bottom: 4px;
+    font-family: var(--font-heading);
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.my-list-item .muted {
+    display: block;
+    color: #8A7066;
+    font-size: 11px;
+}
+
+.my-list-item .cart-order-summary {
+    max-width: none;
+    margin: 16px 0 0;
 }
 
 .cart-order-summary-row {

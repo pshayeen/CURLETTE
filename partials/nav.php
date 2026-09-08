@@ -54,14 +54,21 @@ function navClass(string $key, string $navActive): string
                                     <strong><?= htmlspecialchars($username, ENT_QUOTES, 'UTF-8') ?></strong>
                                 </div>
                             </div>
-                            <a href="account.php?view=account">
-                                <i class="bi bi-person"></i>
-                                <span>My Account</span>
-                            </a>
-                            <a href="account.php?view=appointments">
+                            <a href="my-appointments.php">
                                 <i class="bi bi-calendar-check"></i>
                                 <span>My Appointments</span>
                             </a>
+                            <a href="my-orders.php">
+                                <i class="bi bi-bag-check"></i>
+                                <span>My Orders</span>
+                            </a>
+                            <?php if (!empty($_SESSION['is_admin'])): ?>
+                                <div class="account-dropdown-divider"></div>
+                                <a href="admin/dashboard.php">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Admin Dashboard</span>
+                                </a>
+                            <?php endif; ?>
                             <div class="account-dropdown-divider"></div>
                             <a href="forms/logout.php" class="logout-link">
                                 <i class="bi bi-box-arrow-right"></i>
