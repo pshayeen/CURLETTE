@@ -8,7 +8,7 @@ function getRedirectMap(): array
         'services'         => '../services.php',
         'products'         => '../products.php',
         'about'            => '../about.php',
-        'contact'          => '../index.php#contact',
+        'contact'          => '../contact.php',
         'book-appointment' => '../bookAppointment.php',
         'cart'             => '../cart.php',
     ];

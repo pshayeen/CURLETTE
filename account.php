@@ -60,7 +60,7 @@ $contextMessage = $redirect === 'book-appointment'
             <?php if ($mode === 'login'): ?>
                 <h2 class="auth-title">Welcome back.</h2>
                 <p class="auth-sub">Log in to manage your appointments and orders.</p>
-                <form action="actions/login.php" method="post" class="auth-form" autocomplete="off" novalidate>
+                <form action="forms/login.php" method="post" class="auth-form" autocomplete="off" novalidate>
                     <input type="hidden" name="login" value="1">
                     <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect, ENT_QUOTES, 'UTF-8') ?>">
                     <div class="form-group">
@@ -76,7 +76,7 @@ $contextMessage = $redirect === 'book-appointment'
             <?php else: ?>
                 <h2 class="auth-title">Join Curlétte.</h2>
                 <p class="auth-sub">Create an account to book appointments and shop products.</p>
-                <form action="actions/login.php" method="post" class="auth-form" autocomplete="off" novalidate>
+                <form action="forms/login.php" method="post" class="auth-form" autocomplete="off" novalidate>
                     <input type="hidden" name="signup" value="1">
                     <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect, ENT_QUOTES, 'UTF-8') ?>">
                     <div class="form-group">

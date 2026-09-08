@@ -25,7 +25,7 @@
             <a href="services.php">SERVICES</a>
             <a href="products.php">PRODUCTS</a>
             <a href="about.php">ABOUT US</a>
-            <a href="index.php#contact">CONTACT</a>
+            <a href="contact.php">CONTACT</a>
 
         </div>
 

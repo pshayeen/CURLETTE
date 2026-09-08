@@ -75,11 +75,11 @@ $products   = getProducts();
                         <div><span>AVAILABILITY</span><strong><?= (int) $product['stock_quantity'] > 0 ? 'In stock' : 'Out of stock' ?></strong></div>
                     </div>
                     <?php if ((int) $product['stock_quantity'] > 0): ?>
-                        <form method="post" action="actions/update-cart.php">
+                        <form method="post" action="forms/update-cart.php">
                             <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
                             <input type="hidden" name="return_to" value="products">
                             <button type="submit" class="btn-main detail-modal-cta">
-                                ADD TO CART <i class="bi bi-handbag"></i>
+                                ADD TO CART
                             </button>
                         </form>
                     <?php else: ?>

@@ -132,7 +132,7 @@ $cartTotal = getCartTotal($cartItems);
                             <?php endif; ?>
                         </div>
 
-                        <form method="post" action="actions/update-cart.php" class="cart-item-qty">
+                        <form method="post" action="forms/update-cart.php" class="cart-item-qty">
                             <input type="hidden" name="update_quantity" value="1">
                             <input type="hidden" name="product_id" value="<?= (int) $item['product_id'] ?>">
                             <button type="submit" name="quantity" value="<?= max(0, (int) $item['quantity'] - 1) ?>" class="qty-btn" aria-label="Decrease quantity">−</button>
@@ -142,7 +142,7 @@ $cartTotal = getCartTotal($cartItems);
 
                         <div class="cart-item-total"><?= formatPrice((float) $item['price'] * (int) $item['quantity']) ?></div>
 
-                        <form method="post" action="actions/update-cart.php" class="cart-item-remove-form">
+                        <form method="post" action="forms/update-cart.php" class="cart-item-remove-form">
                             <button type="submit" name="remove_item" value="<?= (int) $item['product_id'] ?>" class="cart-item-remove" aria-label="Remove <?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?>">
                                 <i class="bi bi-trash"></i>
                             </button>
@@ -158,7 +158,7 @@ $cartTotal = getCartTotal($cartItems);
                     <strong><?= formatPrice($cartTotal) ?></strong>
                 </div>
                 <p class="cart-summary-note">Taxes and any shipping are calculated at pickup / delivery.</p>
-                <form method="post" action="actions/checkout.php">
+                <form method="post" action="forms/checkout.php">
                     <input type="hidden" name="place_order" value="1">
                     <button type="submit" class="btn-main cart-checkout-btn">PLACE ORDER <i class="bi bi-arrow-right"></i></button>
                 </form>

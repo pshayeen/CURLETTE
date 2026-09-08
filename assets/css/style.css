@@ -948,6 +948,67 @@ ul {
 }
 
 
+/* CONTACT PAGE */
+
+.contact-split {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+@media (max-width: 800px) {
+    .contact-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+.contact-info-panel {
+    margin: 0;
+    text-align: left;
+}
+
+.contact-info-panel .about-visit-address {
+    align-items: flex-start;
+    text-align: left;
+}
+
+.contact-info-links {
+    justify-content: flex-start;
+}
+
+.contact-response-note {
+    margin-top: 22px;
+    color: #765A50;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.contact-social {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.contact-social a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    color: var(--primary-color);
+    font-size: 15px;
+    transition: background .2s ease, color .2s ease;
+}
+
+.contact-social a:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+
 /* TESTIMONIALS */
 
 .testimonials {

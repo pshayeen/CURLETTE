@@ -541,7 +541,7 @@ $products   = getProducts();
                             <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
                             <input type="hidden" name="return_to" value="index">
                             <button type="submit" class="btn-main detail-modal-cta">
-                                ADD TO CART <i class="bi bi-handbag"></i>
+                                ADD TO CART
                             </button>
                         </form>
                     <?php else: ?>

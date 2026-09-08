@@ -24,7 +24,7 @@ function navClass(string $key, string $navActive): string
                 <li><a href="services.php" class="<?= navClass('services', $navActive) ?>">SERVICES</a></li>
                 <li><a href="products.php" class="<?= navClass('products', $navActive) ?>">PRODUCTS</a></li>
                 <li><a href="about.php" class="<?= navClass('about', $navActive) ?>">ABOUT US</a></li>
-                <li><a href="index.php#contact" class="<?= navClass('contact', $navActive) ?>">CONTACT</a></li>
+                <li><a href="contact.php" class="<?= navClass('contact', $navActive) ?>">CONTACT</a></li>
             </ul>
 
             <div class="nav-actions">
