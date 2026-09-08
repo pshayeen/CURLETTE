@@ -50,7 +50,7 @@ if (isset($_POST['login'])) {
     }
 
     $pdo = getConnection();
-    $stmt = $pdo->prepare('SELECT id, username, password_hash FROM user_account WHERE email = ? LIMIT 1');
+    $stmt = $pdo->prepare('SELECT id, username, password_hash, is_admin FROM user_account WHERE email = ? LIMIT 1');
     $stmt->execute([$result['data']['email']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -61,6 +61,11 @@ if (isset($_POST['login'])) {
     session_regenerate_id(true);
     $_SESSION['user_id'] = (int) $user['id'];
     $_SESSION['username'] = $user['username'];
+    $_SESSION['is_admin'] = (bool) $user['is_admin'];
+
+    if ($_SESSION['is_admin']) {
+        redirectSuccess('../admin/dashboard.php');
+    }
 
     redirectSuccess(resolveRedirectTarget($redirect));
 }
@@ -98,6 +103,7 @@ if (isset($_POST['signup'])) {
         session_regenerate_id(true);
         $_SESSION['user_id'] = (int) $pdo->lastInsertId();
         $_SESSION['username'] = $username;
+        $_SESSION['is_admin'] = false;
 
         redirectSuccess(resolveRedirectTarget($redirect));
     } catch (PDOException $e) {
