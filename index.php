@@ -1,10 +1,12 @@
 <?php
 session_start();
 require 'helpers.php';
+require 'data/products.php';
 
 $isLoggedIn = !empty($_SESSION['user_id']);
 $username   = $_SESSION['username'] ?? '';
 $bookHref   = bookHref($isLoggedIn);
+$products   = getProducts();
 ?>
 
 <!DOCTYPE html>
@@ -165,7 +167,7 @@ $bookHref   = bookHref($isLoggedIn);
                     define, and protect your natural texture.
                 </p>
 
-                <a href="#products" class="btn-main">
+                <a href="products.php" class="btn-main">
                     VIEW ALL PRODUCTS
                 </a>
 
@@ -173,76 +175,9 @@ $bookHref   = bookHref($isLoggedIn);
 
             <div class="product-grid">
 
-                <article class="product-card">
-
-                    <div class="product-img">
-                        <img src="assets/prod.png" alt="Curl cleansing conditioner">
-                    </div>
-
-                    <div class="product-info">
-                        <h3>Curl Cleansing Conditioner</h3>
-                        <strong>$20</strong>
-
-                        <button class="cart-btn" type="button" aria-label="Add Curl Cleansing Conditioner to cart">
-                            <i class="bi bi-handbag"></i>
-                        </button>
-                    </div>
-
-                </article>
-
-
-                <article class="product-card">
-
-                    <div class="product-img">
-                        <img src="assets/prod2.png" alt="Moisturising conditioner">
-                    </div>
-
-                    <div class="product-info">
-                        <h3>Moisturising Conditioner</h3>
-                        <strong>$20</strong>
-
-                        <button class="cart-btn" type="button" aria-label="Add Moisturising Conditioner to cart">
-                            <i class="bi bi-handbag"></i>
-                        </button>
-                    </div>
-
-                </article>
-
-
-                <article class="product-card">
-
-                    <div class="product-img">
-                        <img src="assets/prod4.png" alt="Curl moisturising treatment">
-                    </div>
-
-                    <div class="product-info">
-                        <h3>Curl Moisturising Treatment</h3>
-                        <strong>$25</strong>
-
-                        <button class="cart-btn" type="button" aria-label="Add Curl Moisturising Treatment to cart">
-                            <i class="bi bi-handbag"></i>
-                        </button>
-                    </div>
-
-                </article>
-
-
-                <article class="product-card">
-
-                    <div class="product-img">
-                        <img src="assets/prod5.png" alt="Curl protein treatment">
-                    </div>
-
-                    <div class="product-info">
-                        <h3>Curl Protein Treatment</h3>
-                        <strong>$25</strong>
-
-                        <button class="cart-btn" type="button" aria-label="Add Curl Protein Treatment to cart">
-                            <i class="bi bi-handbag"></i>
-                        </button>
-                    </div>
-
-                </article>
+                <?php foreach (array_slice($products, 0, 4) as $product): ?>
+                    <?php $detailed = false; $returnTo = 'index'; include 'partials/product-card.php'; ?>
+                <?php endforeach; ?>
 
             </div>
 

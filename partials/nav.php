@@ -12,6 +12,7 @@
  */
 $navActive = $navActive ?? '';
 $showBookButton = $showBookButton ?? true;
+$cartCount = $isLoggedIn ? getCartItemCount($_SESSION['user_id'] ?? null) : 0;
 function navClass(string $key, string $navActive): string
 {
     return $key === $navActive ? 'active' : '';
@@ -28,7 +29,7 @@ function navClass(string $key, string $navActive): string
             <ul class="nav-links">
                 <li><a href="index.php#home" class="<?= navClass('home', $navActive) ?>">HOME</a></li>
                 <li><a href="services.php" class="<?= navClass('services', $navActive) ?>">SERVICES</a></li>
-                <li><a href="index.php#products" class="<?= navClass('products', $navActive) ?>">PRODUCTS</a></li>
+                <li><a href="products.php" class="<?= navClass('products', $navActive) ?>">PRODUCTS</a></li>
                 <li><a href="index.php#about" class="<?= navClass('about', $navActive) ?>">ABOUT US</a></li>
                 <li><a href="index.php#contact" class="<?= navClass('contact', $navActive) ?>">CONTACT</a></li>
             </ul>
@@ -38,9 +39,12 @@ function navClass(string $key, string $navActive): string
                     <a href="<?= $bookHref ?>" class="btn-main js-book-trigger">BOOK AN APPOINTMENT</a>
                 <?php endif; ?>
 
-                <button type="button" class="icon-btn cart-btn-nav" aria-label="Shopping bag">
+                <a href="<?= $isLoggedIn ? 'cart.php' : 'account.php?mode=login&redirect=cart' ?>" class="icon-btn cart-btn-nav" aria-label="Shopping cart<?= $cartCount > 0 ? ", $cartCount items" : '' ?>">
                     <i class="bi bi-handbag"></i>
-                </button>
+                    <?php if ($cartCount > 0): ?>
+                        <span class="cart-count-badge"><?= $cartCount > 9 ? '9+' : $cartCount ?></span>
+                    <?php endif; ?>
+                </a>
 
                 <?php if ($isLoggedIn): ?>
                     <div class="account-menu">

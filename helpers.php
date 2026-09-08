@@ -1,9 +1,6 @@
 <?php
 
-/**
- * Where the general "BOOK AN APPOINTMENT" button should go: straight to the
- * booking page if logged in, otherwise to login with a redirect back to it.
- */
+
 function bookHref(bool $isLoggedIn): string
 {
     return $isLoggedIn
@@ -11,13 +8,30 @@ function bookHref(bool $isLoggedIn): string
         : 'account.php?mode=login&redirect=book-appointment';
 }
 
-/**
- * Where a specific service card should go: straight to the booking page with
- * that service pre-selected if logged in, otherwise to login first.
- */
+
 function serviceHref(string $serviceName, bool $isLoggedIn): string
 {
     return $isLoggedIn
         ? 'bookAppointment.php?service=' . urlencode($serviceName)
         : 'account.php?mode=login&redirect=book-appointment';
+}
+
+
+function formatPrice($price): string
+{
+    return '$' . number_format((float) $price, 2);
+}
+
+
+function getCartItemCount(?int $userId): int
+{
+    if (!$userId) {
+        return 0;
+    }
+
+    require_once __DIR__ . '/database/config.php';
+    $pdo = getConnection();
+    $stmt = $pdo->prepare('SELECT COALESCE(SUM(quantity), 0) FROM cart_item WHERE user_id = ?');
+    $stmt->execute([$userId]);
+    return (int) $stmt->fetchColumn();
 }

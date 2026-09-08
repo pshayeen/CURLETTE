@@ -4,11 +4,12 @@ function getRedirectMap(): array
 {
     return [
         'home'             => 'index.php#home',
-        'services'         => 'index.php#services',
-        'products'         => 'index.php#products',
+        'services'         => 'services.php',
+        'products'         => 'products.php',
         'about'            => 'index.php#about',
         'contact'          => 'index.php#contact',
         'book-appointment' => 'bookAppointment.php',
+        'cart'             => 'cart.php',
     ];
 }
 

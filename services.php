@@ -107,6 +107,7 @@ $services   = getServices();
     </div>
 <?php endforeach; ?>
 
+<?php include 'partials/cta-banner.php'; ?>
 <?php include 'partials/footer.php'; ?>
 <?php include 'partials/auth-modal.php'; ?>
 

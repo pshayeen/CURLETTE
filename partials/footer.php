@@ -26,7 +26,7 @@
 
             <a href="index.php#home">HOME</a>
             <a href="services.php">SERVICES</a>
-            <a href="index.php#products">PRODUCTS</a>
+            <a href="products.php">PRODUCTS</a>
             <a href="index.php#about">ABOUT US</a>
             <a href="index.php#contact">CONTACT</a>
 
