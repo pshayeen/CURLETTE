@@ -1,7 +1,7 @@
 <?php
 /**
- * Shared site footer. Expects $isLoggedIn and $bookHref already set by the
- * including page (same values used for the nav partial).
+ * Shared site footer. Expects $bookHref set by the including page (it has a
+ * safe fallback below either way, so this one won't trigger lint warnings).
  */
 ?>
 <footer id="contact" class="footer">

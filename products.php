@@ -34,7 +34,9 @@ $products   = getProducts();
 
 <main class="booking-page">
 
-    <section class="booking-hero">
+    <section class="booking-hero products-hero">
+
+        <img src="assets/bg.png" alt="" class="section-bg">
 
         <div class="booking-heading">
             <p class="home-label">CURLÉTTE PRODUCTS</p>
@@ -42,21 +44,57 @@ $products   = getProducts();
             <p>Everything you need to cleanse, hydrate, define, and protect your curls — picked for every step of your routine.</p>
         </div>
 
-        <div class="product-grid products-page-grid">
+        <div class="products-panel">
+            <div class="product-grid">
 
-            <?php foreach ($products as $product): ?>
-                <?php $detailed = true; $returnTo = 'products'; include 'partials/product-card.php'; ?>
-            <?php endforeach; ?>
+                <?php foreach ($products as $product): ?>
+                    <?php $returnTo = 'products'; $showDetailsTrigger = true; include 'partials/product-card.php'; ?>
+                <?php endforeach; ?>
 
+            </div>
         </div>
 
     </section>
 
 </main>
 
+<?php foreach ($products as $product): ?>
+    <div class="modal fade detail-modal" id="productModal<?= (int) $product['id'] ?>" tabindex="-1" aria-labelledby="productModalLabel<?= (int) $product['id'] ?>" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content detail-modal-content">
+                <button type="button" class="btn-close detail-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="detail-modal-img detail-modal-img--contain">
+                    <img src="<?= htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8') ?>" alt="">
+                </div>
+                <div class="detail-modal-body">
+                    <p class="booking-eyebrow">CURLÉTTE PRODUCT</p>
+                    <h2 id="productModalLabel<?= (int) $product['id'] ?>"><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h2>
+                    <p class="detail-modal-description"><?= htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8') ?></p>
+                    <div class="detail-modal-meta">
+                        <div><span>PRICE</span><strong><?= formatPrice($product['price']) ?></strong></div>
+                        <div><span>AVAILABILITY</span><strong><?= (int) $product['stock_quantity'] > 0 ? 'In stock' : 'Out of stock' ?></strong></div>
+                    </div>
+                    <?php if ((int) $product['stock_quantity'] > 0): ?>
+                        <form method="post" action="cart_function.php">
+                            <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
+                            <input type="hidden" name="return_to" value="products">
+                            <button type="submit" class="btn-main detail-modal-cta">
+                                ADD TO CART <i class="bi bi-handbag"></i>
+                            </button>
+                        </form>
+                    <?php else: ?>
+                        <button type="button" class="btn-outline detail-modal-cta" disabled>OUT OF STOCK</button>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>
+
 <?php include 'partials/footer.php'; ?>
 <?php include 'partials/auth-modal.php'; ?>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="script.js"></script>
 
 </body>

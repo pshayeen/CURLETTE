@@ -10,6 +10,9 @@
  *   $showBookButton bool       set to false to hide the nav "BOOK AN APPOINTMENT" button
  *                              (e.g. on the booking page itself, since you're already there). Optional.
  */
+$isLoggedIn = $isLoggedIn ?? false;
+$username = $username ?? '';
+$bookHref = $bookHref ?? '#';
 $navActive = $navActive ?? '';
 $showBookButton = $showBookButton ?? true;
 $cartCount = $isLoggedIn ? getCartItemCount($_SESSION['user_id'] ?? null) : 0;

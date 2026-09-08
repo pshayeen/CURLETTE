@@ -4,6 +4,7 @@
  * Expects $bookHref already set by the including page.
  * Optional $ctaHeading / $ctaText to override the default copy.
  */
+$bookHref   = $bookHref ?? '#';
 $ctaHeading = $ctaHeading ?? 'Ready to love your curls?';
 $ctaText    = $ctaText ?? 'Book your appointment today!';
 ?>

@@ -79,18 +79,18 @@ $services   = getServices();
 </main>
 
 <?php foreach ($services as $index => $service): ?>
-    <div class="modal fade service-modal" id="serviceModal<?= $index ?>" tabindex="-1" aria-labelledby="serviceModalLabel<?= $index ?>" aria-hidden="true">
+    <div class="modal fade detail-modal" id="serviceModal<?= $index ?>" tabindex="-1" aria-labelledby="serviceModalLabel<?= $index ?>" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content service-modal-content">
-                <button type="button" class="btn-close service-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <div class="service-modal-img">
+            <div class="modal-content detail-modal-content">
+                <button type="button" class="btn-close detail-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="detail-modal-img">
                     <img src="<?= htmlspecialchars($service['image'], ENT_QUOTES, 'UTF-8') ?>" alt="">
                 </div>
-                <div class="service-modal-body">
+                <div class="detail-modal-body">
                     <p class="booking-eyebrow">CURLÉTTE SERVICE 0<?= $index + 1 ?></p>
                     <h2 id="serviceModalLabel<?= $index ?>"><?= htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8') ?></h2>
-                    <p class="service-modal-description"><?= htmlspecialchars($service['description'], ENT_QUOTES, 'UTF-8') ?></p>
-                    <div class="service-modal-meta">
+                    <p class="detail-modal-description"><?= htmlspecialchars($service['description'], ENT_QUOTES, 'UTF-8') ?></p>
+                    <div class="detail-modal-meta">
                         <div><span>PRICE</span><strong><?= htmlspecialchars($service['price'], ENT_QUOTES, 'UTF-8') ?></strong></div>
                         <div><span>DURATION</span><strong><?= htmlspecialchars($service['duration'], ENT_QUOTES, 'UTF-8') ?></strong></div>
                     </div>
@@ -98,7 +98,7 @@ $services   = getServices();
                         <span>WHAT'S INCLUDED</span>
                         <p><?= htmlspecialchars($service['includes'], ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
-                    <a href="<?= serviceHref($service['name'], $isLoggedIn) ?>" class="btn-main modal-book-service">
+                    <a href="<?= serviceHref($service['name'], $isLoggedIn) ?>" class="btn-main detail-modal-cta">
                         BOOK THIS SERVICE <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
@@ -107,7 +107,6 @@ $services   = getServices();
     </div>
 <?php endforeach; ?>
 
-<?php include 'partials/cta-banner.php'; ?>
 <?php include 'partials/footer.php'; ?>
 <?php include 'partials/auth-modal.php'; ?>
 

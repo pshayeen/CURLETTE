@@ -529,6 +529,37 @@ ul {
     background: var(--secondary-color);
 }
 
+/* Products page — background texture behind the hero + panel, matching
+   the same swirl motif used behind the homepage's services section. The
+   heading and panel need position+z-index so they paint above it (the
+   .section-bg image is z-index:0, which by CSS stacking rules would
+   otherwise paint over plain non-positioned flow content). */
+.products-hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.products-hero > .booking-heading,
+.products-hero > .products-panel {
+    position: relative;
+    z-index: 1;
+}
+
+/* Products page — same pink panel as the homepage, expanded to fit the
+   full catalog instead of the fixed-height 4-item teaser */
+.products-panel {
+    padding: 50px;
+    border-radius: 42px;
+    background: var(--secondary-color);
+}
+
+@media (max-width: 650px) {
+    .products-panel {
+        padding: 28px 18px;
+        border-radius: 28px;
+    }
+}
+
 .products-text {
     display: flex;
     flex-direction: column;
@@ -558,25 +589,33 @@ ul {
 }
 
 .product-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 32px;
-    align-items: center;
+}
+
+.product-grid .product-card {
+    flex: 0 1 calc(25% - 24px);
+    width: calc(25% - 24px);
 }
 
 @media (max-width: 1000px) {
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .product-grid .product-card {
+        flex-basis: calc(50% - 16px);
+        width: calc(50% - 16px);
     }
 }
 
 @media (max-width: 560px) {
-    .product-grid {
-        grid-template-columns: 1fr;
+    .product-grid .product-card {
+        flex-basis: 100%;
+        width: 100%;
     }
 }
 
 .product-card {
+    position: relative;
     height: 300px;
     overflow: hidden;
     border-radius: 20px;
@@ -597,14 +636,32 @@ ul {
     justify-content: center;
 }
 
-.product-info {
-    position: relative;
-    height: 95px;
-    padding: 12px 15px;
-    background: rgba(var(--font-color), 0.5);
+/* Products page — whole card is a button that opens the details modal */
+.product-card-trigger {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
 }
 
-.product-info h3 {
+.product-info,
+.product-info-preview {
+    height: 95px;
+    padding: 12px 15px;
+}
+
+.product-info {
+    position: relative;
+}
+
+.product-info h3,
+.product-info-preview h3 {
     width: 140px;
     margin: 0 0 5px;
     font-size: 11px;
@@ -612,7 +669,8 @@ ul {
     line-height: 1.35;
 }
 
-.product-info strong {
+.product-info strong,
+.product-info-preview strong {
     color: var(--primary-color);
     font-size: 17px;
 }
@@ -661,40 +719,6 @@ ul {
     font-size: 8px;
     font-weight: 800;
     letter-spacing: .4px;
-}
-
-/* Products page — fuller card with a short description under the name */
-.products-page-grid {
-    align-items: stretch;
-}
-
-.product-card--detailed {
-    height: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.product-card--detailed .product-img {
-    height: 180px;
-    flex-shrink: 0;
-}
-
-.product-card--detailed .product-info {
-    height: auto;
-    flex: 1;
-    padding: 14px 16px 42px;
-}
-
-.product-card--detailed .product-info h3 {
-    width: auto;
-}
-
-.product-card--detailed .product-info p {
-    margin: 4px 0 8px;
-    color: var(--font-color);
-    font-size: 10.5px;
-    line-height: 1.55;
-    opacity: .75;
 }
 
 
@@ -1780,7 +1804,7 @@ ul {
     margin: 0 auto 20px;
 }
 
-.service-modal .modal-dialog {
+.detail-modal .modal-dialog {
     max-width: 520px;
 }
 
@@ -1795,7 +1819,7 @@ ul {
     opacity: .65;
 }
 
-.service-modal-content {
+.detail-modal-content {
     position: relative;
     overflow: hidden;
     padding: 0;
@@ -1806,23 +1830,39 @@ ul {
     box-shadow: 0 30px 70px rgba(43, 26, 20, .45);
 }
 
-.service-modal-img {
+.detail-modal-img {
     height: 210px;
     overflow: hidden;
 }
 
-.service-modal-img img {
+.detail-modal-img img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.service-modal-body {
+/* Product packshots have transparent backgrounds and shouldn't be
+   cropped like the service photos are — show the whole bottle instead. */
+.detail-modal-img--contain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-bg-color);
+}
+
+.detail-modal-img--contain img {
+    width: auto;
+    height: 100%;
+    padding: 24px;
+    object-fit: contain;
+}
+
+.detail-modal-body {
     padding: 32px 36px 36px;
 }
 
-.service-modal-content h2 {
+.detail-modal-content h2 {
     margin: 0 0 14px;
     font-family: var(--font-heading);
     font-size: 36px;
@@ -1830,27 +1870,27 @@ ul {
     line-height: 1;
 }
 
-.service-modal-description {
+.detail-modal-description {
     margin-bottom: 22px;
     color: #4A342C;
     font-size: 13.5px;
     line-height: 1.7;
 }
 
-.service-modal-meta {
+.detail-modal-meta {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
     margin-bottom: 18px;
 }
 
-.service-modal-meta > div {
+.detail-modal-meta > div {
     padding: 13px 15px;
     border-radius: 12px;
     background: var(--primary-bg-color);
 }
 
-.service-modal-meta span,
+.detail-modal-meta span,
 .service-includes > span {
     display: block;
     margin-bottom: 4px;
@@ -1860,7 +1900,7 @@ ul {
     letter-spacing: .7px;
 }
 
-.service-modal-meta strong {
+.detail-modal-meta strong {
     font-size: 13px;
 }
 
@@ -1878,11 +1918,11 @@ ul {
     line-height: 1.6;
 }
 
-.modal-book-service {
+.detail-modal-cta {
     width: 100%;
 }
 
-.service-modal-close {
+.detail-modal-close {
     position: absolute;
     top: 16px;
     right: 16px;
@@ -1896,7 +1936,7 @@ ul {
     box-shadow: 0 2px 10px rgba(0, 0, 0, .25);
 }
 
-.service-modal-close:hover {
+.detail-modal-close:hover {
     background-color: #fff;
 }
 
@@ -2234,7 +2274,7 @@ ul {
         width: 100%;
     }
 
-    .service-modal-content {
+    .detail-modal-content {
         padding: 34px 24px 26px;
     }
 }
