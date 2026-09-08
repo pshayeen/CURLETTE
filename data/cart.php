@@ -2,10 +2,7 @@
 
 require_once __DIR__ . '/../database/config.php';
 
-/**
- * A user's cart, joined with live product data so price/stock/image are
- * always current even if the catalog changed since the item was added.
- */
+// A user's cart, joined with live product price/stock/image.
 function getCartItems(int $userId): array
 {
     $pdo = getConnection();
@@ -20,9 +17,7 @@ function getCartItems(int $userId): array
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-/**
- * Sum of (price × quantity) across all cart line items.
- */
+// Sum of (price × quantity) across all cart line items.
 function getCartTotal(array $cartItems): float
 {
     $total = 0.0;

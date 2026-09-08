@@ -1,17 +1,16 @@
 <?php
-
 session_start();
 
-require 'database/config.php';
-require 'validation.php';
+require '../database/config.php';
+require '../includes/validation.php';
 
 if (empty($_SESSION['user_id'])) {
-    header('Location: account.php?mode=login&redirect=book-appointment');
+    header('Location: ../account.php?mode=login&redirect=book-appointment');
     exit;
 }
 
 if (!isset($_POST['book-appointment'])) {
-    header('Location: bookAppointment.php');
+    header('Location: ../bookAppointment.php');
     exit;
 }
 
@@ -20,7 +19,7 @@ $errors = $result['errors'];
 
 if (!empty($errors)) {
     $message = implode(' ', $errors);
-    header('Location: bookAppointment.php?status=error&message=' . urlencode($message));
+    header('Location: ../bookAppointment.php?status=error&message=' . urlencode($message));
     exit;
 }
 
@@ -39,9 +38,9 @@ try {
     $stmt->execute();
 
     $newId = $pdo->lastInsertId();
-    header('Location: bookAppointment.php?status=success&id=' . $newId);
+    header('Location: ../bookAppointment.php?status=success&id=' . $newId);
     exit;
 } catch (PDOException $e) {
-    header('Location: bookAppointment.php?status=error&message=' . urlencode('Something went wrong. Please try again.'));
+    header('Location: ../bookAppointment.php?status=error&message=' . urlencode('Something went wrong. Please try again.'));
     exit;
 }

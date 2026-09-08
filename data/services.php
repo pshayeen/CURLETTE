@@ -1,11 +1,6 @@
 <?php
 
-/**
- * Single source of truth for the salon's service catalog.
- * Used by bookAppointment.php (to render the service picker) and by
- * validation.php (to check that a submitted service name is real),
- * so the two never fall out of sync.
- */
+// Single source of truth for the service catalog.
 function getServices(): array
 {
     return [

@@ -1,15 +1,5 @@
 <?php
-/**
- * Renders one product card — same compact style everywhere it's used
- * (homepage preview and the full products page). Expects in scope:
- *   $product              array  one row from getProducts() (needs id, name, price, image, stock_quantity)
- *   $returnTo             string 'index' | 'products' — which page "add to cart" redirects
- *                                back to. Optional, default 'products'.
- *   $showDetailsTrigger   bool   true makes the card itself clickable, opening a modal
- *                                with the full description (products.php only — the
- *                                modal is rendered separately by the including page).
- *                                Optional, default false.
- */
+// Expects $product (array); optional $returnTo ('index'|'products') and $showDetailsTrigger (bool).
 $returnTo = $returnTo ?? 'products';
 $product  = $product ?? [];
 $showDetailsTrigger = $showDetailsTrigger ?? false;
@@ -34,7 +24,7 @@ $inStock  = (int) ($product['stock_quantity'] ?? 0) > 0;
         </button>
 
         <?php if ($inStock): ?>
-            <form method="post" action="cart_function.php" class="cart-btn-form">
+            <form method="post" action="actions/update-cart.php" class="cart-btn-form">
                 <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
                 <input type="hidden" name="return_to" value="<?= htmlspecialchars($returnTo, ENT_QUOTES, 'UTF-8') ?>">
                 <button class="cart-btn" type="submit" aria-label="Add <?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?> to cart">
@@ -56,7 +46,7 @@ $inStock  = (int) ($product['stock_quantity'] ?? 0) > 0;
             <strong><?= formatPrice($product['price']) ?></strong>
 
             <?php if ($inStock): ?>
-                <form method="post" action="cart_function.php" class="cart-btn-form">
+                <form method="post" action="actions/update-cart.php" class="cart-btn-form">
                     <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
                     <input type="hidden" name="return_to" value="<?= htmlspecialchars($returnTo, ENT_QUOTES, 'UTF-8') ?>">
                     <button class="cart-btn" type="submit" aria-label="Add <?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?> to cart">

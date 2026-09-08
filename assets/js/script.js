@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // if the user logged out in another tab or via this same back nav.
             // Ask the server for the real status and reload only if it's wrong,
             // so we don't force a reload on every ordinary back/forward visit.
-            fetch('session_status.php', { cache: 'no-store' })
+            fetch('api/check-login.php', { cache: 'no-store' })
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
                     var actuallyLoggedIn = !!data.loggedIn;

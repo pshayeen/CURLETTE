@@ -8,7 +8,7 @@ if (empty($_SESSION['user_id'])) {
 
 require 'database/config.php';
 require 'data/services.php';
-require 'helpers.php';
+require 'includes/helpers.php';
 
 $isLoggedIn = true;
 $bookHref = bookHref($isLoggedIn);
@@ -53,7 +53,7 @@ if ($status === 'success' && $id) {
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body data-logged-in="1">
 
@@ -90,7 +90,7 @@ if ($status === 'success' && $id) {
                 <div class="auth-error booking-message"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
             <?php endif; ?>
 
-            <form action="booking_function.php" method="post" class="booking-form" novalidate>
+            <form action="actions/save-appointment.php" method="post" class="booking-form" novalidate>
                 <input type="hidden" name="book-appointment" value="1">
 
                 <div class="booking-section">
@@ -185,6 +185,6 @@ if ($status === 'success' && $id) {
 
 <?php include 'partials/footer.php'; ?>
 
-<script src="script.js"></script>
+<script src="assets/js/script.js"></script>
 </body>
 </html>

@@ -1,16 +1,16 @@
 <?php
 session_start();
 
-require 'database/config.php';
-require 'data/cart.php';
+require '../database/config.php';
+require '../data/cart.php';
 
 if (empty($_SESSION['user_id'])) {
-    header('Location: account.php?mode=login&redirect=cart');
+    header('Location: ../account.php?mode=login&redirect=cart');
     exit;
 }
 
 if (!isset($_POST['place_order'])) {
-    header('Location: cart.php');
+    header('Location: ../cart.php');
     exit;
 }
 
@@ -19,17 +19,18 @@ $pdo = getConnection();
 $cartItems = getCartItems($userId);
 
 if (empty($cartItems)) {
-    header('Location: cart.php?cart_status=error&cart_message=' . urlencode('Your cart is empty.'));
+    header('Location: ../cart.php?cart_status=error&cart_message=' . urlencode('Your cart is empty.'));
     exit;
 }
 
 try {
     $pdo->beginTransaction();
 
+    // Re-check stock for every line before committing — it may have changed since the cart was last loaded.
     foreach ($cartItems as $item) {
         if ((int) $item['quantity'] > (int) $item['stock_quantity']) {
             $pdo->rollBack();
-            header('Location: cart.php?cart_status=error&cart_message=' . urlencode(
+            header('Location: ../cart.php?cart_status=error&cart_message=' . urlencode(
                 $item['name'] . ' no longer has enough stock — please update your cart.'
             ));
             exit;
@@ -66,11 +67,11 @@ try {
 
     $pdo->commit();
 
-    header('Location: cart.php?status=success&id=' . $orderId);
+    header('Location: ../cart.php?status=success&id=' . $orderId);
     exit;
 } catch (PDOException $e) {
     $pdo->rollBack();
-    header('Location: cart.php?cart_status=error&cart_message=' . urlencode(
+    header('Location: ../cart.php?cart_status=error&cart_message=' . urlencode(
         'Something went wrong placing your order. Please try again.'
     ));
     exit;

@@ -1,15 +1,5 @@
 <?php
-/**
- * Shared site navigation. Expects these variables already set by the including page:
- *
- *   $isLoggedIn  bool          whether to render the account dropdown or the login icon
- *   $username    string        shown in the account dropdown when logged in
- *   $bookHref    string        link for the "BOOK AN APPOINTMENT" button
- *   $navActive   string        one of 'home' | 'services' | 'products' | 'about' | 'contact'
- *                              — controls which link gets the active style. Optional.
- *   $showBookButton bool       set to false to hide the nav "BOOK AN APPOINTMENT" button
- *                              (e.g. on the booking page itself, since you're already there). Optional.
- */
+// Expects: $isLoggedIn, $username, $bookHref, $navActive (optional), $showBookButton (optional)
 $isLoggedIn = $isLoggedIn ?? false;
 $username = $username ?? '';
 $bookHref = $bookHref ?? '#';
@@ -73,7 +63,7 @@ function navClass(string $key, string $navActive): string
                                 <span>My Appointments</span>
                             </a>
                             <div class="account-dropdown-divider"></div>
-                            <a href="logout.php" class="logout-link">
+                            <a href="actions/logout.php" class="logout-link">
                                 <i class="bi bi-box-arrow-right"></i>
                                 <span>Log Out</span>
                             </a>

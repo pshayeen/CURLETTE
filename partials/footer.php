@@ -1,8 +1,5 @@
 <?php
-/**
- * Shared site footer. Expects $bookHref set by the including page (it has a
- * safe fallback below either way, so this one won't trigger lint warnings).
- */
+// Expects $bookHref (has a fallback below, so it's optional too).
 ?>
 <footer id="contact" class="footer">
 

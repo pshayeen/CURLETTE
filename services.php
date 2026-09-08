@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'helpers.php';
+require 'includes/helpers.php';
 require 'data/services.php';
 
 $isLoggedIn = !empty($_SESSION['user_id']);
@@ -25,7 +25,7 @@ $services   = getServices();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body data-logged-in="<?= $isLoggedIn ? '1' : '0' ?>">
@@ -111,7 +111,7 @@ $services   = getServices();
 <?php include 'partials/auth-modal.php'; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-<script src="script.js"></script>
+<script src="assets/js/script.js"></script>
 
 </body>
 </html>

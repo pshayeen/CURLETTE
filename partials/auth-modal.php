@@ -18,7 +18,7 @@
             <h2 class="auth-title" id="authModalTitle">Welcome back.</h2>
             <p class="auth-sub">Log in to manage your appointments and orders.</p>
 
-            <form action="account_function.php" method="post" class="auth-form" novalidate data-ajax-form>
+            <form action="actions/login.php" method="post" class="auth-form" novalidate data-ajax-form>
                 <input type="hidden" name="login" value="1">
                 <input type="hidden" name="redirect" value="" class="js-redirect-field">
 
@@ -40,7 +40,7 @@
             <h2 class="auth-title">Join Curlétte.</h2>
             <p class="auth-sub">Create an account to book appointments and shop products.</p>
 
-            <form action="account_function.php" method="post" class="auth-form" novalidate data-ajax-form>
+            <form action="actions/login.php" method="post" class="auth-form" novalidate data-ajax-form>
                 <input type="hidden" name="signup" value="1">
                 <input type="hidden" name="redirect" value="" class="js-redirect-field">
 

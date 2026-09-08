@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/data/services.php';
+require_once __DIR__ . '/../data/services.php';
 
 function validateEmailFormat(string $value): ?string
 {

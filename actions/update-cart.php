@@ -1,26 +1,26 @@
 <?php
 session_start();
 
-require 'database/config.php';
-require 'data/products.php';
+require '../database/config.php';
+require '../data/products.php';
 
 if (empty($_SESSION['user_id'])) {
-    header('Location: account.php?mode=login&redirect=cart');
+    header('Location: ../account.php?mode=login&redirect=cart');
     exit;
 }
 
 $userId = (int) $_SESSION['user_id'];
 $pdo = getConnection();
 
-
+// Where to send the user back after "add to cart" — whitelisted, so it can't become an open redirect.
 function cartReturnTarget(string $key): string
 {
     $map = [
-        'index' => 'index.php',
-        'products' => 'products.php',
-        'cart' => 'cart.php',
+        'index' => '../index.php',
+        'products' => '../products.php',
+        'cart' => '../cart.php',
     ];
-    return $map[$key] ?? 'cart.php';
+    return $map[$key] ?? '../cart.php';
 }
 
 function redirectWithStatus(string $target, string $status, string $message = ''): never
@@ -68,13 +68,13 @@ if (isset($_POST['update_quantity'])) {
     $product   = $productId ? getProductById($productId) : null;
 
     if (!$product) {
-        redirectWithStatus('cart.php', 'error', 'That product could not be found.');
+        redirectWithStatus('../cart.php', 'error', 'That product could not be found.');
     }
 
     if ($quantity === null || $quantity < 1) {
         $stmt = $pdo->prepare('DELETE FROM cart_item WHERE user_id = ? AND product_id = ?');
         $stmt->execute([$userId, $productId]);
-        redirectWithStatus('cart.php', 'removed', $product['name'] . ' removed from your cart.');
+        redirectWithStatus('../cart.php', 'removed', $product['name'] . ' removed from your cart.');
     }
 
     $quantity = min($quantity, max((int) $product['stock_quantity'], 0));
@@ -82,12 +82,12 @@ if (isset($_POST['update_quantity'])) {
     if ($quantity < 1) {
         $stmt = $pdo->prepare('DELETE FROM cart_item WHERE user_id = ? AND product_id = ?');
         $stmt->execute([$userId, $productId]);
-        redirectWithStatus('cart.php', 'error', $product['name'] . ' is out of stock and was removed from your cart.');
+        redirectWithStatus('../cart.php', 'error', $product['name'] . ' is out of stock and was removed from your cart.');
     }
 
     $stmt = $pdo->prepare('UPDATE cart_item SET quantity = ? WHERE user_id = ? AND product_id = ?');
     $stmt->execute([$quantity, $userId, $productId]);
-    redirectWithStatus('cart.php', 'updated');
+    redirectWithStatus('../cart.php', 'updated');
 }
 
 if (isset($_POST['remove_item'])) {
@@ -96,8 +96,8 @@ if (isset($_POST['remove_item'])) {
         $stmt = $pdo->prepare('DELETE FROM cart_item WHERE user_id = ? AND product_id = ?');
         $stmt->execute([$userId, $productId]);
     }
-    redirectWithStatus('cart.php', 'removed');
+    redirectWithStatus('../cart.php', 'removed');
 }
 
-header('Location: cart.php');
+header('Location: ../cart.php');
 exit;

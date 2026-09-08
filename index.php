@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'helpers.php';
+require 'includes/helpers.php';
 require 'data/products.php';
 
 $isLoggedIn = !empty($_SESSION['user_id']);
@@ -25,7 +25,7 @@ $products   = getProducts();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body data-logged-in="<?= $isLoggedIn ? '1' : '0' ?>">
@@ -374,7 +374,7 @@ $products   = getProducts();
 
             </article>
 
-            <!-- Duplicate set below: required for the seamless infinite marquee (.testimonial-track animates to -50%, so the track needs two identical copies back-to-back) -->
+            <!-- duplicate set for the marquee loop, hidden from screen readers -->
 
             <article class="testimonial-card" aria-hidden="true">
 
@@ -537,7 +537,7 @@ $products   = getProducts();
                         <div><span>AVAILABILITY</span><strong><?= (int) $product['stock_quantity'] > 0 ? 'In stock' : 'Out of stock' ?></strong></div>
                     </div>
                     <?php if ((int) $product['stock_quantity'] > 0): ?>
-                        <form method="post" action="cart_function.php">
+                        <form method="post" action="actions/update-cart.php">
                             <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
                             <input type="hidden" name="return_to" value="index">
                             <button type="submit" class="btn-main detail-modal-cta">
@@ -557,7 +557,7 @@ $products   = getProducts();
 <?php include 'partials/auth-modal.php'; ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-<script src="script.js"></script>
+<script src="assets/js/script.js"></script>
 
 
 </body>

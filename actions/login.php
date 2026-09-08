@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-require 'database/config.php';
-require 'validation.php';
-require 'redirects.php';
+require '../database/config.php';
+require '../includes/validation.php';
+require '../includes/redirects.php';
 
 function wantsJson(): bool
 {
@@ -22,7 +22,7 @@ function redirectError(string $mode, string $message, string $redirectQuery = ''
         exit;
     }
 
-    header('Location: account.php?mode=' . $mode . '&status=error&message=' . urlencode($message) . $redirectQuery);
+    header('Location: ../account.php?mode=' . $mode . '&status=error&message=' . urlencode($message) . $redirectQuery);
     exit;
 }
 
@@ -107,7 +107,7 @@ if (isset($_POST['signup'])) {
 
 if (isset($_POST['update_account'])) {
     if (empty($_SESSION['user_id'])) {
-        header('Location: account.php?mode=login');
+        header('Location: ../account.php?mode=login');
         exit;
     }
 
@@ -121,7 +121,7 @@ if (isset($_POST['update_account'])) {
     ]);
 
     if ($errors) {
-        header('Location: my-account.php?view=account&status=error&message=' . urlencode(implode(' ', $errors)));
+        header('Location: ../account.php?view=account&status=error&message=' . urlencode(implode(' ', $errors)));
         exit;
     }
 
@@ -135,7 +135,7 @@ if (isset($_POST['update_account'])) {
         $check->execute([$email, $username, (int) $_SESSION['user_id']]);
 
         if ($check->fetch(PDO::FETCH_ASSOC)) {
-            header('Location: my-account.php?view=account&status=error&message=' . urlencode('That username or email is already registered.'));
+            header('Location: ../account.php?view=account&status=error&message=' . urlencode('That username or email is already registered.'));
             exit;
         }
 
@@ -143,13 +143,13 @@ if (isset($_POST['update_account'])) {
         $stmt->execute([$username, $email, (int) $_SESSION['user_id']]);
         $_SESSION['username'] = $username;
 
-        header('Location: my-account.php?view=account&status=success');
+        header('Location: ../account.php?view=account&status=success');
         exit;
     } catch (PDOException $e) {
-        header('Location: my-account.php?view=account&status=error&message=' . urlencode('Something went wrong. Please try again.'));
+        header('Location: ../account.php?view=account&status=error&message=' . urlencode('Something went wrong. Please try again.'));
         exit;
     }
 }
 
-header('Location: account.php');
+header('Location: ../account.php');
 exit;
