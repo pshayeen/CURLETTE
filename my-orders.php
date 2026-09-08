@@ -24,6 +24,7 @@ $orders     = getUserOrders($userId);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -39,6 +40,14 @@ $orders     = getUserOrders($userId);
             <h1>My <em>orders.</em></h1>
             <p>Everything you've ordered from the shop, past and pending.</p>
         </div>
+
+        <?php if ($orders): ?>
+            <?php if (($_GET['status'] ?? null) === 'success'): ?>
+                <div class="auth-context booking-message"><?= htmlspecialchars($_GET['message'] ?? 'Updated.', ENT_QUOTES, 'UTF-8') ?></div>
+            <?php elseif (($_GET['status'] ?? null) === 'error'): ?>
+                <div class="auth-error booking-message"><?= htmlspecialchars($_GET['message'] ?? 'Something went wrong.', ENT_QUOTES, 'UTF-8') ?></div>
+            <?php endif; ?>
+        <?php endif; ?>
 
         <?php if (empty($orders)): ?>
             <div class="cart-empty">
@@ -72,6 +81,18 @@ $orders     = getUserOrders($userId);
                                 <strong><?= formatPrice($order['total']) ?></strong>
                             </div>
                         </div>
+
+                        <?php if ($order['status'] === 'placed'): ?>
+                            <div class="my-list-item-actions">
+                                <button type="button" class="my-cancel-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#cancelConfirmModal"
+                                        data-id="<?= (int) $order['id'] ?>"
+                                        data-label="Order #<?= (int) $order['id'] ?> will be cancelled and its items restocked. This can't be undone.">
+                                    Cancel Order
+                                </button>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -80,7 +101,26 @@ $orders     = getUserOrders($userId);
     </section>
 </main>
 
+<!-- Shared cancel-confirmation modal (populated per row via data attributes) -->
+<div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <form method="post" action="forms/cancel-order.php" id="cancelConfirmForm">
+            <div class="modal-content confirm-modal-content danger">
+                <div class="confirm-modal-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                <h2>Cancel this order?</h2>
+                <p id="cancelConfirmLabel">This can't be undone.</p>
+                <input type="hidden" id="cancelConfirmIdField" name="order_id" value="">
+                <div class="confirm-modal-actions">
+                    <button type="button" class="btn-outline" data-bs-dismiss="modal">GO BACK</button>
+                    <button type="submit" class="btn-main confirm-modal-danger">YES, CANCEL</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <?php include 'partials/footer.php'; ?>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/script.js"></script>
 </body>
 </html>

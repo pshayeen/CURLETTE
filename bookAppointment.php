@@ -183,8 +183,24 @@ if ($status === 'success' && $id) {
     </section>
 </main>
 
+<!-- Booking confirmation modal -->
+<div class="modal fade" id="bookingConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content confirm-modal-content">
+            <div class="confirm-modal-icon"><i class="bi bi-calendar-check"></i></div>
+            <h2>Confirm your booking?</h2>
+            <p><strong id="bookingConfirmSummary">—</strong></p>
+            <div class="confirm-modal-actions">
+                <button type="button" class="btn-outline" data-bs-dismiss="modal">GO BACK</button>
+                <button type="button" class="btn-main" id="bookingConfirmBtn">YES, BOOK IT</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php include 'partials/footer.php'; ?>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/script.js"></script>
 </body>
 </html>

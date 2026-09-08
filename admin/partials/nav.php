@@ -26,6 +26,7 @@ function adminNavClass(string $key, string $adminActive): string
                 <span class="admin-avatar"><?= htmlspecialchars(strtoupper(mb_substr($adminUsername !== '' ? $adminUsername : 'A', 0, 1)), ENT_QUOTES, 'UTF-8') ?></span>
                 <span class="admin-username"><?= htmlspecialchars($adminUsername, ENT_QUOTES, 'UTF-8') ?></span>
             </div>
+            <a href="../index.php" class="admin-link">View Site</a>
             <a href="../forms/logout.php" class="admin-logout-btn">
                 <i class="bi bi-box-arrow-right"></i> Log Out
             </a>

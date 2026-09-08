@@ -258,12 +258,130 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.querySelector('.booking-form')?.addEventListener('submit', function (event) {
+        var form = event.target;
+
         if (!serviceInput.value) {
             event.preventDefault();
             var firstService = document.querySelector('[data-service-card]');
             if (firstService) {
                 firstService.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
+            return;
+        }
+
+        if (form.dataset.confirmed === 'true') {
+            return;
+        }
+
+        if (!form.checkValidity()) {
+            return; // let the browser show its native "please fill this field" messages
+        }
+
+        event.preventDefault();
+
+        var summaryEl = document.getElementById('bookingConfirmSummary');
+        var dateInput = document.getElementById('appointment_date');
+        var timeSelect = document.getElementById('appointment_time');
+
+        if (summaryEl && dateInput && dateInput.value && timeSelect) {
+            var dateObj = new Date(dateInput.value + 'T00:00:00');
+            var dateText = dateObj.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+            var timeOption = timeSelect.options[timeSelect.selectedIndex];
+            summaryEl.textContent = serviceInput.value + ' — ' + dateText + ' at ' + (timeOption ? timeOption.text : '');
+        }
+
+        var bookingModalEl = document.getElementById('bookingConfirmModal');
+        if (bookingModalEl && window.bootstrap) {
+            bootstrap.Modal.getOrCreateInstance(bookingModalEl).show();
         }
     });
+
+    document.getElementById('bookingConfirmBtn')?.addEventListener('click', function () {
+        var form = document.querySelector('.booking-form');
+        if (form) {
+            form.dataset.confirmed = 'true';
+            form.submit();
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Shared "cancel" modal — one modal per page, filled in based on which
+    // row's button opened it (id + a human-readable description).
+    var cancelModalEl = document.getElementById('cancelConfirmModal');
+    if (cancelModalEl) {
+        cancelModalEl.addEventListener('show.bs.modal', function (event) {
+            var trigger = event.relatedTarget;
+            if (!trigger) return;
+
+            var idField = document.getElementById('cancelConfirmIdField');
+            var labelEl = document.getElementById('cancelConfirmLabel');
+
+            if (idField) idField.value = trigger.getAttribute('data-id') || '';
+            if (labelEl) labelEl.textContent = trigger.getAttribute('data-label') || "This can't be undone.";
+        });
+    }
+
+    // Reschedule forms: intercept submit, show a confirmation modal with the
+    // chosen date/time, and only actually submit once the user confirms.
+    var pendingRescheduleForm = null;
+    var rescheduleModalEl = document.getElementById('rescheduleConfirmModal');
+    var rescheduleModal = rescheduleModalEl ? new bootstrap.Modal(rescheduleModalEl) : null;
+
+    document.querySelectorAll('.js-reschedule-form').forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (form.dataset.confirmed === 'true') {
+                return;
+            }
+            event.preventDefault();
+
+            var dateInput = form.querySelector('input[name="appointment_date"]');
+            var timeInput = form.querySelector('input[name="appointment_time"]');
+            var summaryEl = document.getElementById('rescheduleConfirmSummary');
+
+            if (summaryEl && dateInput && timeInput && dateInput.value && timeInput.value) {
+                var combined = new Date(dateInput.value + 'T' + timeInput.value);
+                var dateText = combined.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+                var timeText = combined.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+                summaryEl.textContent = dateText + ' at ' + timeText;
+            }
+
+            pendingRescheduleForm = form;
+            if (rescheduleModal) rescheduleModal.show();
+        });
+    });
+
+    var confirmRescheduleBtn = document.getElementById('rescheduleConfirmBtn');
+    if (confirmRescheduleBtn) {
+        confirmRescheduleBtn.addEventListener('click', function () {
+            if (pendingRescheduleForm) {
+                pendingRescheduleForm.dataset.confirmed = 'true';
+                pendingRescheduleForm.submit();
+            }
+        });
+    }
+
+    // Checkout confirmation
+    var checkoutForm = document.querySelector('.js-checkout-form');
+    if (checkoutForm) {
+        checkoutForm.addEventListener('submit', function (event) {
+            if (checkoutForm.dataset.confirmed === 'true') {
+                return;
+            }
+            event.preventDefault();
+            var modalEl = document.getElementById('checkoutConfirmModal');
+            if (modalEl && window.bootstrap) {
+                bootstrap.Modal.getOrCreateInstance(modalEl).show();
+            }
+        });
+    }
+
+    document.getElementById('checkoutConfirmBtn')?.addEventListener('click', function () {
+        if (checkoutForm) {
+            checkoutForm.dataset.confirmed = 'true';
+            checkoutForm.submit();
+        }
+    });
+
 });

@@ -158,7 +158,7 @@ $cartTotal = getCartTotal($cartItems);
                     <strong><?= formatPrice($cartTotal) ?></strong>
                 </div>
                 <p class="cart-summary-note">Taxes and any shipping are calculated at pickup / delivery.</p>
-                <form method="post" action="forms/checkout.php">
+                <form method="post" action="forms/checkout.php" class="js-checkout-form">
                     <input type="hidden" name="place_order" value="1">
                     <button type="submit" class="btn-main cart-checkout-btn">PLACE ORDER <i class="bi bi-arrow-right"></i></button>
                 </form>
@@ -168,8 +168,24 @@ $cartTotal = getCartTotal($cartItems);
     </section>
 </main>
 
+<!-- Checkout confirmation modal -->
+<div class="modal fade" id="checkoutConfirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content confirm-modal-content">
+            <div class="confirm-modal-icon"><i class="bi bi-bag-check"></i></div>
+            <h2>Place this order?</h2>
+            <p>Your total is <strong><?= formatPrice($cartTotal) ?></strong>. This will check out your cart.</p>
+            <div class="confirm-modal-actions">
+                <button type="button" class="btn-outline" data-bs-dismiss="modal">GO BACK</button>
+                <button type="button" class="btn-main" id="checkoutConfirmBtn">YES, PLACE ORDER</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?php include 'partials/footer.php'; ?>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/script.js"></script>
 
 </body>
