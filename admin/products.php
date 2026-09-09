@@ -31,16 +31,18 @@ $message = $_GET['message'] ?? null;
             <h1>Products</h1>
             <p><?= count($products) ?> product<?= count($products) === 1 ? '' : 's' ?> in the catalog.</p>
         </div>
+        <a href="add-product.php" class="btn-main">+ ADD PRODUCT</a>
     </div>
 
     <?php if ($status === 'success'): ?>
-        <div class="admin-notice success">Stock updated.</div>
+        <div class="admin-notice success"><?= htmlspecialchars($message ?: 'Stock updated.', ENT_QUOTES, 'UTF-8') ?></div>
     <?php elseif ($status === 'error' && $message): ?>
         <div class="admin-notice error"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
     <?php endif; ?>
 
     <div class="admin-table-wrap">
         <table class="admin-table">
+
             <thead>
                 <tr>
                     <th></th>
@@ -48,24 +50,33 @@ $message = $_GET['message'] ?? null;
                     <th>Price</th>
                     <th>Stock</th>
                     <th>Update Stock</th>
+                    <th>Change Photo</th>
                 </tr>
             </thead>
+
             <tbody>
                 <?php foreach ($products as $product): ?>
                     <tr>
+
                         <td>
                             <div class="admin-table-img">
                                 <img src="../<?= htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8') ?>" alt="">
                             </div>
                         </td>
-                        <td><strong><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></strong></td>
+
+                        <td>
+                            <strong><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></strong>
+                        </td>
+
                         <td><?= formatPrice($product['price']) ?></td>
+
                         <td>
                             <span class="<?= (int) $product['stock_quantity'] <= 5 ? 'admin-stock-low' : '' ?>">
                                 <?= (int) $product['stock_quantity'] ?>
                                 <?= (int) $product['stock_quantity'] <= 5 ? ' (low)' : '' ?>
                             </span>
                         </td>
+
                         <td>
                             <form method="post" action="update-stock.php" class="admin-stock-form">
                                 <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
@@ -73,9 +84,19 @@ $message = $_GET['message'] ?? null;
                                 <button type="submit">Save</button>
                             </form>
                         </td>
+
+                        <td>
+                            <form method="post" action="update-product-image.php" enctype="multipart/form-data" class="admin-photo-form">
+                                <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
+                                <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp,.gif">
+                                <button type="submit">Upload</button>
+                            </form>
+                        </td>
+
                     </tr>
                 <?php endforeach; ?>
             </tbody>
+
         </table>
     </div>
 

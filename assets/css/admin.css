@@ -494,6 +494,52 @@ a {
     cursor: pointer;
 }
 
+/* add product form */
+
+.admin-form-panel {
+    max-width: 560px;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.admin-form-hint {
+    color: #8A7066;
+    font-size: 11px;
+}
+
+.admin-form input[type="file"] {
+    padding: 10px 14px;
+}
+
+/* per-row photo upload in the products table */
+
+.admin-photo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-photo-form input[type="file"] {
+    width: 170px;
+    font-size: 11px;
+}
+
+.admin-photo-form button {
+    align-self: flex-start;
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
 .admin-empty {
     padding: 50px 20px;
     text-align: center;
