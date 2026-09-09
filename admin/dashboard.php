@@ -1,6 +1,7 @@
 <?php
 require 'guard.php';
 require '../data/admin.php';
+require '../includes/helpers.php';
 
 $adminActive = 'dashboard';
 $stats = getDashboardStats();
@@ -33,6 +34,11 @@ $upcomingAppointments = getUpcomingAppointmentsPreview(5);
     </div>
 
     <div class="admin-stats-grid">
+        <div class="admin-stat-card money">
+            <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+            <strong><?= formatPrice($stats['total_revenue']) ?></strong>
+            <span>Total Income</span>
+        </div>
         <div class="admin-stat-card">
             <div class="stat-icon"><i class="bi bi-bag-check"></i></div>
             <strong><?= $stats['pending_orders'] ?></strong>
