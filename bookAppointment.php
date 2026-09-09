@@ -69,21 +69,45 @@ if ($status === 'success' && $id) {
 
         <?php if ($status === 'success' && $booking): ?>
             <div class="booking-success-card">
-                <div class="booking-success-icon"><i class="bi bi-check2"></i></div>
+
+                <div class="booking-success-icon">
+                    <i class="bi bi-check2"></i>
+                </div>
+
                 <div>
                     <p class="booking-eyebrow">BOOKING CONFIRMED</p>
                     <h2>Your appointment is booked.</h2>
                     <p>Confirmation #<?= htmlspecialchars((string) $id, ENT_QUOTES, 'UTF-8') ?></p>
                 </div>
+
                 <div class="booking-summary booking-summary-grid">
-                    <div><span>Service</span><strong><?= htmlspecialchars($booking['service'], ENT_QUOTES, 'UTF-8') ?></strong></div>
-                    <div><span>Date</span><strong><?= htmlspecialchars(date('F j, Y', strtotime($booking['appointment_date'])), ENT_QUOTES, 'UTF-8') ?></strong></div>
-                    <div><span>Time</span><strong><?= htmlspecialchars(date('g:i A', strtotime($booking['appointment_time'])), ENT_QUOTES, 'UTF-8') ?></strong></div>
+
+                    <div>
+                        <span>Service</span>
+                        <strong><?= htmlspecialchars($booking['service'], ENT_QUOTES, 'UTF-8') ?></strong>
+                    </div>
+
+                    <div>
+                        <span>Date</span>
+                        <strong><?= htmlspecialchars(date('F j, Y', strtotime($booking['appointment_date'])), ENT_QUOTES, 'UTF-8') ?></strong>
+                    </div>
+
+                    <div>
+                        <span>Time</span>
+                        <strong><?= htmlspecialchars(date('g:i A', strtotime($booking['appointment_time'])), ENT_QUOTES, 'UTF-8') ?></strong>
+                    </div>
+
                     <?php if (!empty($booking['notes'])): ?>
-                        <div><span>Notes</span><strong><?= htmlspecialchars($booking['notes'], ENT_QUOTES, 'UTF-8') ?></strong></div>
+                        <div>
+                            <span>Notes</span>
+                            <strong><?= htmlspecialchars($booking['notes'], ENT_QUOTES, 'UTF-8') ?></strong>
+                        </div>
                     <?php endif; ?>
+
                 </div>
+
                 <a href="bookAppointment.php" class="btn-outline booking-again-btn">BOOK ANOTHER</a>
+
             </div>
         <?php else: ?>
             <?php if ($status === 'error' && $message): ?>
@@ -186,9 +210,9 @@ if ($status === 'success' && $id) {
 <!-- Booking confirmation modal -->
 <div class="modal fade" id="bookingConfirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content confirm-modal-content">
-            <div class="confirm-modal-icon"><i class="bi bi-calendar-check"></i></div>
-            <h2>Confirm your booking?</h2>
+    <div class="modal-content confirm-modal-content">
+        <div class="confirm-modal-icon"><i class="bi bi-calendar-check"></i></div>
+        <h2>Confirm your booking?</h2>
             <p><strong id="bookingConfirmSummary">—</strong></p>
             <div class="confirm-modal-actions">
                 <button type="button" class="btn-outline" data-bs-dismiss="modal">GO BACK</button>

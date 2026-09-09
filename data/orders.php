@@ -16,7 +16,7 @@ function getUserOrders(int $userId): array
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Line items for one order, scoped to that same user as a safety check.
+// items for one order, checked against the user
 function getUserOrderItems(int $orderId, int $userId): array
 {
     $pdo = getConnection();

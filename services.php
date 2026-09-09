@@ -91,15 +91,21 @@ $services   = getServices();
                     <h2 id="serviceModalLabel<?= $index ?>"><?= htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8') ?></h2>
                     <p class="detail-modal-description"><?= htmlspecialchars($service['description'], ENT_QUOTES, 'UTF-8') ?></p>
                     <div class="detail-modal-meta">
-                        <div><span>PRICE</span><strong><?= htmlspecialchars($service['price'], ENT_QUOTES, 'UTF-8') ?></strong></div>
-                        <div><span>DURATION</span><strong><?= htmlspecialchars($service['duration'], ENT_QUOTES, 'UTF-8') ?></strong></div>
+                        <div>
+                            <span>PRICE</span>
+                            <strong><?= htmlspecialchars($service['price'], ENT_QUOTES, 'UTF-8') ?></strong>
+                        </div>
+                        <div>
+                            <span>DURATION</span>
+                            <strong><?= htmlspecialchars($service['duration'], ENT_QUOTES, 'UTF-8') ?></strong>
+                        </div>
                     </div>
                     <div class="service-includes">
                         <span>WHAT'S INCLUDED</span>
                         <p><?= htmlspecialchars($service['includes'], ENT_QUOTES, 'UTF-8') ?></p>
                     </div>
                     <a href="<?= serviceHref($service['name'], $isLoggedIn) ?>" class="btn-main detail-modal-cta">
-                        BOOK THIS SERVICE <i class="bi bi-arrow-right"></i>
+                        BOOK THIS SERVICE
                     </a>
                 </div>
             </div>

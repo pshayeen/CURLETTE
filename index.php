@@ -350,7 +350,7 @@ $products   = getProducts();
             <article class="testimonial-card">
 
                 <div class="testimonial-img">
-                    <img src="assets/c4.jpg" alt="Curlette client">
+                    <img src="assets/c4.jpg" alt="Curlétte client">
                 </div>
 
                 <div class="testimonial-info">
@@ -374,7 +374,7 @@ $products   = getProducts();
 
             </article>
 
-            <!-- duplicate set for the marquee loop, hidden from screen readers -->
+            <!-- duplicate set for the scrolling loop -->
 
             <article class="testimonial-card" aria-hidden="true">
 
@@ -533,8 +533,14 @@ $products   = getProducts();
                     <h2 id="productModalLabel<?= (int) $product['id'] ?>"><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h2>
                     <p class="detail-modal-description"><?= htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8') ?></p>
                     <div class="detail-modal-meta">
-                        <div><span>PRICE</span><strong><?= formatPrice($product['price']) ?></strong></div>
-                        <div><span>AVAILABILITY</span><strong><?= (int) $product['stock_quantity'] > 0 ? 'In stock' : 'Out of stock' ?></strong></div>
+                        <div>
+                            <span>PRICE</span>
+                            <strong><?= formatPrice($product['price']) ?></strong>
+                        </div>
+                        <div>
+                            <span>AVAILABILITY</span>
+                            <strong><?= (int) $product['stock_quantity'] > 0 ? 'In stock' : 'Out of stock' ?></strong>
+                        </div>
                     </div>
                     <?php if ((int) $product['stock_quantity'] > 0): ?>
                         <form method="post" action="forms/update-cart.php">

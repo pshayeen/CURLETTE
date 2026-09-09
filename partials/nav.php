@@ -1,5 +1,5 @@
 <?php
-// Expects: $isLoggedIn, $username, $bookHref, $navActive (optional), $showBookButton (optional)
+// needs: $isLoggedIn, $username, $bookHref (rest optional)
 $isLoggedIn = $isLoggedIn ?? false;
 $username = $username ?? '';
 $bookHref = $bookHref ?? '#';
@@ -70,10 +70,12 @@ function navClass(string $key, string $navActive): string
                                 </a>
                             <?php endif; ?>
                             <div class="account-dropdown-divider"></div>
-                            <a href="forms/logout.php" class="logout-link">
-                                <i class="bi bi-box-arrow-right"></i>
-                                <span>Log Out</span>
-                            </a>
+                            <form method="post" action="forms/logout.php" class="logout-form">
+                                <button type="submit" class="logout-link">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    <span>Log Out</span>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 <?php else: ?>

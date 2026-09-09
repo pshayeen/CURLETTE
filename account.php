@@ -73,6 +73,7 @@ $contextMessage = $redirect === 'book-appointment'
                     </div>
                     <button type="submit" class="btn-main auth-submit">LOG IN</button>
                 </form>
+                <p class="auth-switch">Don't have an account yet? <a href="?mode=signup&redirect=<?= urlencode($redirect) ?>">Sign up.</a></p>
             <?php else: ?>
                 <h2 class="auth-title">Join Curlétte.</h2>
                 <p class="auth-sub">Create an account to book appointments and shop products.</p>
@@ -100,6 +101,7 @@ $contextMessage = $redirect === 'book-appointment'
                     </div>
                     <button type="submit" class="btn-main auth-submit">CREATE ACCOUNT</button>
                 </form>
+                <p class="auth-switch">Already have an account? <a href="?mode=login&redirect=<?= urlencode($redirect) ?>">Log in.</a></p>
             <?php endif; ?>
         </div>
     </section>

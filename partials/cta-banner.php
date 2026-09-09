@@ -1,5 +1,5 @@
 <?php
-// Expects $bookHref; optional $ctaHeading/$ctaText to override the default copy.
+// needs: $bookHref (optional: $ctaHeading, $ctaText)
 $bookHref   = $bookHref ?? '#';
 $ctaHeading = $ctaHeading ?? 'Ready to love your curls?';
 $ctaText    = $ctaText ?? 'Book your appointment today!';

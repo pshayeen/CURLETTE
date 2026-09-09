@@ -21,7 +21,7 @@ $pdo = getConnection();
 try {
     $pdo->beginTransaction();
 
-    // Confirm this order really belongs to the user and is still cancellable
+    // must be this user's order and still cancellable
     $stmt = $pdo->prepare(
         "SELECT id FROM shop_order WHERE id = ? AND user_id = ? AND status = 'placed' FOR UPDATE"
     );

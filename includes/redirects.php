@@ -1,6 +1,6 @@
 <?php
 
-// Targets are relative to forms/, the only place resolveRedirectTarget() is called from.
+// used after login/signup to send the user back
 function getRedirectMap(): array
 {
     return [

@@ -26,7 +26,7 @@ if (empty($cartItems)) {
 try {
     $pdo->beginTransaction();
 
-    // Re-check stock for every line before committing — it may have changed since the cart was last loaded.
+    // recheck stock before charging
     foreach ($cartItems as $item) {
         if ((int) $item['quantity'] > (int) $item['stock_quantity']) {
             $pdo->rollBack();

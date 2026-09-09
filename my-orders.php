@@ -101,7 +101,7 @@ $orders     = getUserOrders($userId);
     </section>
 </main>
 
-<!-- Shared cancel-confirmation modal (populated per row via data attributes) -->
+<!-- cancel confirmation modal -->
 <div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <form method="post" action="forms/cancel-order.php" id="cancelConfirmForm">

@@ -1,5 +1,5 @@
 <?php
-// Expects $product (array); optional $returnTo ('index'|'products') and $showDetailsTrigger (bool).
+// needs: $product (optional: $returnTo, $showDetailsTrigger)
 $returnTo = $returnTo ?? 'products';
 $product  = $product ?? [];
 $showDetailsTrigger = $showDetailsTrigger ?? false;

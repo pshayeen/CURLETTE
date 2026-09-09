@@ -1,6 +1,6 @@
 <?php
 
-// Where "BOOK AN APPOINTMENT" goes: straight to booking if logged in, else to login first.
+// booking page if logged in, else login page
 function bookHref(bool $isLoggedIn): string
 {
     return $isLoggedIn
@@ -8,7 +8,7 @@ function bookHref(bool $isLoggedIn): string
         : 'account.php?mode=login&redirect=book-appointment';
 }
 
-// Where a specific service card goes: booking with that service pre-selected, or login first.
+// booking page with the service picked, or login
 function serviceHref(string $serviceName, bool $isLoggedIn): string
 {
     return $isLoggedIn

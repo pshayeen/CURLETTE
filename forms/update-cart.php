@@ -12,7 +12,7 @@ if (empty($_SESSION['user_id'])) {
 $userId = (int) $_SESSION['user_id'];
 $pdo = getConnection();
 
-// Where to send the user back after "add to cart" — whitelisted, so it can't become an open redirect.
+// safe redirect targets only
 function cartReturnTarget(string $key): string
 {
     $map = [

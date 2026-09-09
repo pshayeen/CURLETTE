@@ -82,11 +82,29 @@ ul {
 }
 
 .nav-links a {
+    position: relative;
     padding: 10px 0;
     color: var(--font-color);
     font-size: 12px;
     font-weight: 700;
     transition: color .25s ease;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transform: scaleX(0);
+    transition: transform .25s ease;
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    transform: scaleX(1);
 }
 
 .nav-links a:hover {
@@ -157,7 +175,7 @@ ul {
     box-shadow: 0 6px 14px rgba(var(--primary-color-rgb), .3);
 }
 
-/* Logged-out trigger is just the plain icon, no circle fill */
+/* logged-out: no circle fill */
 .js-account-trigger.icon-btn.account-btn {
     background: none;
 }
@@ -168,7 +186,7 @@ ul {
     box-shadow: none;
 }
 
-/* Logged-in trigger is a pill (avatar initial + caret), not a plain circle */
+/* logged-in: pill shape with avatar */
 .account-menu-toggle.icon-btn.account-btn {
     width: auto;
     height: 38px;
@@ -468,12 +486,21 @@ ul {
     }
 }
 
-/* Services page — fuller card with a longer description and duration */
+/* services page card */
+.service-card--detailed {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
 .service-card--detailed .card-img {
     height: 190px;
 }
 
 .service-card--detailed .card-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     height: auto;
     min-height: 190px;
     padding: 16px 16px 18px;
@@ -485,6 +512,10 @@ ul {
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin-bottom: 10px;
+}
+
+.service-card--detailed .card-actions {
+    margin-top: auto;
 }
 
 .card-bottom {
@@ -651,7 +682,7 @@ ul {
     justify-content: center;
 }
 
-/* Products page — whole card is a button that opens the details modal */
+/* products page: whole card opens the modal */
 .product-card-trigger {
     display: block;
     width: 100%;
@@ -800,6 +831,9 @@ ul {
 
 .about-hero {
     position: relative;
+    min-height: 460px;
+    display: flex;
+    align-items: center;
     overflow: hidden;
 }
 
@@ -809,6 +843,10 @@ ul {
     max-width: 640px;
     margin: 0;
     text-align: left;
+}
+
+.about-hero .booking-heading > p:last-child {
+    margin: 0;
 }
 
 .about-hero-overlay {
@@ -1501,6 +1539,19 @@ ul {
     font-size: 12px;
 }
 
+.auth-switch {
+    margin-top: 18px;
+    color: #765A50;
+    font-size: 12px;
+    text-align: center;
+}
+
+.auth-switch a {
+    color: var(--primary-color);
+    font-weight: 700;
+    text-decoration: underline;
+}
+
 .booking-summary {
     display: flex;
     flex-direction: column;
@@ -1627,6 +1678,38 @@ ul {
     height: 1px;
     margin: 6px 0;
     background: #E7DAD5;
+}
+
+.logout-form {
+    display: contents;
+}
+
+.account-dropdown .logout-link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    padding: 11px 10px;
+    border: 0;
+    border-radius: 9px;
+    background: none;
+    color: var(--font-color);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.account-dropdown .logout-link:hover {
+    background: var(--primary-bg-color);
+    color: var(--primary-color);
+}
+
+.account-dropdown .logout-link i {
+    width: 18px;
+    text-align: center;
+    font-size: 15px;
 }
 
 .account-dropdown .logout-link {

@@ -18,7 +18,7 @@ if (!$appointmentId) {
 
 $pdo = getConnection();
 
-// Only cancel if it's really this user's appointment and still upcoming
+// must be this user's upcoming appointment
 $stmt = $pdo->prepare(
     "UPDATE appointment_booking
      SET status = 'cancelled'
