@@ -7,7 +7,7 @@
 
         <div class="footer-brand">
 
-            <img src="assets/logo.png" alt="Curlette Hair Studio">
+            <img src="assets/images/logo.png" alt="Curlette Hair Studio">
 
             <p>
                 A curly hair studio dedicated to helping you care for,

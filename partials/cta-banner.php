@@ -7,7 +7,7 @@ $ctaText    = $ctaText ?? 'Book your appointment today!';
 <!-- APPOINTMENT -->
 <section id="appointment" class="cta">
 
-    <img src="assets/cta-bg.png" alt="" class="cta-bg">
+    <img src="assets/images/cta-bg.png" alt="" class="cta-bg">
 
     <div class="cta-overlay"></div>
     <div class="cta-content">

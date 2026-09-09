@@ -16,7 +16,7 @@ $products   = getProducts();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Shop Products | Curlétte Hair Studio</title>
-    <link rel="icon" href="assets/C-icon.png" type="image/png">
+    <link rel="icon" href="assets/images/C-icon.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +36,7 @@ $products   = getProducts();
 
     <section class="booking-hero products-hero">
 
-        <img src="assets/bg.png" alt="" class="section-bg">
+        <img src="assets/images/bg.png" alt="" class="section-bg">
 
         <div class="booking-heading">
             <p class="home-label">CURLÉTTE PRODUCTS</p>

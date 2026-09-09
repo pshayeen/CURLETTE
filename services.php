@@ -16,7 +16,7 @@ $services   = getServices();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Our Services | Curlétte Hair Studio</title>
-    <link rel="icon" href="assets/C-icon.png" type="image/png">
+    <link rel="icon" href="assets/images/C-icon.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

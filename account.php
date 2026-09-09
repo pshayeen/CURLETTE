@@ -29,7 +29,7 @@ $contextMessage = $redirect === 'book-appointment'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account | Curlétte Hair Studio</title>
-    <link rel="icon" href="assets/C-icon.png" type="image/png">
+    <link rel="icon" href="assets/images/C-icon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -44,10 +44,7 @@ $contextMessage = $redirect === 'book-appointment'
 <main>
     <section class="auth">
         <div class="auth-card">
-            <div class="auth-tabs" role="tablist">
-                <a href="?mode=login&redirect=<?= urlencode($redirect) ?>" class="auth-tab <?= $mode === 'login' ? 'active' : '' ?>">LOG IN</a>
-                <a href="?mode=signup&redirect=<?= urlencode($redirect) ?>" class="auth-tab <?= $mode === 'signup' ? 'active' : '' ?>">SIGN UP</a>
-            </div>
+            <img src="assets/images/logo.png" alt="Curlétte Hair Studio" class="auth-logo">
 
             <?php if ($contextMessage): ?>
                 <p class="auth-context"><?= htmlspecialchars($contextMessage, ENT_QUOTES, 'UTF-8') ?></p>

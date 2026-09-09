@@ -388,6 +388,11 @@ a {
     color: var(--primary-color);
 }
 
+.admin-badge.processing {
+    background: #FBE8CE;
+    color: #B4720A;
+}
+
 .admin-badge.fulfilled,
 .admin-badge.completed {
     background: #DCEFE1;
@@ -408,6 +413,8 @@ a {
     background: #EFE7E2;
     color: #8A7066;
 }
+
+
 
 /* INLINE FORMS */
 
@@ -467,15 +474,27 @@ a {
     font-size: 12px;
 }
 
-.admin-stock-form button {
-    padding: 6px 12px;
-    border: 0;
-    border-radius: 8px;
-    background: var(--primary-color);
-    color: #fff;
+.admin-price-form {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-price-form span {
+    color: #8A7066;
     font-size: 11px;
     font-weight: 700;
-    cursor: pointer;
+}
+
+.admin-price-form input {
+    width: 80px;
+    padding: 6px 8px;
+    border: 1px solid #DED0CA;
+    border-radius: 8px;
+    background: var(--primary-bg-color);
+    color: var(--font-color);
+    font-family: var(--font-body);
+    font-size: 12px;
 }
 
 .admin-stock-low {
@@ -528,16 +547,8 @@ a {
     font-size: 11px;
 }
 
-.admin-photo-form button {
+.admin-photo-form .admin-btn-outline {
     align-self: flex-start;
-    padding: 6px 12px;
-    border: 0;
-    border-radius: 8px;
-    background: var(--primary-color);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
 }
 
 .admin-empty {
@@ -562,4 +573,96 @@ a {
 .admin-notice.error {
     background: #F6DADA;
     color: #9B3A3A;
+}
+
+/* CUSTOMERS PAGE */
+
+.admin-search-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.admin-search-form input {
+    width: 280px;
+    max-width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #DED0CA;
+    border-radius: 10px;
+    background: #fff;
+    color: var(--font-color);
+    font-family: var(--font-body);
+    font-size: 13px;
+}
+
+.admin-search-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.admin-search-form button {
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 10px;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.admin-inline-input {
+    width: 100%;
+    min-width: 140px;
+    padding: 8px 10px;
+    border: 1px solid #DED0CA;
+    border-radius: 8px;
+    background: var(--primary-bg-color);
+    color: var(--font-color);
+    font-family: var(--font-body);
+    font-size: 12px;
+}
+
+.admin-inline-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.admin-customer-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.admin-btn-outline,
+.admin-btn-danger {
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.admin-btn-outline {
+    border: 1px solid #DED0CA;
+    background: #fff;
+    color: var(--font-color);
+}
+
+.admin-btn-outline:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.admin-btn-danger {
+    border: 0;
+    background: #F6DADA;
+    color: #9B3A3A;
+}
+
+.admin-btn-danger:hover {
+    background: #9B3A3A;
+    color: #fff;
 }

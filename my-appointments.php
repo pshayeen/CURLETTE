@@ -19,7 +19,7 @@ $appointments = getUserAppointments((int) $_SESSION['user_id']);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Appointments | Curlétte Hair Studio</title>
-    <link rel="icon" href="assets/C-icon.png" type="image/png">
+    <link rel="icon" href="assets/images/C-icon.png" type="image/png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -77,7 +77,8 @@ $appointments = getUserAppointments((int) $_SESSION['user_id']);
                             <div class="my-list-item-actions">
                                 <details class="my-reschedule-toggle">
                                     <summary>Reschedule</summary>
-                                    <form method="post" action="forms/reschedule-appointment.php" class="my-reschedule-form js-reschedule-form">
+                                    <form method="post" action="forms/appointment-actions.php" class="my-reschedule-form js-reschedule-form">
+                                        <input type="hidden" name="reschedule_appointment" value="1">
                                         <input type="hidden" name="appointment_id" value="<?= (int) $appt['id'] ?>">
                                         <div class="form-group">
                                             <label for="date-<?= (int) $appt['id'] ?>">New Date</label>
@@ -111,7 +112,8 @@ $appointments = getUserAppointments((int) $_SESSION['user_id']);
 <!-- cancel confirmation modal -->
 <div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <form method="post" action="forms/cancel-appointment.php" id="cancelConfirmForm">
+        <form method="post" action="forms/appointment-actions.php" id="cancelConfirmForm">
+            <input type="hidden" name="cancel_appointment" value="1">
             <div class="modal-content confirm-modal-content danger">
                 <div class="confirm-modal-icon"><i class="bi bi-exclamation-triangle"></i></div>
                 <h2>Cancel this appointment?</h2>

@@ -1,8 +1,6 @@
 <?php
 
 // checks and saves an uploaded product photo
-// returns ['success' => bool, 'path' => string|null, 'error' => string|null]
-// error is 'no_file' when nothing was picked, so callers can decide if that's ok
 function handleProductImageUpload(array $file): array
 {
     $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];

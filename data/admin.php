@@ -2,8 +2,7 @@
 
 require_once __DIR__ . '/../database/config.php';
 
-// all of these exclude admin accounts, so an admin's own bookings/orders
-// never show up in their own dashboard
+// excludes admin accounts from every count and list below
 
 function getDashboardStats(): array
 {
@@ -13,7 +12,7 @@ function getDashboardStats(): array
         'pending_orders' => (int) $pdo->query(
             "SELECT COUNT(*) FROM shop_order o
              INNER JOIN user_account u ON u.id = o.user_id
-             WHERE o.status = 'placed' AND u.is_admin = 0"
+             WHERE o.status IN ('placed', 'processing') AND u.is_admin = 0"
         )->fetchColumn(),
 
         'total_orders' => (int) $pdo->query(
@@ -115,4 +114,74 @@ function getAllMessages(): array
     $pdo = getConnection();
     $stmt = $pdo->query('SELECT * FROM contact_message ORDER BY created_at DESC');
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Customer accounts only (excludes admin/staff logins), with a quick
+// order/appointment count for each so the admin panel shows activity
+// without extra clicks.
+function getAllCustomers(string $search = ''): array
+{
+    $pdo = getConnection();
+
+    $sql = "SELECT u.id, u.username, u.email, u.created_at,
+                   (SELECT COUNT(*) FROM shop_order o WHERE o.user_id = u.id) AS order_count,
+                   (SELECT COUNT(*) FROM appointment_booking a WHERE a.user_id = u.id) AS appointment_count
+            FROM user_account u
+            WHERE u.is_admin = 0";
+
+    $params = [];
+    if ($search !== '') {
+        $sql .= ' AND (u.username LIKE ? OR u.email LIKE ?)';
+        $params[] = '%' . $search . '%';
+        $params[] = '%' . $search . '%';
+    }
+
+    $sql .= ' ORDER BY u.created_at DESC';
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+// Updates a customer's username/email. Reuses the same format rules as
+// signup. Returns ['success' => bool, 'errors' => string[]].
+function updateCustomerAccount(int $id, string $username, string $email): array
+{
+    require_once __DIR__ . '/../includes/validation.php';
+
+    $username = trim($username);
+    $email = trim($email);
+
+    $errors = array_filter([
+        validateRequired($username, 'Username'),
+        validateUsernameFormat($username),
+        validateRequired($email, 'Email'),
+        validateEmailFormat($email),
+    ]);
+    $errors = array_values($errors);
+
+    if (!empty($errors)) {
+        return ['success' => false, 'errors' => $errors];
+    }
+
+    $pdo = getConnection();
+    try {
+        $stmt = $pdo->prepare('UPDATE user_account SET username = ?, email = ? WHERE id = ? AND is_admin = 0');
+        $stmt->execute([$username, $email, $id]);
+        return ['success' => true, 'errors' => []];
+    } catch (PDOException $e) {
+        if ($e->getCode() === '23000') {
+            return ['success' => false, 'errors' => ['That username or email is already taken.']];
+        }
+        throw $e;
+    }
+}
+
+// deletes a customer (never an admin); related rows cascade via FKs
+function deleteCustomerAccount(int $id): bool
+{
+    $pdo = getConnection();
+    $stmt = $pdo->prepare('DELETE FROM user_account WHERE id = ? AND is_admin = 0');
+    $stmt->execute([$id]);
+    return $stmt->rowCount() > 0;
 }

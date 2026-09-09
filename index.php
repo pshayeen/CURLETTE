@@ -18,7 +18,7 @@ $services   = getServices();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Curlétte Hair Studio</title>
-    <link rel="icon" href="assets/C-icon.png" type="image/png">
+    <link rel="icon" href="assets/images/C-icon.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,7 +39,7 @@ $services   = getServices();
     <!-- HOME -->
     <section id="home" class="home">
 
-        <img src="assets/model.png" alt="" class="home-bg">
+        <img src="assets/images/model.png" alt="" class="home-bg">
 
         <div class="home-overlay"></div>
 
@@ -78,7 +78,7 @@ $services   = getServices();
     <!-- SERVICES -->
     <section id="services" class="services">
 
-        <img src="assets/bg.png" alt="" class="section-bg">
+        <img src="assets/images/bg.png" alt="" class="section-bg">
 
         <div class="section-box">
 
@@ -182,7 +182,7 @@ $services   = getServices();
             </div>
 
             <div class="about-img">
-                <img src="assets/salon.jpg" alt="Curlétte Hair Studio">
+                <img src="assets/images/salon.jpg" alt="Curlétte Hair Studio">
             </div>
 
         </div>
@@ -193,8 +193,8 @@ $services   = getServices();
     <!-- TESTIMONIALS -->
     <section class="testimonials">
 
-        <img src="assets/pattern.png" alt="" class="pattern">
-        <img src="assets/pattern.png" alt="" class="pattern2">
+        <img src="assets/images/pattern.png" alt="" class="pattern">
+        <img src="assets/images/pattern.png" alt="" class="pattern2">
 
         <header class="testimonial-title">
 
@@ -210,7 +210,7 @@ $services   = getServices();
             <article class="testimonial-card">
 
                 <div class="testimonial-img">
-                    <img src="assets/c5.jpg" alt="Curlétte client">
+                    <img src="assets/images/c5.jpg" alt="Curlétte client">
                 </div>
 
                 <div class="testimonial-info">
@@ -237,7 +237,7 @@ $services   = getServices();
             <article class="testimonial-card">
 
                 <div class="testimonial-img">
-                    <img src="assets/c1.jpg" alt="Curlétte client">
+                    <img src="assets/images/c1.jpg" alt="Curlétte client">
                 </div>
 
                 <div class="testimonial-info">
@@ -264,7 +264,7 @@ $services   = getServices();
             <article class="testimonial-card">
 
                 <div class="testimonial-img">
-                    <img src="assets/c2.jpg" alt="Curlétte client">
+                    <img src="assets/images/c2.jpg" alt="Curlétte client">
                 </div>
 
                 <div class="testimonial-info">
@@ -291,7 +291,7 @@ $services   = getServices();
             <article class="testimonial-card">
 
                 <div class="testimonial-img">
-                    <img src="assets/c3.jpg" alt="Curlétte client">
+                    <img src="assets/images/c3.jpg" alt="Curlétte client">
                 </div>
 
                 <div class="testimonial-info">
@@ -318,7 +318,7 @@ $services   = getServices();
             <article class="testimonial-card">
 
                 <div class="testimonial-img">
-                    <img src="assets/c4.jpg" alt="Curlette client">
+                    <img src="assets/images/c4.jpg" alt="Curlette client">
                 </div>
 
                 <div class="testimonial-info">
@@ -347,7 +347,7 @@ $services   = getServices();
             <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c5.jpg" alt="" role="presentation">
+                    <img src="assets/images/c5.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">
@@ -374,7 +374,7 @@ $services   = getServices();
             <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c1.jpg" alt="" role="presentation">
+                    <img src="assets/images/c1.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">
@@ -401,7 +401,7 @@ $services   = getServices();
             <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c2.jpg" alt="" role="presentation">
+                    <img src="assets/images/c2.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">
@@ -428,7 +428,7 @@ $services   = getServices();
             <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c3.jpg" alt="" role="presentation">
+                    <img src="assets/images/c3.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">
@@ -455,7 +455,7 @@ $services   = getServices();
             <article class="testimonial-card" aria-hidden="true">
 
                 <div class="testimonial-img">
-                    <img src="assets/c4.jpg" alt="" role="presentation">
+                    <img src="assets/images/c4.jpg" alt="" role="presentation">
                 </div>
 
                 <div class="testimonial-info">

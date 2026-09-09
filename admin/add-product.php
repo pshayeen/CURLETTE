@@ -11,7 +11,7 @@ $message = $_GET['message'] ?? null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product | Admin | Curlétte</title>
-    <link rel="icon" href="../assets/C-icon.png" type="image/png">
+    <link rel="icon" href="../assets/images/C-icon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500,600;1,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -36,8 +36,9 @@ $message = $_GET['message'] ?? null;
     <?php endif; ?>
 
     <div class="admin-panel admin-form-panel">
-        <form action="create-product.php" method="post" enctype="multipart/form-data" class="admin-form">
+        <form action="product-actions.php" method="post" enctype="multipart/form-data" class="admin-form">
 
+            <input type="hidden" name="create_product" value="1">
             <div class="form-group">
                 <label for="name">Product Name</label>
                 <input type="text" id="name" name="name" required>

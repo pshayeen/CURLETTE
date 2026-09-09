@@ -21,6 +21,14 @@ function validateUsernameFormat(string $value): ?string
         : "Username must be 3-20 characters (letters, numbers, underscores only).";
 }
 
+// PH mobile format: 11 digits, starts with 09
+function validatePhoneFormat(string $value): ?string
+{
+    return preg_match('/^09[0-9]{9}$/', $value)
+        ? null
+        : "Phone must be 11 digits and start with 09.";
+}
+
 function validatePasswordStrength(string $value): ?string
 {
     if (strlen($value) < 8) {
@@ -46,6 +54,7 @@ function validateSignupInput(array $post): array
 {
     $username = trim($post['username'] ?? '');
     $email    = trim($post['email'] ?? '');
+    $phone    = trim($post['phone'] ?? '');
     $password = $post['password'] ?? '';
     $confirm  = $post['confirm_password'] ?? '';
 
@@ -54,6 +63,8 @@ function validateSignupInput(array $post): array
         validateUsernameFormat($username),
         validateRequired($email, 'Email'),
         validateEmailFormat($email),
+        validateRequired($phone, 'Phone number'),
+        $phone !== '' ? validatePhoneFormat($phone) : null,
         validateRequired($password, 'Password'),
         validatePasswordStrength($password),
         $password !== '' && $password !== $confirm ? "Passwords do not match." : null,
@@ -66,7 +77,7 @@ function validateSignupInput(array $post): array
 
     return [
         'errors' => $errors,
-        'data'   => ['username' => $username, 'email' => $email, 'password' => $password],
+        'data'   => ['username' => $username, 'email' => $email, 'phone' => $phone, 'password' => $password],
     ];
 }
 

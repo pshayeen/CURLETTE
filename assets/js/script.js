@@ -90,18 +90,13 @@ document.addEventListener('DOMContentLoaded', function () {
     var closeBtn = document.getElementById('authModalClose');
     var contextEl = document.getElementById('authModalContext');
     var errorEl = document.getElementById('authModalError');
-    var tabs = modal.querySelectorAll('.auth-tab');
     var panels = modal.querySelectorAll('.auth-panel');
+    var switchTriggers = modal.querySelectorAll('.auth-switch-trigger');
     var redirectFields = modal.querySelectorAll('.js-redirect-field');
     var lastFocused = null;
     var BOOK_CONTEXT_MESSAGE = 'Log in or create an account to book your appointment.';
 
     function setTab(tabName) {
-        tabs.forEach(function (tab) {
-            var active = tab.getAttribute('data-tab') === tabName;
-            tab.classList.toggle('active', active);
-            tab.setAttribute('aria-selected', active ? 'true' : 'false');
-        });
         panels.forEach(function (panel) {
             panel.hidden = panel.getAttribute('data-panel') !== tabName;
         });
@@ -154,9 +149,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (lastFocused) lastFocused.focus();
     }
 
-    tabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-            setTab(tab.getAttribute('data-tab'));
+    switchTriggers.forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+            setTab(trigger.getAttribute('data-tab'));
         });
     });
 
@@ -307,8 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    // Shared "cancel" modal — one modal per page, filled in based on which
-    // row's button opened it (id + a human-readable description).
+    // shared cancel modal, filled in per row when opened
     var cancelModalEl = document.getElementById('cancelConfirmModal');
     if (cancelModalEl) {
         cancelModalEl.addEventListener('show.bs.modal', function (event) {
@@ -323,8 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Reschedule forms: intercept submit, show a confirmation modal with the
-    // chosen date/time, and only actually submit once the user confirms.
+    // confirm reschedule before actually submitting
     var pendingRescheduleForm = null;
     var rescheduleModalEl = document.getElementById('rescheduleConfirmModal');
     var rescheduleModal = rescheduleModalEl ? new bootstrap.Modal(rescheduleModalEl) : null;

@@ -14,7 +14,7 @@ $bookHref   = bookHref($isLoggedIn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>About Us | Curlétte Hair Studio</title>
-    <link rel="icon" href="assets/C-icon.png" type="image/png">
+    <link rel="icon" href="assets/images/C-icon.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,7 +34,7 @@ $bookHref   = bookHref($isLoggedIn);
 
     <section class="booking-hero about-hero">
 
-        <img src="assets/salon.jpg" alt="" class="section-bg">
+        <img src="assets/images/salon.jpg" alt="" class="section-bg">
         <div class="about-hero-overlay"></div>
 
         <div class="booking-heading">
@@ -79,7 +79,7 @@ $bookHref   = bookHref($isLoggedIn);
             </div>
 
             <div class="about-img about-img--right">
-                <img src="assets/model.png" alt="Curlétte client with healthy curls">
+                <img src="assets/images/model.png" alt="Curlétte client with healthy curls">
             </div>
 
         </div>
@@ -99,7 +99,7 @@ $bookHref   = bookHref($isLoggedIn);
 
             <div class="about-box about-box--auto about-box--reverse">
                 <div class="about-img">
-                    <img src="assets/sample-pic3.jpg" alt="Shy Alonso">
+                    <img src="assets/images/sample-pic3.jpg" alt="Shy Alonso">
                 </div>
                 <div class="about-text about-text--person">
                     <span>FOUNDER &amp; MASTER STYLIST</span>
@@ -115,13 +115,13 @@ $bookHref   = bookHref($isLoggedIn);
                     <p>Trained in curl-by-curl cutting and lives for a good curly bob transformation. If you're nervous about cutting your curls, ask for Ren.</p>
                 </div>
                 <div class="about-img">
-                    <img src="assets/sample-pic2.jpg" alt="Ren Cruz">
+                    <img src="assets/images/sample-pic2.jpg" alt="Ren Cruz">
                 </div>
             </div>
 
             <div class="about-box about-box--auto about-box--reverse">
                 <div class="about-img">
-                    <img src="assets/sample-pic1.jpg" alt="Leah Santos">
+                    <img src="assets/images/sample-pic1.jpg" alt="Leah Santos">
                 </div>
                 <div class="about-text about-text--person">
                     <span>COLORIST</span>
@@ -137,7 +137,7 @@ $bookHref   = bookHref($isLoggedIn);
                     <p>Runs our styling workshops and will absolutely rewrite how you think about the "plopping" technique.</p>
                 </div>
                 <div class="about-img">
-                    <img src="assets/sample-pic.jpg" alt="Bea Rodriguez">
+                    <img src="assets/images/sample-pic.jpg" alt="Bea Rodriguez">
                 </div>
             </div>
 
@@ -148,7 +148,7 @@ $bookHref   = bookHref($isLoggedIn);
     <!-- VISIT US -->
     <section class="about-visit">
 
-        <img src="assets/bg.png" alt="" class="section-bg">
+        <img src="assets/images/bg.png" alt="" class="section-bg">
 
         <div class="about-visit-content">
             <div class="about-visit-panel">

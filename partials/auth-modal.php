@@ -6,10 +6,7 @@
             <i class="bi bi-x-lg"></i>
         </button>
 
-        <div class="auth-tabs" role="tablist">
-            <button type="button" class="auth-tab active" data-tab="login" role="tab" aria-selected="true">LOG IN</button>
-            <button type="button" class="auth-tab" data-tab="signup" role="tab" aria-selected="false">SIGN UP</button>
-        </div>
+        <img src="assets/images/logo.png" alt="Curlétte Hair Studio" class="auth-logo">
 
         <p class="auth-context" id="authModalContext" hidden></p>
         <p class="auth-error" id="authModalError" hidden></p>
@@ -34,6 +31,8 @@
 
                 <button type="submit" class="btn-main auth-submit">LOG IN</button>
             </form>
+
+            <p class="auth-switch">Don't have an account yet? <button type="button" class="auth-switch-trigger" data-tab="signup">Sign up.</button></p>
         </div>
 
         <div class="auth-panel" data-panel="signup" hidden>
@@ -55,6 +54,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="modal-signup-phone">Phone Number</label>
+                    <input type="tel" id="modal-signup-phone" name="phone" maxlength="11" pattern="09[0-9]{9}" placeholder="09XXXXXXXXX" title="11 digits, starting with 09" required>
+                </div>
+
+                <div class="form-group">
                     <label for="modal-signup-password">Password</label>
                     <input type="password" id="modal-signup-password" name="password" autocomplete="new-password" minlength="8" pattern="(?=.*[A-Za-z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}" title="Password must be at least 8 characters and include a letter, a number, and a special character." required>
                     <small class="password-hint">At least 8 characters, with a letter, a number, and a special character.</small>
@@ -67,6 +71,8 @@
 
                 <button type="submit" class="btn-main auth-submit">CREATE ACCOUNT</button>
             </form>
+
+            <p class="auth-switch">Already have an account? <button type="button" class="auth-switch-trigger" data-tab="login">Log in.</button></p>
         </div>
 
     </div>

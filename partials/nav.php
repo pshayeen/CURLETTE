@@ -16,7 +16,7 @@ function navClass(string $key, string $navActive): string
         <div class="nav-box">
 
             <a href="index.php#home" class="logo">
-                <img src="assets/logo.png" alt="Curlette Hair Studio">
+                <img src="assets/images/logo.png" alt="Curlette Hair Studio">
             </a>
 
             <ul class="nav-links">
@@ -54,6 +54,10 @@ function navClass(string $key, string $navActive): string
                                     <strong><?= htmlspecialchars($username, ENT_QUOTES, 'UTF-8') ?></strong>
                                 </div>
                             </div>
+                            <a href="my-account.php">
+                                <i class="bi bi-person"></i>
+                                <span>My Account</span>
+                            </a>
                             <a href="my-appointments.php">
                                 <i class="bi bi-calendar-check"></i>
                                 <span>My Appointments</span>

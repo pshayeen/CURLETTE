@@ -9,7 +9,7 @@ function adminNavClass(string $key, string $adminActive): string
     <div class="admin-header-inner">
 
         <a href="dashboard.php" class="admin-logo">
-            <img src="../assets/logo.png" alt="Curlétte">
+            <img src="../assets/images/logo.png" alt="Curlétte">
             <span>ADMIN</span>
         </a>
 
@@ -18,6 +18,7 @@ function adminNavClass(string $key, string $adminActive): string
             <a href="orders.php" class="<?= adminNavClass('orders', $adminActive) ?>">Orders</a>
             <a href="appointments.php" class="<?= adminNavClass('appointments', $adminActive) ?>">Appointments</a>
             <a href="products.php" class="<?= adminNavClass('products', $adminActive) ?>">Products</a>
+            <a href="customers.php" class="<?= adminNavClass('customers', $adminActive) ?>">Customers</a>
             <a href="messages.php" class="<?= adminNavClass('messages', $adminActive) ?>">Messages</a>
         </nav>
 

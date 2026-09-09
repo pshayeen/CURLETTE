@@ -1433,28 +1433,10 @@ ul {
     box-shadow: 0 10px 30px rgba(var(--font-color-rgb), .07);
 }
 
-.auth-tabs {
-    display: flex;
-    margin-bottom: 26px;
-    border-bottom: 1px solid #E7DAD5;
-}
-
-.auth-tab {
-    flex: 1;
-    padding: 0 0 12px;
-    text-align: center;
-    color: var(--font-color);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: .3px;
-    border-bottom: 2px solid transparent;
-    transform: translateY(1px);
-    transition: color .2s ease, border-color .2s ease;
-}
-
-.auth-tab.active {
-    color: var(--primary-color);
-    border-bottom-color: var(--primary-color);
+.auth-logo {
+    display: block;
+    height: 64px;
+    margin: 0 auto 26px;
 }
 
 .auth-title {
@@ -1558,6 +1540,18 @@ ul {
     color: var(--primary-color);
     font-weight: 700;
     text-decoration: underline;
+}
+
+.auth-switch-trigger {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--primary-color);
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 .booking-summary {
@@ -2384,6 +2378,11 @@ ul {
 .status-badge.placed {
     background: var(--secondary-color);
     color: var(--primary-color);
+}
+
+.status-badge.processing {
+    background: #FBE8CE;
+    color: #B4720A;
 }
 
 .status-badge.completed,
