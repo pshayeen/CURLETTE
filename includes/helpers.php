@@ -16,10 +16,10 @@ function serviceHref(string $serviceName, bool $isLoggedIn): string
         : 'account.php?mode=login&redirect=book-appointment';
 }
 
-// Formats a DB decimal or float/int price as "$12.00".
+// formats a price as "PHP 1,234.00"
 function formatPrice($price): string
 {
-    return '$' . number_format((float) $price, 2);
+    return 'PHP ' . number_format((float) $price, 2);
 }
 
 // Cart item count for the nav badge. 0 for guests, no DB hit.

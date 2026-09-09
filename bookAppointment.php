@@ -45,7 +45,7 @@ if ($status === 'success' && $id) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book an Appointment — Curlétte Hair Studio</title>
+    <title>Book an Appointment | Curlétte Hair Studio</title>
     <link rel="icon" href="assets/C-icon.png" type="image/png">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -210,9 +210,9 @@ if ($status === 'success' && $id) {
 <!-- Booking confirmation modal -->
 <div class="modal fade" id="bookingConfirmModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content confirm-modal-content">
-        <div class="confirm-modal-icon"><i class="bi bi-calendar-check"></i></div>
-        <h2>Confirm your booking?</h2>
+        <div class="modal-content confirm-modal-content">
+            <div class="confirm-modal-icon"><i class="bi bi-calendar-check"></i></div>
+            <h2>Confirm your booking?</h2>
             <p><strong id="bookingConfirmSummary">—</strong></p>
             <div class="confirm-modal-actions">
                 <button type="button" class="btn-outline" data-bs-dismiss="modal">GO BACK</button>

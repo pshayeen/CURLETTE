@@ -2,11 +2,13 @@
 session_start();
 require 'includes/helpers.php';
 require 'data/products.php';
+require 'data/services.php';
 
 $isLoggedIn = !empty($_SESSION['user_id']);
 $username   = $_SESSION['username'] ?? '';
 $bookHref   = bookHref($isLoggedIn);
 $products   = getProducts();
+$services   = getServices();
 ?>
 
 <!DOCTYPE html>
@@ -87,53 +89,19 @@ $products   = getProducts();
 
             <div class="service-grid">
 
-                <a href="services.php" class="service-card">
-                    <div class="card-img">
-                        <img src="assets/service.jpg" alt="Curl consultation">
-                    </div>
+                <?php foreach (array_slice($services, 0, 4) as $service): ?>
+                    <a href="services.php" class="service-card">
+                        <div class="card-img">
+                            <img src="<?= htmlspecialchars($service['image'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8') ?>">
+                        </div>
 
-                    <div class="card-info">
-                        <h3>Curl Consultation</h3>
-                        <p>Personalized guidance for your natural curls.</p>
-                        <strong>$123</strong>
-                    </div>
-                </a>
-
-                <a href="services.php" class="service-card">
-                    <div class="card-img">
-                        <img src="assets/service1.jpg" alt="Curl styling">
-                    </div>
-
-                    <div class="card-info">
-                        <h3>Curl Styling</h3>
-                        <p>Professional styling designed for your curl pattern.</p>
-                        <strong>$123</strong>
-                    </div>
-                </a>
-
-                <a href="services.php" class="service-card">
-                    <div class="card-img">
-                        <img src="assets/service3.jpg" alt="Curly hair cut">
-                    </div>
-
-                    <div class="card-info">
-                        <h3>Curl Hair Cut</h3>
-                        <p>A cut shaped specifically for your natural texture.</p>
-                        <strong>$123</strong>
-                    </div>
-                </a>
-
-                <a href="services.php" class="service-card">
-                    <div class="card-img">
-                        <img src="assets/service2.jpg" alt="Curly hair color">
-                    </div>
-
-                    <div class="card-info">
-                        <h3>Curl Hair Color</h3>
-                        <p>Beautiful color while keeping your curls healthy.</p>
-                        <strong>$123</strong>
-                    </div>
-                </a>
+                        <div class="card-info">
+                            <h3><?= htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8') ?></h3>
+                            <p><?= htmlspecialchars($service['description'], ENT_QUOTES, 'UTF-8') ?></p>
+                            <strong><?= htmlspecialchars($service['price'], ENT_QUOTES, 'UTF-8') ?></strong>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
 
             </div>
 
@@ -350,7 +318,7 @@ $products   = getProducts();
             <article class="testimonial-card">
 
                 <div class="testimonial-img">
-                    <img src="assets/c4.jpg" alt="Curlétte client">
+                    <img src="assets/c4.jpg" alt="Curlette client">
                 </div>
 
                 <div class="testimonial-info">
