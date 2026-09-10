@@ -224,7 +224,7 @@ a {
     display: flex;
     align-items: center;
     height: 34px;
-    font-family: var(--font-body);
+    font-family: var(--font-heading);
     font-size: 30px;
     font-weight: 700;
     line-height: 1;

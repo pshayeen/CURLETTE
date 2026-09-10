@@ -8,7 +8,7 @@ function getServices(): array
             'name' => 'Curl Consultation',
             'price' => 'PHP 350',
             'duration' => '30–45 min',
-            'image' => 'assets/images/service.jpg',
+            'image' => 'assets/images/service5.jpg',
             'description' => 'A personalized consultation to understand your curl pattern, concerns, routine, and hair goals.',
             'includes' => 'Curl assessment, routine recommendations, and personalized care advice.'
         ],
@@ -40,7 +40,7 @@ function getServices(): array
             'name' => 'Deep Conditioning Treatment',
             'price' => 'PHP 550',
             'duration' => '45–60 min',
-            'image' => 'assets/images/service1.jpg',
+            'image' => 'assets/images/service4.jpg',
             'description' => 'A moisture-focused treatment for curls that feel dry, rough, or lacking softness.',
             'includes' => 'Deep conditioning treatment, gentle cleansing, and curl styling.'
         ],
@@ -56,7 +56,7 @@ function getServices(): array
             'name' => 'Wash & Define',
             'price' => 'PHP 450',
             'duration' => '60–75 min',
-            'image' => 'assets/images/service2.jpg',
+            'image' => 'assets/images/service7.jpg',
             'description' => 'A complete wash and definition service for fresh, bouncy, and well-defined curls.',
             'includes' => 'Cleanse, condition, curl definition, and drying.'
         ],
@@ -64,7 +64,7 @@ function getServices(): array
             'name' => 'Special Occasion Styling',
             'price' => 'PHP 850',
             'duration' => '60–90 min',
-            'image' => 'assets/images/service3.jpg',
+            'image' => 'assets/images/service6.jpg',
             'description' => 'A polished curl style created for celebrations, events, photos, and special moments.',
             'includes' => 'Consultation, customized styling, finishing, and event-ready details.'
         ],

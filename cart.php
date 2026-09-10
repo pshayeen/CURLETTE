@@ -160,7 +160,7 @@ $cartTotal = getCartTotal($cartItems);
                 <p class="cart-summary-note">Taxes and any shipping are calculated at pickup / delivery.</p>
                 <form method="post" action="forms/checkout.php" class="js-checkout-form">
                     <input type="hidden" name="place_order" value="1">
-                    <button type="submit" class="btn-main cart-checkout-btn">PLACE ORDER <i class="bi bi-arrow-right"></i></button>
+                    <button type="submit" class="btn-main cart-checkout-btn">PLACE ORDER</i></button>
                 </form>
             </div>
         <?php endif; ?>

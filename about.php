@@ -151,21 +151,42 @@ $bookHref   = bookHref($isLoggedIn);
         <img src="assets/images/bg.png" alt="" class="section-bg">
 
         <div class="about-visit-content">
-            <div class="about-visit-panel">
-                <header class="section-title">
-                    <h2>VISIT US</h2>
-                    <p>Come say hello.</p>
-                </header>
+            <div class="visit-split">
 
-                <div class="about-visit-address">
-                    <i class="bi bi-geo-alt"></i>
-                    <p>123 Curl Street, Cebu City, 6000 Cebu, Philippines</p>
+                <div class="visit-split-intro">
+                    <div class="visit-split-icon"><img src="assets/images/C-icon.png" alt="Curlétte"></div>
+                    <p class="home-label">VISIT US</p>
+                    <h2>Come say <em>hello.</em></h2>
                 </div>
 
-                <div class="about-visit-contact">
-                    <a href="tel:09123456789"><i class="bi bi-telephone"></i> 0912 345 6789</a>
-                    <a href="mailto:curlettehairstudio@email.com"><i class="bi bi-envelope"></i> curlettehairstudio@email.com</a>
+                <div class="visit-split-details">
+
+                    <div class="visit-row">
+                        <div class="visit-row-icon"><i class="bi bi-geo-alt"></i></div>
+                        <div>
+                            <span>ADDRESS</span>
+                            <p>123 Curl Street, Cebu City, 6000 Cebu, Philippines</p>
+                        </div>
+                    </div>
+
+                    <div class="visit-row">
+                        <div class="visit-row-icon"><i class="bi bi-telephone"></i></div>
+                        <div>
+                            <span>PHONE</span>
+                            <p><a href="tel:09123456789">0912 345 6789</a></p>
+                        </div>
+                    </div>
+
+                    <div class="visit-row">
+                        <div class="visit-row-icon"><i class="bi bi-envelope"></i></div>
+                        <div>
+                            <span>EMAIL</span>
+                            <p><a href="mailto:curlettehairstudio@email.com">curlettehairstudio@email.com</a></p>
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
         </div>
 
