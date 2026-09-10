@@ -79,7 +79,7 @@ function getAllOrders(): array
 {
     $pdo = getConnection();
     $stmt = $pdo->query(
-        'SELECT o.id, o.status, o.total, o.created_at, u.username, u.email
+        'SELECT o.id, o.status, o.total, o.payment_method, o.created_at, u.username, u.email
          FROM shop_order o
          INNER JOIN user_account u ON u.id = o.user_id
          WHERE u.is_admin = 0
@@ -100,7 +100,7 @@ function getAllAppointments(): array
 {
     $pdo = getConnection();
     $stmt = $pdo->query(
-        'SELECT a.id, a.service, a.appointment_date, a.appointment_time, a.notes, a.status, u.username, u.email
+        'SELECT a.id, a.service, a.appointment_date, a.appointment_time, a.notes, a.status, a.deposit_amount, a.payment_method, u.username, u.email
          FROM appointment_booking a
          INNER JOIN user_account u ON u.id = a.user_id
          WHERE u.is_admin = 0

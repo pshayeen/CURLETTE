@@ -26,7 +26,7 @@ $orderItems = [];
 if ($status === 'success' && $orderId) {
     $pdo = getConnection();
 
-    $orderStmt = $pdo->prepare('SELECT id, total, created_at FROM shop_order WHERE id = ? AND user_id = ?');
+    $orderStmt = $pdo->prepare('SELECT id, total, payment_method, created_at FROM shop_order WHERE id = ? AND user_id = ?');
     $orderStmt->execute([$orderId, $userId]);
     $order = $orderStmt->fetch(PDO::FETCH_ASSOC);
 
@@ -97,6 +97,10 @@ $cartTotal = getCartTotal($cartItems);
                     </div>
                 </div>
 
+                <p class="cart-summary-note">
+                    Paid via <?= paymentMethodLabel($order['payment_method']) ?>
+                </p>
+
                 <a href="products.php" class="btn-outline booking-again-btn">CONTINUE SHOPPING</a>
             </div>
 
@@ -158,9 +162,38 @@ $cartTotal = getCartTotal($cartItems);
                     <strong><?= formatPrice($cartTotal) ?></strong>
                 </div>
                 <p class="cart-summary-note">Taxes and any shipping are calculated at pickup / delivery.</p>
-                <form method="post" action="forms/checkout.php" class="js-checkout-form">
+                <form method="post" action="forms/checkout.php" class="js-checkout-form" id="checkoutForm">
                     <input type="hidden" name="place_order" value="1">
-                    <button type="submit" class="btn-main cart-checkout-btn">PLACE ORDER</i></button>
+
+                    <div class="payment-method-select">
+                        <p class="payment-method-label">Payment Method</p>
+
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="cash" checked>
+                            <span class="payment-option-info">
+                                <strong>Cash on Delivery</strong>
+                                <span>Pay when you receive your order.</span>
+                            </span>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="gcash">
+                            <span class="payment-option-info">
+                                <strong>GCash</strong>
+                                <span>Pay via GCash.</span>
+                            </span>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="bank">
+                            <span class="payment-option-info">
+                                <strong>Bank Transfer</strong>
+                                <span>Pay via bank transfer.</span>
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn-main cart-checkout-btn">PLACE ORDER</button>
                 </form>
             </div>
         <?php endif; ?>

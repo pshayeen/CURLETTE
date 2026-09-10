@@ -23,6 +23,12 @@ if (empty($cartItems)) {
     exit;
 }
 
+$paymentMethod = $_POST['payment_method'] ?? 'cash';
+
+if (!in_array($paymentMethod, ['cash', 'gcash', 'bank'], true)) {
+    $paymentMethod = 'cash';
+}
+
 try {
     $pdo->beginTransaction();
 
@@ -39,8 +45,11 @@ try {
 
     $total = getCartTotal($cartItems);
 
-    $orderStmt = $pdo->prepare("INSERT INTO shop_order (user_id, status, total) VALUES (?, 'placed', ?)");
-    $orderStmt->execute([$userId, $total]);
+    $orderStmt = $pdo->prepare(
+        "INSERT INTO shop_order (user_id, status, total, payment_method)
+         VALUES (?, 'placed', ?, ?)"
+    );
+    $orderStmt->execute([$userId, $total, $paymentMethod]);
     $orderId = (int) $pdo->lastInsertId();
 
     $itemStmt = $pdo->prepare(

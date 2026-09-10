@@ -30,7 +30,7 @@ if (!in_array($selectedService, $serviceNames, true)) {
 $booking = null;
 if ($status === 'success' && $id) {
     $pdo  = getConnection();
-    $sql  = "SELECT service, appointment_date, appointment_time, notes
+    $sql  = "SELECT service, appointment_date, appointment_time, notes, deposit_amount, payment_method
              FROM appointment_booking
              WHERE id = :id AND user_id = :user_id";
     $stmt = $pdo->prepare($sql);
@@ -103,6 +103,11 @@ if ($status === 'success' && $id) {
                             <strong><?= htmlspecialchars($booking['notes'], ENT_QUOTES, 'UTF-8') ?></strong>
                         </div>
                     <?php endif; ?>
+
+                    <div>
+                        <span>Deposit</span>
+                        <strong><?= formatPrice($booking['deposit_amount']) ?> via <?= paymentMethodLabel($booking['payment_method']) ?></strong>
+                    </div>
 
                 </div>
 
@@ -195,6 +200,36 @@ if ($status === 'success' && $id) {
                     <div class="form-group">
                         <label for="notes">NOTES <span>(OPTIONAL)</span></label>
                         <textarea id="notes" name="notes" maxlength="500" rows="4" placeholder="Tell us anything you'd like us to know..."></textarea>
+                    </div>
+                </div>
+
+                <div class="booking-section">
+                    <div class="booking-section-heading">
+                        <span>04</span>
+                        <div>
+                            <h2>Secure your slot.</h2>
+                            <p>A <?= formatPrice(getDepositAmount()) ?> deposit is required to confirm your booking.</p>
+                        </div>
+                    </div>
+
+                    <div class="payment-method-select">
+                        <p class="payment-method-label">Payment Method</p>
+
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="gcash" required>
+                            <span class="payment-option-info">
+                                <strong>GCash</strong>
+                                <span>Pay the deposit via GCash.</span>
+                            </span>
+                        </label>
+
+                        <label class="payment-option">
+                            <input type="radio" name="payment_method" value="bank">
+                            <span class="payment-option-info">
+                                <strong>Bank Transfer</strong>
+                                <span>Pay the deposit via bank transfer.</span>
+                            </span>
+                        </label>
                     </div>
                 </div>
 

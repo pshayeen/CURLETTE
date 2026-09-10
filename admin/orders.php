@@ -52,6 +52,7 @@ $message = $_GET['message'] ?? null;
                         <th>Customer</th>
                         <th>Items</th>
                         <th>Total</th>
+                        <th>Payment</th>
                         <th>Date</th>
                         <th>Status</th>
                         <th>Update</th>
@@ -72,6 +73,9 @@ $message = $_GET['message'] ?? null;
                                 <?php endforeach; ?>
                             </td>
                             <td><strong><?= formatPrice($order['total']) ?></strong></td>
+                            <td>
+                                <strong><?= paymentMethodLabel($order['payment_method']) ?></strong>
+                            </td>
                             <td><span class="muted"><?= date('M j, Y', strtotime($order['created_at'])) ?></span></td>
                             <td><span class="admin-badge <?= htmlspecialchars($order['status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($order['status'], ENT_QUOTES, 'UTF-8') ?></span></td>
                             <td>

@@ -1,6 +1,7 @@
 <?php
 require 'guard.php';
 require '../data/admin.php';
+require '../includes/helpers.php';
 
 $adminActive = 'appointments';
 $appointments = getAllAppointments();
@@ -52,6 +53,7 @@ $message = $_GET['message'] ?? null;
                         <th>Date</th>
                         <th>Time</th>
                         <th>Notes</th>
+                        <th>Deposit</th>
                         <th>Status</th>
                         <th>Update</th>
                     </tr>
@@ -67,6 +69,10 @@ $message = $_GET['message'] ?? null;
                             <td><?= date('M j, Y', strtotime($appt['appointment_date'])) ?></td>
                             <td><?= date('g:i A', strtotime($appt['appointment_time'])) ?></td>
                             <td><span class="muted"><?= $appt['notes'] ? htmlspecialchars($appt['notes'], ENT_QUOTES, 'UTF-8') : '—' ?></span></td>
+                            <td>
+                                <strong><?= formatPrice($appt['deposit_amount']) ?></strong>
+                                <span class="muted"><?= paymentMethodLabel($appt['payment_method']) ?></span>
+                            </td>
                             <td><span class="admin-badge <?= htmlspecialchars($appt['status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($appt['status'], ENT_QUOTES, 'UTF-8') ?></span></td>
                             <td>
                                 <form method="post" action="update-appointment-status.php" class="admin-status-form">

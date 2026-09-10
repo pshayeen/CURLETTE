@@ -35,3 +35,16 @@ function getCartItemCount(?int $userId): int
     $stmt->execute([$userId]);
     return (int) $stmt->fetchColumn();
 }
+
+// turns a payment_method value into a readable label
+function paymentMethodLabel(string $method): string
+{
+    $labels = ['cash' => 'Cash on Delivery', 'gcash' => 'GCash', 'bank' => 'Bank Transfer'];
+    return $labels[$method] ?? 'Cash on Delivery';
+}
+
+// flat deposit required to book any appointment
+function getDepositAmount(): float
+{
+    return 100.00;
+}

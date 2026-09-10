@@ -7,7 +7,7 @@ function getUserAppointments(int $userId): array
 {
     $pdo = getConnection();
     $stmt = $pdo->prepare(
-        'SELECT id, service, appointment_date, appointment_time, notes, status, created_at
+        'SELECT id, service, appointment_date, appointment_time, notes, status, deposit_amount, payment_method, created_at
          FROM appointment_booking
          WHERE user_id = ?
          ORDER BY appointment_date DESC, appointment_time DESC'

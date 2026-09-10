@@ -82,6 +82,10 @@ $orders     = getUserOrders($userId);
                             </div>
                         </div>
 
+                        <p class="muted">
+                            Paid via <?= $order['payment_method'] === 'gcash' ? 'GCash' : 'Cash on Pickup' ?><?php if ($order['payment_reference']): ?> — Ref# <?= htmlspecialchars($order['payment_reference'], ENT_QUOTES, 'UTF-8') ?><?php endif; ?>
+                        </p>
+
                         <?php if ($order['status'] === 'placed'): ?>
                             <div class="my-list-item-actions">
                                 <button type="button" class="my-cancel-btn"
