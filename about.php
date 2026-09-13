@@ -79,7 +79,7 @@ $bookHref   = bookHref($isLoggedIn);
             </div>
 
             <div class="about-img about-img--right">
-                <img src="assets/images/model.png" alt="Curlétte client with healthy curls">
+                <img src="assets/images/about-curlette.jpg" alt="Curlétte client with healthy curls">
             </div>
 
         </div>
