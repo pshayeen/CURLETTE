@@ -21,16 +21,25 @@ $username = $_SESSION['username'] ?? 'Account';
 
 $services = getServices();
 
-$selectedService = trim($_GET['service'] ?? '');
+// refills the form if the last submit had errors
+$oldInput = $_SESSION['old_booking_input'] ?? [];
+unset($_SESSION['old_booking_input']);
+
+$selectedService = trim($_GET['service'] ?? ($oldInput['service'] ?? ''));
 $serviceNames = array_column($services, 'name');
 if (!in_array($selectedService, $serviceNames, true)) {
     $selectedService = '';
 }
 
+$oldDate = $oldInput['appointment_date'] ?? '';
+$oldTime = $oldInput['appointment_time'] ?? '';
+$oldNotes = $oldInput['notes'] ?? '';
+$oldPaymentMethod = $oldInput['payment_method'] ?? '';
+
 $booking = null;
 if ($status === 'success' && $id) {
     $pdo  = getConnection();
-    $sql  = "SELECT service, appointment_date, appointment_time, notes, deposit_amount, payment_method
+    $sql  = "SELECT service, appointment_date, appointment_time, notes, deposit_amount, payment_method, payment_reference
              FROM appointment_booking
              WHERE id = :id AND user_id = :user_id";
     $stmt = $pdo->prepare($sql);
@@ -106,7 +115,10 @@ if ($status === 'success' && $id) {
 
                     <div>
                         <span>Deposit</span>
-                        <strong><?= formatPrice($booking['deposit_amount']) ?> via <?= paymentMethodLabel($booking['payment_method']) ?></strong>
+                        <strong>
+                            <?= formatPrice($booking['deposit_amount']) ?> via <?= paymentMethodLabel($booking['payment_method']) ?>
+                            <?php if ($booking['payment_reference']): ?> — Ref# <?= htmlspecialchars($booking['payment_reference'], ENT_QUOTES, 'UTF-8') ?><?php endif; ?>
+                        </strong>
                     </div>
 
                 </div>
@@ -170,17 +182,17 @@ if ($status === 'success' && $id) {
                     <div class="booking-details-grid">
                         <div class="form-group">
                             <label for="appointment_date">APPOINTMENT DATE</label>
-                            <input type="date" id="appointment_date" name="appointment_date" min="<?= htmlspecialchars($today, ENT_QUOTES, 'UTF-8') ?>" required>
+                            <input type="date" id="appointment_date" name="appointment_date" min="<?= htmlspecialchars($today, ENT_QUOTES, 'UTF-8') ?>" value="<?= htmlspecialchars($oldDate, ENT_QUOTES, 'UTF-8') ?>" required>
                         </div>
                         <div class="form-group">
                             <label for="appointment_time">APPOINTMENT TIME</label>
                             <select id="appointment_time" name="appointment_time" required>
-                                <option value="" selected disabled>Choose a time</option>
+                                <option value="" <?= $oldTime === '' ? 'selected' : '' ?> disabled>Choose a time</option>
                                 <?php for ($hour = 9; $hour <= 17; $hour++): ?>
                                     <?php foreach ([0, 30] as $minute): ?>
                                         <?php if ($hour === 17 && $minute > 0) continue; ?>
                                         <?php $timeValue = sprintf('%02d:%02d', $hour, $minute); ?>
-                                        <option value="<?= $timeValue ?>"><?= date('g:i A', strtotime($timeValue)) ?></option>
+                                        <option value="<?= $timeValue ?>" <?= $oldTime === $timeValue ? 'selected' : '' ?>><?= date('g:i A', strtotime($timeValue)) ?></option>
                                     <?php endforeach; ?>
                                 <?php endfor; ?>
                             </select>
@@ -199,7 +211,7 @@ if ($status === 'success' && $id) {
 
                     <div class="form-group">
                         <label for="notes">NOTES <span>(OPTIONAL)</span></label>
-                        <textarea id="notes" name="notes" maxlength="500" rows="4" placeholder="Tell us anything you'd like us to know..."></textarea>
+                        <textarea id="notes" name="notes" maxlength="500" rows="4" placeholder="Tell us anything you'd like us to know..."><?= htmlspecialchars($oldNotes, ENT_QUOTES, 'UTF-8') ?></textarea>
                     </div>
                 </div>
 
@@ -216,7 +228,7 @@ if ($status === 'success' && $id) {
                         <p class="payment-method-label">Payment Method</p>
 
                         <label class="payment-option">
-                            <input type="radio" name="payment_method" value="gcash" required>
+                            <input type="radio" name="payment_method" value="gcash" <?= $oldPaymentMethod === 'gcash' ? 'checked' : '' ?> required>
                             <span class="payment-option-info">
                                 <strong>GCash</strong>
                                 <span>Pay the deposit via GCash.</span>
@@ -224,7 +236,7 @@ if ($status === 'success' && $id) {
                         </label>
 
                         <label class="payment-option">
-                            <input type="radio" name="payment_method" value="bank">
+                            <input type="radio" name="payment_method" value="bank" <?= $oldPaymentMethod === 'bank' ? 'checked' : '' ?>>
                             <span class="payment-option-info">
                                 <strong>Bank Transfer</strong>
                                 <span>Pay the deposit via bank transfer.</span>

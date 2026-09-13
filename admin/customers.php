@@ -40,7 +40,7 @@ $message = $_GET['message'] ?? null;
     <?php endif; ?>
 
     <form method="get" class="admin-search-form">
-        <input type="text" name="search" placeholder="Search by username or email" value="<?= htmlspecialchars($search, ENT_QUOTES, 'UTF-8') ?>">
+        <input type="text" name="search" placeholder="Search by name, username, or email" value="<?= htmlspecialchars($search, ENT_QUOTES, 'UTF-8') ?>">
         <button type="submit">Search</button>
         <?php if ($search !== ''): ?>
             <a href="customers.php" class="admin-link">Clear</a>
@@ -56,6 +56,7 @@ $message = $_GET['message'] ?? null;
             <table class="admin-table">
                 <thead>
                     <tr>
+                        <th>Full Name</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Joined</th>
@@ -73,6 +74,10 @@ $message = $_GET['message'] ?? null;
                                     <input type="hidden" name="update_info" value="1">
                                 </form>
                                 <input type="hidden" name="customer_id" value="<?= (int) $customer['id'] ?>" form="<?= $formId ?>">
+                                <input type="text" name="full_name" class="admin-inline-input" maxlength="100" required
+                                       value="<?= htmlspecialchars($customer['full_name'], ENT_QUOTES, 'UTF-8') ?>" form="<?= $formId ?>">
+                            </td>
+                            <td>
                                 <input type="text" name="username" class="admin-inline-input" maxlength="20" required
                                        value="<?= htmlspecialchars($customer['username'], ENT_QUOTES, 'UTF-8') ?>" form="<?= $formId ?>">
                             </td>

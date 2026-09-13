@@ -7,7 +7,7 @@ function getUserOrders(int $userId): array
 {
     $pdo = getConnection();
     $stmt = $pdo->prepare(
-        'SELECT id, status, total, payment_method, created_at
+        'SELECT id, status, total, payment_method, payment_reference, created_at
          FROM shop_order
          WHERE user_id = ?
          ORDER BY created_at DESC'

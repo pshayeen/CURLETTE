@@ -78,12 +78,20 @@ $contextMessage = $redirect === 'book-appointment'
                     <input type="hidden" name="signup" value="1">
                     <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect, ENT_QUOTES, 'UTF-8') ?>">
                     <div class="form-group">
-                        <label for="signup-username">Username</label>
-                        <input type="text" id="signup-username" name="username" autocomplete="username" required>
+                        <label for="signup-fullname">Full Name</label>
+                        <input type="text" id="signup-fullname" name="full_name" autocomplete="name" required>
                     </div>
                     <div class="form-group">
                         <label for="signup-email">Email</label>
                         <input type="email" id="signup-email" name="email" autocomplete="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-phone">Phone Number</label>
+                        <input type="tel" id="signup-phone" name="phone" autocomplete="tel" maxlength="11" pattern="09[0-9]{9}" placeholder="09XXXXXXXXX" title="11 digits, starting with 09" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-address">Address</label>
+                        <textarea id="signup-address" name="address" rows="3" placeholder="House/unit no., street, barangay, city" required></textarea>
                     </div>
                     <div class="form-group">
                         <label for="signup-password">Password</label>

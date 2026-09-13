@@ -48,6 +48,7 @@ $message = $_GET['message'] ?? null;
             <table class="admin-table">
                 <thead>
                     <tr>
+                        <th>Booking</th>
                         <th>Customer</th>
                         <th>Service</th>
                         <th>Date</th>
@@ -61,8 +62,9 @@ $message = $_GET['message'] ?? null;
                 <tbody>
                     <?php foreach ($appointments as $appt): ?>
                         <tr>
+                            <td><strong>#<?= (int) $appt['id'] ?></strong></td>
                             <td>
-                                <strong><?= htmlspecialchars($appt['username'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                <strong><?= htmlspecialchars($appt['full_name'], ENT_QUOTES, 'UTF-8') ?></strong>
                                 <span class="muted"><?= htmlspecialchars($appt['email'], ENT_QUOTES, 'UTF-8') ?></span>
                             </td>
                             <td><?= htmlspecialchars($appt['service'], ENT_QUOTES, 'UTF-8') ?></td>
@@ -72,6 +74,9 @@ $message = $_GET['message'] ?? null;
                             <td>
                                 <strong><?= formatPrice($appt['deposit_amount']) ?></strong>
                                 <span class="muted"><?= paymentMethodLabel($appt['payment_method']) ?></span>
+                                <?php if ($appt['payment_reference']): ?>
+                                    <span class="muted">Ref# <?= htmlspecialchars($appt['payment_reference'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <?php endif; ?>
                             </td>
                             <td><span class="admin-badge <?= htmlspecialchars($appt['status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($appt['status'], ENT_QUOTES, 'UTF-8') ?></span></td>
                             <td>

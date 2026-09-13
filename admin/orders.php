@@ -64,7 +64,7 @@ $message = $_GET['message'] ?? null;
                         <tr>
                             <td><strong>#<?= (int) $order['id'] ?></strong></td>
                             <td>
-                                <strong><?= htmlspecialchars($order['username'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                <strong><?= htmlspecialchars($order['full_name'], ENT_QUOTES, 'UTF-8') ?></strong>
                                 <span class="muted"><?= htmlspecialchars($order['email'], ENT_QUOTES, 'UTF-8') ?></span>
                             </td>
                             <td>
@@ -75,6 +75,9 @@ $message = $_GET['message'] ?? null;
                             <td><strong><?= formatPrice($order['total']) ?></strong></td>
                             <td>
                                 <strong><?= paymentMethodLabel($order['payment_method']) ?></strong>
+                                <?php if ($order['payment_reference']): ?>
+                                    <span class="muted">Ref# <?= htmlspecialchars($order['payment_reference'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <?php endif; ?>
                             </td>
                             <td><span class="muted"><?= date('M j, Y', strtotime($order['created_at'])) ?></span></td>
                             <td><span class="admin-badge <?= htmlspecialchars($order['status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($order['status'], ENT_QUOTES, 'UTF-8') ?></span></td>

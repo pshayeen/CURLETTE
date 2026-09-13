@@ -81,9 +81,13 @@ $products   = getProducts();
                         </div>
                     </div>
                     <?php if ((int) $product['stock_quantity'] > 0): ?>
-                        <form method="post" action="forms/update-cart.php">
+                        <form method="post" action="forms/update-cart.php" class="detail-modal-add-form">
                             <input type="hidden" name="add_to_cart" value="<?= (int) $product['id'] ?>">
                             <input type="hidden" name="return_to" value="products">
+                            <div class="qty-select">
+                                <label for="qty-<?= (int) $product['id'] ?>">Qty</label>
+                                <input type="number" id="qty-<?= (int) $product['id'] ?>" name="quantity" value="1" min="1" max="<?= (int) $product['stock_quantity'] ?>">
+                            </div>
                             <button type="submit" class="btn-main detail-modal-cta">
                                 ADD TO CART
                             </button>

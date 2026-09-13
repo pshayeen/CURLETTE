@@ -3,6 +3,7 @@ session_start();
 
 require '../database/config.php';
 require '../data/cart.php';
+require '../includes/helpers.php';
 
 if (empty($_SESSION['user_id'])) {
     header('Location: ../account.php?mode=login&redirect=cart');
@@ -29,6 +30,8 @@ if (!in_array($paymentMethod, ['cash', 'gcash', 'bank'], true)) {
     $paymentMethod = 'cash';
 }
 
+$paymentReference = $paymentMethod === 'cash' ? null : generatePaymentReference();
+
 try {
     $pdo->beginTransaction();
 
@@ -46,10 +49,10 @@ try {
     $total = getCartTotal($cartItems);
 
     $orderStmt = $pdo->prepare(
-        "INSERT INTO shop_order (user_id, status, total, payment_method)
-         VALUES (?, 'placed', ?, ?)"
+        "INSERT INTO shop_order (user_id, status, total, payment_method, payment_reference)
+         VALUES (?, 'placed', ?, ?, ?)"
     );
-    $orderStmt->execute([$userId, $total, $paymentMethod]);
+    $orderStmt->execute([$userId, $total, $paymentMethod, $paymentReference]);
     $orderId = (int) $pdo->lastInsertId();
 
     $itemStmt = $pdo->prepare(

@@ -43,7 +43,7 @@ $orders     = getUserOrders($userId);
 
         <?php if ($orders): ?>
             <?php if (($_GET['status'] ?? null) === 'success'): ?>
-                <div class="auth-context booking-message"><?= htmlspecialchars($_GET['message'] ?? 'Updated.', ENT_QUOTES, 'UTF-8') ?></div>
+                <div class="auth-success booking-message"><?= htmlspecialchars($_GET['message'] ?? 'Updated.', ENT_QUOTES, 'UTF-8') ?></div>
             <?php elseif (($_GET['status'] ?? null) === 'error'): ?>
                 <div class="auth-error booking-message"><?= htmlspecialchars($_GET['message'] ?? 'Something went wrong.', ENT_QUOTES, 'UTF-8') ?></div>
             <?php endif; ?>
@@ -83,7 +83,8 @@ $orders     = getUserOrders($userId);
                         </div>
 
                         <p class="muted">
-                            Paid via <?= $order['payment_method'] === 'gcash' ? 'GCash' : 'Cash on Pickup' ?><?php if ($order['payment_reference']): ?> — Ref# <?= htmlspecialchars($order['payment_reference'], ENT_QUOTES, 'UTF-8') ?><?php endif; ?>
+                            Paid via <?= paymentMethodLabel($order['payment_method']) ?>
+                            <?php if ($order['payment_reference']): ?> — Ref# <?= htmlspecialchars($order['payment_reference'], ENT_QUOTES, 'UTF-8') ?><?php endif; ?>
                         </p>
 
                         <?php if ($order['status'] === 'placed'): ?>

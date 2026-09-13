@@ -1,6 +1,13 @@
 <?php
 session_start();
 
+// ?check=1 reports login status as JSON (used for bfcache detection)
+if (isset($_GET['check'])) {
+    header('Content-Type: application/json');
+    echo json_encode(['loggedIn' => !empty($_SESSION['user_id'])]);
+    exit;
+}
+
 $_SESSION = [];
 
 if (ini_get('session.use_cookies')) {

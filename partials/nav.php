@@ -34,9 +34,7 @@ function navClass(string $key, string $navActive): string
 
                 <a href="<?= $isLoggedIn ? 'cart.php' : 'account.php?mode=login&redirect=cart' ?>" class="icon-btn cart-btn-nav" aria-label="Shopping cart<?= $cartCount > 0 ? ", $cartCount items" : '' ?>">
                     <i class="bi bi-handbag"></i>
-                    <?php if ($cartCount > 0): ?>
-                        <span class="cart-count-badge"><?= $cartCount > 9 ? '9+' : $cartCount ?></span>
-                    <?php endif; ?>
+                    <span class="cart-count-badge" id="cartCountBadge" <?= $cartCount > 0 ? '' : 'hidden' ?>><?= $cartCount > 9 ? '9+' : $cartCount ?></span>
                 </a>
 
                 <?php if ($isLoggedIn): ?>

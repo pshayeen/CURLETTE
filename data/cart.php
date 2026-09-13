@@ -11,7 +11,7 @@ function getCartItems(int $userId): array
          FROM cart_item c
          INNER JOIN product p ON p.id = c.product_id
          WHERE c.user_id = ?
-         ORDER BY c.updated_at DESC'
+         ORDER BY c.id ASC'
     );
     $stmt->execute([$userId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);

@@ -42,7 +42,7 @@ $appointments = getUserAppointments((int) $_SESSION['user_id']);
 
         <?php if ($appointments): ?>
             <?php if (($_GET['status'] ?? null) === 'success'): ?>
-                <div class="auth-context booking-message"><?= htmlspecialchars($_GET['message'] ?? 'Updated.', ENT_QUOTES, 'UTF-8') ?></div>
+                <div class="auth-success booking-message"><?= htmlspecialchars($_GET['message'] ?? 'Updated.', ENT_QUOTES, 'UTF-8') ?></div>
             <?php elseif (($_GET['status'] ?? null) === 'error'): ?>
                 <div class="auth-error booking-message"><?= htmlspecialchars($_GET['message'] ?? 'Something went wrong.', ENT_QUOTES, 'UTF-8') ?></div>
             <?php endif; ?>
@@ -61,7 +61,7 @@ $appointments = getUserAppointments((int) $_SESSION['user_id']);
                     <div class="my-list-item">
                         <div class="my-list-item-header">
                             <div>
-                                <h3><?= htmlspecialchars($appt['service'], ENT_QUOTES, 'UTF-8') ?></h3>
+                                <h3>Booking #<?= (int) $appt['id'] ?> — <?= htmlspecialchars($appt['service'], ENT_QUOTES, 'UTF-8') ?></h3>
                                 <span class="muted">
                                     <?= date('M j, Y', strtotime($appt['appointment_date'])) ?>
                                     at <?= date('g:i A', strtotime($appt['appointment_time'])) ?>
@@ -69,6 +69,10 @@ $appointments = getUserAppointments((int) $_SESSION['user_id']);
                                 <?php if ($appt['notes']): ?>
                                     <span class="muted"><?= htmlspecialchars($appt['notes'], ENT_QUOTES, 'UTF-8') ?></span>
                                 <?php endif; ?>
+                                <span class="muted">
+                                    Deposit: <?= formatPrice($appt['deposit_amount']) ?> via <?= paymentMethodLabel($appt['payment_method']) ?>
+                                    <?php if ($appt['payment_reference']): ?> — Ref# <?= htmlspecialchars($appt['payment_reference'], ENT_QUOTES, 'UTF-8') ?><?php endif; ?>
+                                </span>
                             </div>
                             <span class="status-badge <?= htmlspecialchars($appt['status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($appt['status'], ENT_QUOTES, 'UTF-8') ?></span>
                         </div>

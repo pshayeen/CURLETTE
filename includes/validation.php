@@ -21,6 +21,24 @@ function validateUsernameFormat(string $value): ?string
         : "Username must be 3-20 characters (letters, numbers, underscores only).";
 }
 
+// just needs to be filled in, real names vary too much to be strict
+function validateFullName(string $value): ?string
+{
+    if (trim($value) === '') {
+        return "Full name is required.";
+    }
+    return strlen($value) > 100 ? "Full name must be 100 characters or less." : null;
+}
+
+// checks address is filled in and not too long
+function validateAddress(string $value): ?string
+{
+    if (trim($value) === '') {
+        return "Address is required.";
+    }
+    return strlen($value) > 255 ? "Address must be 255 characters or less." : null;
+}
+
 // PH mobile format: 11 digits, starts with 09
 function validatePhoneFormat(string $value): ?string
 {
@@ -52,19 +70,20 @@ function validatePasswordStrength(string $value): ?string
 
 function validateSignupInput(array $post): array
 {
-    $username = trim($post['username'] ?? '');
+    $fullName = trim($post['full_name'] ?? '');
     $email    = trim($post['email'] ?? '');
     $phone    = trim($post['phone'] ?? '');
+    $address  = trim($post['address'] ?? '');
     $password = $post['password'] ?? '';
     $confirm  = $post['confirm_password'] ?? '';
 
     $errors = array_filter([
-        validateRequired($username, 'Username'),
-        validateUsernameFormat($username),
+        validateFullName($fullName),
         validateRequired($email, 'Email'),
         validateEmailFormat($email),
         validateRequired($phone, 'Phone number'),
         $phone !== '' ? validatePhoneFormat($phone) : null,
+        validateAddress($address),
         validateRequired($password, 'Password'),
         validatePasswordStrength($password),
         $password !== '' && $password !== $confirm ? "Passwords do not match." : null,
@@ -72,12 +91,13 @@ function validateSignupInput(array $post): array
     $errors = array_values($errors);
 
     if (empty($errors)) {
-        $username = htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
+        $fullName = trim($fullName);
+        $address = trim($address);
     }
 
     return [
         'errors' => $errors,
-        'data'   => ['username' => $username, 'email' => $email, 'phone' => $phone, 'password' => $password],
+        'data'   => ['full_name' => $fullName, 'email' => $email, 'phone' => $phone, 'address' => $address, 'password' => $password],
     ];
 }
 
@@ -144,10 +164,6 @@ function validateAppointmentInput(array $post): array
         ($paymentMethod !== '' && !in_array($paymentMethod, ['gcash', 'bank'], true)) ? "Select a valid payment method." : null,
     ]);
     $errors = array_values($errors);
-
-    if (empty($errors)) {
-        $notes = htmlspecialchars($notes, ENT_QUOTES, 'UTF-8');
-    }
 
     return [
         'errors' => $errors,

@@ -44,7 +44,7 @@ $message = $_GET['message'] ?? null;
         </div>
 
         <?php if ($status === 'success'): ?>
-            <div class="auth-context booking-message">Account updated.</div>
+            <div class="auth-success booking-message">Account updated.</div>
         <?php elseif ($status === 'error' && $message): ?>
             <div class="auth-error booking-message"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
         <?php endif; ?>
@@ -54,8 +54,13 @@ $message = $_GET['message'] ?? null;
                 <input type="hidden" name="update_account" value="1">
 
                 <div class="form-group">
+                    <label for="full_name">Full Name</label>
+                    <input type="text" id="full_name" name="full_name" value="<?= htmlspecialchars($account['full_name'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
+                </div>
+
+                <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" value="<?= htmlspecialchars($account['username'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
+                    <input type="text" id="username" name="username" maxlength="20" value="<?= htmlspecialchars($account['username'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
                 </div>
 
                 <div class="form-group">
@@ -66,6 +71,11 @@ $message = $_GET['message'] ?? null;
                 <div class="form-group">
                     <label for="phone">Phone Number</label>
                     <input type="tel" id="phone" name="phone" maxlength="11" pattern="09[0-9]{9}" placeholder="09XXXXXXXXX" title="11 digits, starting with 09" value="<?= htmlspecialchars($account['phone'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <textarea id="address" name="address" rows="3" placeholder="House/unit no., street, barangay, city" required><?= htmlspecialchars($account['address'] ?? '', ENT_QUOTES, 'UTF-8') ?></textarea>
                 </div>
 
                 <button type="submit" class="btn-main">SAVE CHANGES</button>

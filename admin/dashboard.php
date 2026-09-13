@@ -76,7 +76,7 @@ $upcomingAppointments = getUpcomingAppointmentsPreview(5);
                 <?php foreach ($recentOrders as $order): ?>
                     <div class="admin-preview-row">
                         <div>
-                            <strong>#<?= (int) $order['id'] ?> — <?= htmlspecialchars($order['username'], ENT_QUOTES, 'UTF-8') ?></strong>
+                            <strong>#<?= (int) $order['id'] ?> — <?= htmlspecialchars($order['full_name'], ENT_QUOTES, 'UTF-8') ?></strong>
                             <span><?= date('M j, Y', strtotime($order['created_at'])) ?></span>
                         </div>
                         <span class="admin-badge <?= htmlspecialchars($order['status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($order['status'], ENT_QUOTES, 'UTF-8') ?></span>
@@ -94,7 +94,7 @@ $upcomingAppointments = getUpcomingAppointmentsPreview(5);
                 <?php foreach ($upcomingAppointments as $appt): ?>
                     <div class="admin-preview-row">
                         <div>
-                            <strong><?= htmlspecialchars($appt['username'], ENT_QUOTES, 'UTF-8') ?> — <?= htmlspecialchars($appt['service'], ENT_QUOTES, 'UTF-8') ?></strong>
+                            <strong><?= htmlspecialchars($appt['full_name'], ENT_QUOTES, 'UTF-8') ?> — <?= htmlspecialchars($appt['service'], ENT_QUOTES, 'UTF-8') ?></strong>
                             <span><?= date('M j, Y', strtotime($appt['appointment_date'])) ?> at <?= date('g:i A', strtotime($appt['appointment_time'])) ?></span>
                         </div>
                     </div>

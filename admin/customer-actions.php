@@ -5,6 +5,7 @@ require '../data/admin.php';
 if (isset($_POST['update_info'])) {
     $customerId = filter_input(INPUT_POST, 'customer_id', FILTER_VALIDATE_INT);
     $username = $_POST['username'] ?? '';
+    $fullName = $_POST['full_name'] ?? '';
     $email = $_POST['email'] ?? '';
 
     if (!$customerId) {
@@ -12,7 +13,7 @@ if (isset($_POST['update_info'])) {
         exit;
     }
 
-    $result = updateCustomerAccount($customerId, $username, $email);
+    $result = updateCustomerAccount($customerId, $username, $fullName, $email);
 
     if (!$result['success']) {
         header('Location: customers.php?status=error&message=' . urlencode($result['errors'][0]));

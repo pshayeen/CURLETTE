@@ -48,7 +48,7 @@ $message = $_GET['message'] ?? null;
             <div class="contact-form-col booking-section">
 
                 <?php if ($status === 'success'): ?>
-                    <div class="auth-context">Thanks! Your message has been sent — we'll get back to you soon.</div>
+                    <div class="auth-success">Thanks! Your message has been sent — we'll get back to you soon.</div>
                 <?php elseif ($status === 'error' && $message): ?>
                     <div class="auth-error"><?= htmlspecialchars($message, ENT_QUOTES, 'UTF-8') ?></div>
                 <?php endif; ?>

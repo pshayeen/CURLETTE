@@ -26,7 +26,7 @@ $orderItems = [];
 if ($status === 'success' && $orderId) {
     $pdo = getConnection();
 
-    $orderStmt = $pdo->prepare('SELECT id, total, payment_method, created_at FROM shop_order WHERE id = ? AND user_id = ?');
+    $orderStmt = $pdo->prepare('SELECT id, total, payment_method, payment_reference, created_at FROM shop_order WHERE id = ? AND user_id = ?');
     $orderStmt->execute([$orderId, $userId]);
     $order = $orderStmt->fetch(PDO::FETCH_ASSOC);
 
@@ -99,6 +99,7 @@ $cartTotal = getCartTotal($cartItems);
 
                 <p class="cart-summary-note">
                     Paid via <?= paymentMethodLabel($order['payment_method']) ?>
+                    <?php if ($order['payment_reference']): ?> — Ref# <?= htmlspecialchars($order['payment_reference'], ENT_QUOTES, 'UTF-8') ?><?php endif; ?>
                 </p>
 
                 <a href="products.php" class="btn-outline booking-again-btn">CONTINUE SHOPPING</a>
@@ -117,12 +118,12 @@ $cartTotal = getCartTotal($cartItems);
 
         <?php else: ?>
             <?php if ($cartMessage): ?>
-                <div class="<?= $cartStatus === 'error' ? 'auth-error' : 'auth-context' ?> booking-message"><?= htmlspecialchars($cartMessage, ENT_QUOTES, 'UTF-8') ?></div>
+                <div class="<?= $cartStatus === 'error' ? 'auth-error' : 'auth-success' ?> booking-message"><?= htmlspecialchars($cartMessage, ENT_QUOTES, 'UTF-8') ?></div>
             <?php endif; ?>
 
             <div class="cart-list">
                 <?php foreach ($cartItems as $item): ?>
-                    <div class="cart-item">
+                    <div class="cart-item" data-product-id="<?= (int) $item['product_id'] ?>">
 
                         <div class="cart-item-img">
                             <img src="<?= htmlspecialchars($item['image'], ENT_QUOTES, 'UTF-8') ?>" alt="">
@@ -130,10 +131,8 @@ $cartTotal = getCartTotal($cartItems);
 
                         <div class="cart-item-info">
                             <h3><?= htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8') ?></h3>
-                            <span class="cart-item-unit-price"><?= formatPrice($item['price']) ?> each</span>
-                            <?php if ((int) $item['quantity'] >= (int) $item['stock_quantity']): ?>
-                                <span class="cart-item-stock-note">Max available in stock</span>
-                            <?php endif; ?>
+                            <span class="cart-item-unit-price" data-unit-price="<?= (float) $item['price'] ?>"><?= formatPrice($item['price']) ?> each</span>
+                            <span class="cart-item-stock-note" <?= (int) $item['quantity'] >= (int) $item['stock_quantity'] ? '' : 'hidden' ?>>Max available in stock</span>
                         </div>
 
                         <form method="post" action="forms/update-cart.php" class="cart-item-qty">
@@ -159,7 +158,7 @@ $cartTotal = getCartTotal($cartItems);
             <div class="cart-summary">
                 <div class="cart-summary-row">
                     <span>Subtotal</span>
-                    <strong><?= formatPrice($cartTotal) ?></strong>
+                    <strong id="cartSubtotal"><?= formatPrice($cartTotal) ?></strong>
                 </div>
                 <p class="cart-summary-note">Taxes and any shipping are calculated at pickup / delivery.</p>
                 <form method="post" action="forms/checkout.php" class="js-checkout-form" id="checkoutForm">
@@ -172,7 +171,7 @@ $cartTotal = getCartTotal($cartItems);
                             <input type="radio" name="payment_method" value="cash" checked>
                             <span class="payment-option-info">
                                 <strong>Cash on Delivery</strong>
-                                <span>Pay when you receive your order.</span>
+                                <span>Pay in cash when your order is delivered.</span>
                             </span>
                         </label>
 

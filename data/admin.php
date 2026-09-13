@@ -47,7 +47,7 @@ function getRecentOrders(int $limit = 5): array
 {
     $pdo = getConnection();
     $stmt = $pdo->prepare(
-        'SELECT o.id, o.status, o.total, o.created_at, u.username
+        'SELECT o.id, o.status, o.total, o.created_at, u.full_name
          FROM shop_order o
          INNER JOIN user_account u ON u.id = o.user_id
          WHERE u.is_admin = 0
@@ -63,7 +63,7 @@ function getUpcomingAppointmentsPreview(int $limit = 5): array
 {
     $pdo = getConnection();
     $stmt = $pdo->prepare(
-        "SELECT a.id, a.service, a.appointment_date, a.appointment_time, u.username
+        "SELECT a.id, a.service, a.appointment_date, a.appointment_time, u.full_name
          FROM appointment_booking a
          INNER JOIN user_account u ON u.id = a.user_id
          WHERE a.status = 'upcoming' AND a.appointment_date >= CURDATE() AND u.is_admin = 0
@@ -79,7 +79,7 @@ function getAllOrders(): array
 {
     $pdo = getConnection();
     $stmt = $pdo->query(
-        'SELECT o.id, o.status, o.total, o.payment_method, o.created_at, u.username, u.email
+        'SELECT o.id, o.status, o.total, o.payment_method, o.payment_reference, o.created_at, u.username, u.full_name, u.email
          FROM shop_order o
          INNER JOIN user_account u ON u.id = o.user_id
          WHERE u.is_admin = 0
@@ -100,7 +100,7 @@ function getAllAppointments(): array
 {
     $pdo = getConnection();
     $stmt = $pdo->query(
-        'SELECT a.id, a.service, a.appointment_date, a.appointment_time, a.notes, a.status, a.deposit_amount, a.payment_method, u.username, u.email
+        'SELECT a.id, a.service, a.appointment_date, a.appointment_time, a.notes, a.status, a.deposit_amount, a.payment_method, a.payment_reference, u.username, u.full_name, u.email
          FROM appointment_booking a
          INNER JOIN user_account u ON u.id = a.user_id
          WHERE u.is_admin = 0
@@ -123,7 +123,7 @@ function getAllCustomers(string $search = ''): array
 {
     $pdo = getConnection();
 
-    $sql = "SELECT u.id, u.username, u.email, u.created_at,
+    $sql = "SELECT u.id, u.username, u.full_name, u.email, u.created_at,
                    (SELECT COUNT(*) FROM shop_order o WHERE o.user_id = u.id) AS order_count,
                    (SELECT COUNT(*) FROM appointment_booking a WHERE a.user_id = u.id) AS appointment_count
             FROM user_account u
@@ -131,7 +131,8 @@ function getAllCustomers(string $search = ''): array
 
     $params = [];
     if ($search !== '') {
-        $sql .= ' AND (u.username LIKE ? OR u.email LIKE ?)';
+        $sql .= ' AND (u.username LIKE ? OR u.full_name LIKE ? OR u.email LIKE ?)';
+        $params[] = '%' . $search . '%';
         $params[] = '%' . $search . '%';
         $params[] = '%' . $search . '%';
     }
@@ -143,18 +144,19 @@ function getAllCustomers(string $search = ''): array
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Updates a customer's username/email. Reuses the same format rules as
-// signup. Returns ['success' => bool, 'errors' => string[]].
-function updateCustomerAccount(int $id, string $username, string $email): array
+// updates a customer's username, full name, and email
+function updateCustomerAccount(int $id, string $username, string $fullName, string $email): array
 {
     require_once __DIR__ . '/../includes/validation.php';
 
     $username = trim($username);
+    $fullName = trim($fullName);
     $email = trim($email);
 
     $errors = array_filter([
         validateRequired($username, 'Username'),
         validateUsernameFormat($username),
+        validateFullName($fullName),
         validateRequired($email, 'Email'),
         validateEmailFormat($email),
     ]);
@@ -166,8 +168,8 @@ function updateCustomerAccount(int $id, string $username, string $email): array
 
     $pdo = getConnection();
     try {
-        $stmt = $pdo->prepare('UPDATE user_account SET username = ?, email = ? WHERE id = ? AND is_admin = 0');
-        $stmt->execute([$username, $email, $id]);
+        $stmt = $pdo->prepare('UPDATE user_account SET username = ?, full_name = ?, email = ? WHERE id = ? AND is_admin = 0');
+        $stmt->execute([$username, $fullName, $email, $id]);
         return ['success' => true, 'errors' => []];
     } catch (PDOException $e) {
         if ($e->getCode() === '23000') {

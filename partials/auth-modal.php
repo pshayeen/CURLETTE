@@ -44,8 +44,8 @@
                 <input type="hidden" name="redirect" value="" class="js-redirect-field">
 
                 <div class="form-group">
-                    <label for="modal-signup-username">Username</label>
-                    <input type="text" id="modal-signup-username" name="username" required>
+                    <label for="modal-signup-fullname">Full Name</label>
+                    <input type="text" id="modal-signup-fullname" name="full_name" autocomplete="name" required>
                 </div>
 
                 <div class="form-group">
@@ -56,6 +56,11 @@
                 <div class="form-group">
                     <label for="modal-signup-phone">Phone Number</label>
                     <input type="tel" id="modal-signup-phone" name="phone" maxlength="11" pattern="09[0-9]{9}" placeholder="09XXXXXXXXX" title="11 digits, starting with 09" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="modal-signup-address">Address</label>
+                    <textarea id="modal-signup-address" name="address" rows="3" placeholder="House/unit no., street, barangay, city" required></textarea>
                 </div>
 
                 <div class="form-group">

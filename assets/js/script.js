@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // if the user logged out in another tab or via this same back nav.
             // Ask the server for the real status and reload only if it's wrong,
             // so we don't force a reload on every ordinary back/forward visit.
-            fetch('api/check-login.php', { cache: 'no-store' })
+            fetch('forms/logout.php?check=1', { cache: 'no-store' })
                 .then(function (response) { return response.json(); })
                 .then(function (data) {
                     var actuallyLoggedIn = !!data.loggedIn;
@@ -378,3 +378,140 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 });
+
+// updates cart via ajax (no reload), so scroll never jumps
+(function () {
+    function showToast(message, isError) {
+        var toast = document.createElement('div');
+        toast.className = 'cart-toast' + (isError ? ' cart-toast-error' : '');
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(function () {
+            toast.classList.add('show');
+        });
+
+        setTimeout(function () {
+            toast.classList.remove('show');
+            setTimeout(function () { toast.remove(); }, 250);
+        }, 2200);
+    }
+
+    function updateCartBadge(count) {
+        var badge = document.getElementById('cartCountBadge');
+        if (!badge) return;
+        badge.textContent = count > 9 ? '9+' : count;
+        badge.hidden = count <= 0;
+    }
+
+    function submitCartForm(form) {
+        var formData = new FormData(form);
+        formData.set('ajax', '1');
+        return fetch(form.action, { method: 'POST', body: formData })
+            .then(function (res) { return res.json(); });
+    }
+
+    // add to cart — product cards and the product detail modal
+    document.addEventListener('submit', function (event) {
+        var form = event.target;
+        if (!form.classList.contains('cart-btn-form') && !form.classList.contains('detail-modal-add-form')) {
+            return;
+        }
+        event.preventDefault();
+
+        submitCartForm(form).then(function (data) {
+            showToast(data.message || (data.success ? 'Added to cart.' : 'Something went wrong.'), !data.success);
+            if (data.success && typeof data.cartCount === 'number') {
+                updateCartBadge(data.cartCount);
+            }
+        }).catch(function () {
+            showToast('Something went wrong. Please try again.', true);
+        });
+    });
+
+    // quantity +/- buttons in the cart
+    document.addEventListener('submit', function (event) {
+        var form = event.target;
+        if (!form.classList.contains('cart-item-qty')) {
+            return;
+        }
+        event.preventDefault();
+
+        var formData = new FormData(form);
+        var submitter = event.submitter;
+        if (submitter && submitter.name === 'quantity') {
+            formData.set('quantity', submitter.value);
+        }
+        formData.set('ajax', '1');
+
+        fetch(form.action, { method: 'POST', body: formData })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                if (!data.success && !data.removed) {
+                    showToast(data.message || 'Something went wrong.', true);
+                    return;
+                }
+
+                var item = document.querySelector('.cart-item[data-product-id="' + data.productId + '"]');
+                if (!item) return;
+
+                if (data.removed) {
+                    item.remove();
+                    if (data.message) showToast(data.message, !data.success);
+                } else {
+                    item.querySelector('.qty-value').textContent = data.quantity;
+                    item.querySelector('.cart-item-total').textContent = data.subtotal;
+                    var minusBtn = item.querySelector('.qty-btn[aria-label="Decrease quantity"]');
+                    var plusBtn = item.querySelector('.qty-btn[aria-label="Increase quantity"]');
+                    if (minusBtn) minusBtn.value = Math.max(0, data.quantity - 1);
+                    if (plusBtn) {
+                        plusBtn.value = data.quantity + 1;
+                        plusBtn.disabled = data.atMaxStock;
+                    }
+                    var stockNote = item.querySelector('.cart-item-stock-note');
+                    if (stockNote) stockNote.hidden = !data.atMaxStock;
+                }
+
+                if (typeof data.cartTotal === 'string') {
+                    var subtotalEl = document.getElementById('cartSubtotal');
+                    if (subtotalEl) subtotalEl.textContent = data.cartTotal;
+                }
+                if (typeof data.cartCount === 'number') {
+                    updateCartBadge(data.cartCount);
+                    if (data.cartCount === 0) {
+                        window.location.reload();
+                    }
+                }
+            })
+            .catch(function () {
+                showToast('Something went wrong. Please try again.', true);
+            });
+    });
+
+    // remove item from cart
+    document.addEventListener('submit', function (event) {
+        var form = event.target;
+        if (!form.classList.contains('cart-item-remove-form')) {
+            return;
+        }
+        event.preventDefault();
+
+        submitCartForm(form).then(function (data) {
+            var item = document.querySelector('.cart-item[data-product-id="' + data.productId + '"]');
+            if (item) item.remove();
+
+            if (typeof data.cartTotal === 'string') {
+                var subtotalEl = document.getElementById('cartSubtotal');
+                if (subtotalEl) subtotalEl.textContent = data.cartTotal;
+            }
+            if (typeof data.cartCount === 'number') {
+                updateCartBadge(data.cartCount);
+                if (data.cartCount === 0) {
+                    window.location.reload();
+                }
+            }
+        }).catch(function () {
+            showToast('Something went wrong. Please try again.', true);
+        });
+    });
+})();

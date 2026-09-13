@@ -20,6 +20,7 @@ $errors = $result['errors'];
 
 if (!empty($errors)) {
     $message = implode(' ', $errors);
+    $_SESSION['old_booking_input'] = $_POST;
     header('Location: ../bookAppointment.php?status=error&message=' . urlencode($message));
     exit;
 }
@@ -27,8 +28,8 @@ if (!empty($errors)) {
 try {
     $pdo = getConnection();
 
-    $sql = "INSERT INTO appointment_booking (user_id, service, appointment_date, appointment_time, notes, deposit_amount, payment_method)
-            VALUES (:user_id, :service, :appointment_date, :appointment_time, :notes, :deposit_amount, :payment_method)";
+    $sql = "INSERT INTO appointment_booking (user_id, service, appointment_date, appointment_time, notes, deposit_amount, payment_method, payment_reference)
+            VALUES (:user_id, :service, :appointment_date, :appointment_time, :notes, :deposit_amount, :payment_method, :payment_reference)";
 
     $stmt = $pdo->prepare($sql);
     $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
@@ -38,6 +39,7 @@ try {
     $stmt->bindValue(':notes', $result['data']['notes'] !== '' ? $result['data']['notes'] : null);
     $stmt->bindValue(':deposit_amount', getDepositAmount());
     $stmt->bindValue(':payment_method', $result['data']['payment_method']);
+    $stmt->bindValue(':payment_reference', generatePaymentReference());
     $stmt->execute();
 
     $newId = $pdo->lastInsertId();

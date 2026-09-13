@@ -4,6 +4,7 @@ session_start();
 require '../database/config.php';
 require '../includes/validation.php';
 require '../includes/redirects.php';
+require '../includes/helpers.php';
 
 function wantsJson(): bool
 {
@@ -77,26 +78,32 @@ if (isset($_POST['signup'])) {
         redirectError('signup', implode(' ', $result['errors']), $redirectQuery);
     }
 
-    $username = $result['data']['username'];
+    $fullName = $result['data']['full_name'];
     $email = $result['data']['email'];
+    $phone = $result['data']['phone'];
+    $address = $result['data']['address'];
 
     try {
         $pdo = getConnection();
-        $check = $pdo->prepare('SELECT id FROM user_account WHERE email = ? OR username = ? LIMIT 1');
-        $check->execute([$email, $username]);
+        $check = $pdo->prepare('SELECT id FROM user_account WHERE email = ? LIMIT 1');
+        $check->execute([$email]);
 
         if ($check->fetch(PDO::FETCH_ASSOC)) {
-            redirectError('signup', 'That username or email is already registered.', $redirectQuery);
+            redirectError('signup', 'That email is already registered.', $redirectQuery);
         }
 
+        $username = generateUsernameFromName($pdo, $fullName);
         $passwordHash = password_hash($result['data']['password'], PASSWORD_DEFAULT);
         $stmt = $pdo->prepare(
-            'INSERT INTO user_account (username, email, password_hash)
-             VALUES (:username, :email, :password_hash)'
+            'INSERT INTO user_account (username, full_name, email, phone, address, password_hash)
+             VALUES (:username, :full_name, :email, :phone, :address, :password_hash)'
         );
         $stmt->execute([
             ':username' => $username,
+            ':full_name' => $fullName,
             ':email' => $email,
+            ':phone' => $phone,
+            ':address' => $address,
             ':password_hash' => $passwordHash
         ]);
 
@@ -118,41 +125,49 @@ if (isset($_POST['update_account'])) {
     }
 
     $username = trim($_POST['username'] ?? '');
+    $fullName = trim($_POST['full_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $address = trim($_POST['address'] ?? '');
     $errors = array_filter([
         validateRequired($username, 'Username'),
         validateUsernameFormat($username),
+        validateFullName($fullName),
         validateRequired($email, 'Email'),
         validateEmailFormat($email),
+        validateRequired($phone, 'Phone number'),
+        $phone !== '' ? validatePhoneFormat($phone) : null,
+        validateAddress($address),
     ]);
 
     if ($errors) {
-        header('Location: ../account.php?view=account&status=error&message=' . urlencode(implode(' ', $errors)));
+        header('Location: ../my-account.php?status=error&message=' . urlencode(implode(' ', $errors)));
         exit;
     }
 
     try {
         $pdo = getConnection();
+        $userId = (int) $_SESSION['user_id'];
         $check = $pdo->prepare(
             'SELECT id FROM user_account
              WHERE (email = ? OR username = ?) AND id <> ?
              LIMIT 1'
         );
-        $check->execute([$email, $username, (int) $_SESSION['user_id']]);
+        $check->execute([$email, $username, $userId]);
 
         if ($check->fetch(PDO::FETCH_ASSOC)) {
-            header('Location: ../account.php?view=account&status=error&message=' . urlencode('That username or email is already registered.'));
+            header('Location: ../my-account.php?status=error&message=' . urlencode('That username or email is already registered.'));
             exit;
         }
 
-        $stmt = $pdo->prepare('UPDATE user_account SET username = ?, email = ? WHERE id = ?');
-        $stmt->execute([$username, $email, (int) $_SESSION['user_id']]);
+        $stmt = $pdo->prepare('UPDATE user_account SET username = ?, full_name = ?, email = ?, phone = ?, address = ? WHERE id = ?');
+        $stmt->execute([$username, $fullName, $email, $phone, $address, $userId]);
         $_SESSION['username'] = $username;
 
-        header('Location: ../account.php?view=account&status=success');
+        header('Location: ../my-account.php?status=success');
         exit;
     } catch (PDOException $e) {
-        header('Location: ../account.php?view=account&status=error&message=' . urlencode('Something went wrong. Please try again.'));
+        header('Location: ../my-account.php?status=error&message=' . urlencode('Something went wrong. Please try again.'));
         exit;
     }
 }

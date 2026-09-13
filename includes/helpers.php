@@ -48,3 +48,43 @@ function getDepositAmount(): float
 {
     return 100.00;
 }
+
+// generates a reference number for GCash/Bank Transfer payments
+function generatePaymentReference(): string
+{
+    return strtoupper(bin2hex(random_bytes(5)));
+}
+
+// makes a username from the first part of someone's name, adding a
+// number on the end if that name is already taken. pass $excludeUserId
+// when re-generating for an existing account so it doesn't collide
+// with that same account's current username.
+function generateUsernameFromName(PDO $pdo, string $fullName, ?int $excludeUserId = null): string
+{
+    $firstName = explode(' ', trim($fullName))[0] ?? '';
+    $base = preg_replace('/[^a-zA-Z0-9_]/', '', $firstName);
+    if ($base === '') {
+        $base = 'user';
+    }
+    $base = substr($base, 0, 15);
+
+    $sql = 'SELECT id FROM user_account WHERE username = ?';
+    if ($excludeUserId !== null) {
+        $sql .= ' AND id != ?';
+    }
+    $sql .= ' LIMIT 1';
+    $check = $pdo->prepare($sql);
+
+    $username = $base;
+    $suffix = 1;
+
+    while (true) {
+        $params = $excludeUserId !== null ? [$username, $excludeUserId] : [$username];
+        $check->execute($params);
+        if (!$check->fetch()) {
+            return $username;
+        }
+        $suffix++;
+        $username = $base . $suffix;
+    }
+}
