@@ -29,3 +29,25 @@ function getUserOrderItems(int $orderId, int $userId): array
     $stmt->execute([$orderId, $userId]);
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+// one order with customer info, for the receipt page.
+// pass $userId to restrict to that user's own order, or null for admin
+function getOrderById(int $orderId, ?int $userId = null): ?array
+{
+    $pdo = getConnection();
+    $sql = 'SELECT o.*, u.full_name, u.email
+            FROM shop_order o
+            INNER JOIN user_account u ON u.id = o.user_id
+            WHERE o.id = ?';
+    $params = [$orderId];
+
+    if ($userId !== null) {
+        $sql .= ' AND o.user_id = ?';
+        $params[] = $userId;
+    }
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $order ?: null;
+}

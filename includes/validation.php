@@ -139,6 +139,7 @@ function validateAppointmentInput(array $post): array
     $time    = trim($post['appointment_time'] ?? '');
     $notes   = trim($post['notes'] ?? '');
     $paymentMethod = trim($post['payment_method'] ?? '');
+    $paymentReference = trim($post['payment_reference'] ?? '');
 
     $validServices = array_column(getServices(), 'name');
 
@@ -162,17 +163,19 @@ function validateAppointmentInput(array $post): array
         strlen($notes) > 500 ? "Notes must be 500 characters or less." : null,
         validateRequired($paymentMethod, 'Payment method'),
         ($paymentMethod !== '' && !in_array($paymentMethod, ['gcash', 'bank'], true)) ? "Select a valid payment method." : null,
+        validateRequired($paymentReference, 'Reference number'),
     ]);
     $errors = array_values($errors);
 
     return [
         'errors' => $errors,
         'data'   => [
-            'service'          => $service,
-            'appointment_date' => $date,
-            'appointment_time' => $time,
-            'notes'            => $notes,
-            'payment_method'   => $paymentMethod,
+            'service'           => $service,
+            'appointment_date'  => $date,
+            'appointment_time'  => $time,
+            'notes'             => $notes,
+            'payment_method'    => $paymentMethod,
+            'payment_reference' => $paymentReference,
         ],
     ];
 }

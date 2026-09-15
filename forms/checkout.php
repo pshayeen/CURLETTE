@@ -25,12 +25,20 @@ if (empty($cartItems)) {
 }
 
 $paymentMethod = $_POST['payment_method'] ?? 'cash';
+$paymentReference = trim($_POST['payment_reference'] ?? '');
 
 if (!in_array($paymentMethod, ['cash', 'gcash', 'bank'], true)) {
     $paymentMethod = 'cash';
 }
 
-$paymentReference = $paymentMethod === 'cash' ? null : generatePaymentReference();
+if ($paymentMethod === 'cash') {
+    $paymentReference = null;
+} elseif ($paymentReference === '') {
+    header('Location: ../cart.php?cart_status=error&cart_message=' . urlencode(
+        'Please enter your reference number.'
+    ));
+    exit;
+}
 
 try {
     $pdo->beginTransaction();

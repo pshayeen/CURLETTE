@@ -77,6 +77,10 @@ $appointments = getUserAppointments((int) $_SESSION['user_id']);
                             <span class="status-badge <?= htmlspecialchars($appt['status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($appt['status'], ENT_QUOTES, 'UTF-8') ?></span>
                         </div>
 
+                        <div class="my-list-item-actions">
+                            <a href="receipt-appointment.php?id=<?= (int) $appt['id'] ?>" class="btn-outline btn-small">VIEW RECEIPT</a>
+                        </div>
+
                         <?php if ($appt['status'] === 'upcoming'): ?>
                             <div class="my-list-item-actions">
                                 <details class="my-reschedule-toggle">

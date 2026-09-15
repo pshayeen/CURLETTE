@@ -56,6 +56,7 @@ $message = $_GET['message'] ?? null;
                         <th>Date</th>
                         <th>Status</th>
                         <th>Update</th>
+                        <th>Receipt</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,6 +94,7 @@ $message = $_GET['message'] ?? null;
                                     <button type="submit">Save</button>
                                 </form>
                             </td>
+                            <td><a href="../receipt-order.php?id=<?= (int) $order['id'] ?>" class="admin-link" target="_blank">View</a></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

@@ -243,6 +243,11 @@ if ($status === 'success' && $id) {
                             </span>
                         </label>
                     </div>
+
+                    <div class="form-group">
+                        <label for="payment_reference">Reference Number</label>
+                        <input type="text" id="payment_reference" name="payment_reference" placeholder="e.g. 1234567890123" value="<?= htmlspecialchars($oldInput['payment_reference'] ?? '', ENT_QUOTES, 'UTF-8') ?>" required>
+                    </div>
                 </div>
 
                 <div class="booking-submit-area">

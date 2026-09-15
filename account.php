@@ -79,15 +79,28 @@ $contextMessage = $redirect === 'book-appointment'
                     <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect, ENT_QUOTES, 'UTF-8') ?>">
                     <div class="form-group">
                         <label for="signup-fullname">Full Name</label>
-                        <input type="text" id="signup-fullname" name="full_name" autocomplete="name" required>
+                        <input type="text" 
+                               id="signup-fullname" 
+                               name="full_name" 
+                               autocomplete="name" required>
                     </div>
                     <div class="form-group">
                         <label for="signup-email">Email</label>
-                        <input type="email" id="signup-email" name="email" autocomplete="email" required>
+                        <input type="email" 
+                               id="signup-email" 
+                               name="email" 
+                               autocomplete="email" 
+                               required>
                     </div>
                     <div class="form-group">
                         <label for="signup-phone">Phone Number</label>
-                        <input type="tel" id="signup-phone" name="phone" autocomplete="tel" maxlength="11" pattern="09[0-9]{9}" placeholder="09XXXXXXXXX" title="11 digits, starting with 09" required>
+                        <input type="tel" 
+                               id="signup-phone" 
+                               name="phone" 
+                               autocomplete="tel" 
+                               maxlength="11" pattern="09[0-9]{9}" 
+                               placeholder="09XXXXXXXXX" 
+                               title="11 digits, starting with 09" required>
                     </div>
                     <div class="form-group">
                         <label for="signup-address">Address</label>
@@ -102,7 +115,10 @@ $contextMessage = $redirect === 'book-appointment'
                     </div>
                     <div class="form-group">
                         <label for="signup-confirm">Confirm Password</label>
-                        <input type="password" id="signup-confirm" name="confirm_password" autocomplete="new-password" required>
+                        <input type="password" 
+                               id="signup-confirm" 
+                               name="confirm_password" 
+                               autocomplete="new-password" required>
                     </div>
                     <button type="submit" class="btn-main auth-submit">CREATE ACCOUNT</button>
                 </form>

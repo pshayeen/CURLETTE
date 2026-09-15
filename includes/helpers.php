@@ -49,12 +49,6 @@ function getDepositAmount(): float
     return 100.00;
 }
 
-// generates a reference number for GCash/Bank Transfer payments
-function generatePaymentReference(): string
-{
-    return strtoupper(bin2hex(random_bytes(5)));
-}
-
 // makes a username from the first part of someone's name, adding a
 // number on the end if that name is already taken. pass $excludeUserId
 // when re-generating for an existing account so it doesn't collide

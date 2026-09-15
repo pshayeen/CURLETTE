@@ -168,7 +168,7 @@ $cartTotal = getCartTotal($cartItems);
                         <p class="payment-method-label">Payment Method</p>
 
                         <label class="payment-option">
-                            <input type="radio" name="payment_method" value="cash" checked>
+                            <input type="radio" name="payment_method" value="cash" class="js-payment-method" checked>
                             <span class="payment-option-info">
                                 <strong>Cash on Delivery</strong>
                                 <span>Pay in cash when your order is delivered.</span>
@@ -176,7 +176,7 @@ $cartTotal = getCartTotal($cartItems);
                         </label>
 
                         <label class="payment-option">
-                            <input type="radio" name="payment_method" value="gcash">
+                            <input type="radio" name="payment_method" value="gcash" class="js-payment-method">
                             <span class="payment-option-info">
                                 <strong>GCash</strong>
                                 <span>Pay via GCash.</span>
@@ -184,12 +184,17 @@ $cartTotal = getCartTotal($cartItems);
                         </label>
 
                         <label class="payment-option">
-                            <input type="radio" name="payment_method" value="bank">
+                            <input type="radio" name="payment_method" value="bank" class="js-payment-method">
                             <span class="payment-option-info">
                                 <strong>Bank Transfer</strong>
                                 <span>Pay via bank transfer.</span>
                             </span>
                         </label>
+                    </div>
+
+                    <div class="form-group payment-reference-field" hidden>
+                        <label for="payment_reference">Reference Number</label>
+                        <input type="text" id="payment_reference" name="payment_reference" placeholder="e.g. 1234567890123">
                     </div>
 
                     <button type="submit" class="btn-main cart-checkout-btn">PLACE ORDER</button>

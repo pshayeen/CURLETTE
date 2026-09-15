@@ -39,7 +39,7 @@ try {
     $stmt->bindValue(':notes', $result['data']['notes'] !== '' ? $result['data']['notes'] : null);
     $stmt->bindValue(':deposit_amount', getDepositAmount());
     $stmt->bindValue(':payment_method', $result['data']['payment_method']);
-    $stmt->bindValue(':payment_reference', generatePaymentReference());
+    $stmt->bindValue(':payment_reference', $result['data']['payment_reference']);
     $stmt->execute();
 
     $newId = $pdo->lastInsertId();

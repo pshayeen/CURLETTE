@@ -355,6 +355,25 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // show/require the reference number only for GCash or Bank Transfer
+    var paymentRadios = document.querySelectorAll('.js-payment-method');
+    var referenceField = document.querySelector('.payment-reference-field');
+    var referenceInput = document.getElementById('payment_reference');
+
+    function updatePaymentReferenceField() {
+        var selected = document.querySelector('.js-payment-method:checked');
+        var needsReference = selected && selected.value !== 'cash';
+        if (referenceField) referenceField.hidden = !needsReference;
+        if (referenceInput) referenceInput.required = needsReference;
+    }
+
+    if (paymentRadios.length) {
+        paymentRadios.forEach(function (radio) {
+            radio.addEventListener('change', updatePaymentReferenceField);
+        });
+        updatePaymentReferenceField();
+    }
+
     // Checkout confirmation
     var checkoutForm = document.querySelector('.js-checkout-form');
     if (checkoutForm) {
@@ -362,6 +381,11 @@ document.addEventListener('DOMContentLoaded', function () {
             if (checkoutForm.dataset.confirmed === 'true') {
                 return;
             }
+
+            if (!checkoutForm.checkValidity()) {
+                return; // let the browser show its native "please fill this field" message
+            }
+
             event.preventDefault();
             var modalEl = document.getElementById('checkoutConfirmModal');
             if (modalEl && window.bootstrap) {

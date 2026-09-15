@@ -87,8 +87,9 @@ $orders     = getUserOrders($userId);
                             <?php if ($order['payment_reference']): ?> — Ref# <?= htmlspecialchars($order['payment_reference'], ENT_QUOTES, 'UTF-8') ?><?php endif; ?>
                         </p>
 
-                        <?php if ($order['status'] === 'placed'): ?>
-                            <div class="my-list-item-actions">
+                        <div class="my-list-item-actions">
+                            <a href="receipt-order.php?id=<?= (int) $order['id'] ?>" class="btn-outline btn-small">VIEW RECEIPT</a>
+                            <?php if ($order['status'] === 'placed'): ?>
                                 <button type="button" class="my-cancel-btn"
                                         data-bs-toggle="modal"
                                         data-bs-target="#cancelConfirmModal"
@@ -96,8 +97,8 @@ $orders     = getUserOrders($userId);
                                         data-label="Order #<?= (int) $order['id'] ?> will be cancelled and its items restocked. This can't be undone.">
                                     Cancel Order
                                 </button>
-                            </div>
-                        <?php endif; ?>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>
