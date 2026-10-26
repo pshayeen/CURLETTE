@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Appointments index{% endblock %}
+
+{% block body %}
+    <h1>Appointments index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>CustomerName</th>
+                <th>CustomerEmail</th>
+                <th>Service</th>
+                <th>AppointmentDate</th>
+                <th>AppointmentTime</th>
+                <th>Notes</th>
+                <th>Status</th>
+                <th>DepositAmount</th>
+                <th>PaymentReference</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for appointment in appointments %}
+            <tr>
+                <td>{{ appointment.id }}</td>
+                <td>{{ appointment.customerName }}</td>
+                <td>{{ appointment.customerEmail }}</td>
+                <td>{{ appointment.service }}</td>
+                <td>{{ appointment.appointmentDate ? appointment.appointmentDate|date('Y-m-d') : '' }}</td>
+                <td>{{ appointment.appointmentTime ? appointment.appointmentTime|date('H:i:s') : '' }}</td>
+                <td>{{ appointment.notes }}</td>
+                <td>{{ appointment.status }}</td>
+                <td>{{ appointment.depositAmount }}</td>
+                <td>{{ appointment.paymentReference }}</td>
+                <td>{{ appointment.createdAt ? appointment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_appointments_show', {'id': appointment.id}) }}">show</a>
+                    <a href="{{ path('app_appointments_edit', {'id': appointment.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_appointments_new') }}">Create new</a>
+{% endblock %}

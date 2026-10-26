@@ -1,0 +1,5 @@
+<form method="post" action="{{ path('app_products_delete', {id: product.id}) }}" style="display:inline"
+      onsubmit="return confirm('Remove {{ product.productName|e('js') }} from the catalog? This cannot be undone.');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
+    <button type="submit" class="btn-danger">Remove</button>
+</form>

@@ -1,0 +1,25 @@
+{% set current = app.request.attributes.get('_route') %}
+
+<aside class="sidebar">
+
+    <div class="sidebar-header">
+        <img src="{{ asset('images/logo.png') }}" alt="Curlétte">
+        <span class="admin-tag">ADMIN</span>
+    </div>
+
+    <nav>
+        <ul>
+            <li>
+                <a href="{{ path('app_dashboard') }}" class="{{ current == 'app_dashboard' ? 'active' }}">
+                    <i class="bi bi-speedometer2"></i> Dashboard
+                </a>
+            </li>
+            <li><a><i class="bi bi-bag-check"></i> Orders</a></li>
+            <li><a><i class="bi bi-calendar-check"></i> Appointments</a></li>
+            <li><a><i class="bi bi-box-seam"></i> Products</a></li>
+            <li><a><i class="bi bi-people"></i> Customers</a></li>
+            <li><a><i class="bi bi-envelope"></i> Messages</a></li>
+        </ul>
+    </nav>
+
+</aside>

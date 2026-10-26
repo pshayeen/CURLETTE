@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard | Curlétte Admin{% endblock %}
+
+{% block body %}
+
+    <div class="page-header">
+        <div>
+            <h1>Dashboard</h1>
+            <p>Welcome back, {{ adminUsername }}.</p>
+        </div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card money">
+            <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+            <strong>PHP {{ stats.total_revenue|number_format(2) }}</strong>
+            <span>Total Income</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-bag-check"></i></div>
+            <strong>{{ stats.pending_orders }}</strong>
+            <span>Pending Orders</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-receipt"></i></div>
+            <strong>{{ stats.total_orders }}</strong>
+            <span>Total Orders</span>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-calendar-check"></i></div>
+            <strong>{{ stats.upcoming_appointments }}</strong>
+            <span>Upcoming Appointments</span>
+        </div>
+        <div class="stat-card {{ stats.low_stock_count > 0 ? 'alert' }}">
+            <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+            <strong>{{ stats.low_stock_count }}</strong>
+            <span>Low Stock Items</span>
+        </div>
+        <div class="stat-card {{ stats.unread_messages > 0 ? 'alert' }}">
+            <div class="stat-icon"><i class="bi bi-envelope"></i></div>
+            <strong>{{ stats.unread_messages }}</strong>
+            <span>Unread Messages</span>
+        </div>
+    </div>
+
+    <div class="panels">
+
+        <div class="panel">
+            <h2>Recent Orders</h2>
+            {% for order in recentOrders %}
+                <div class="row">
+                    <div>
+                        <strong>#{{ order.id }} — {{ order.full_name }}</strong>
+                        <small>{{ order.date }}</small>
+                    </div>
+                    <span class="badge {{ order.status }}">{{ order.status }}</span>
+                </div>
+            {% else %}
+                <p>No orders yet.</p>
+            {% endfor %}
+        </div>
+
+        <div class="panel">
+            <h2>Upcoming Appointments</h2>
+            {% for appt in upcomingAppointments %}
+                <div class="row">
+                    <div>
+                        <strong>{{ appt.full_name }} — {{ appt.service }}</strong>
+                        <small>{{ appt.date }} at {{ appt.time }}</small>
+                    </div>
+                </div>
+            {% else %}
+                <p>No upcoming appointments.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock %}

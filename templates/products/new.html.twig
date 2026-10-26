@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Product | Curlétte Admin{% endblock %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h1>Add Product</h1>
+        <p>Fill in the details to add a product to the catalog.</p>
+    </div>
+
+    <div class="form-card">
+        {{ include('products/_form.html.twig', {button_label: 'Add Product'}) }}
+        <p class="form-back"><a href="{{ path('app_products_index') }}">← Back to products</a></p>
+    </div>
+
+{% endblock %}
