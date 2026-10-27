@@ -14,12 +14,28 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/appointments')]
 final class AppointmentsController extends AbstractController
 {
-    #[Route(name: 'app_appointments_index', methods: ['GET'])]
-    public function index(AppointmentsRepository $appointmentsRepository): Response
+    #[Route(name: 'app_appointments_index', methods: ['GET', 'POST'])]
+    public function index(AppointmentsRepository $appointmentsRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $appointment = new Appointments();
+        $form = $this->createForm(AppointmentsType::class, $appointment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($appointment);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Appointment added.');
+
+            return $this->redirectToRoute('app_appointments_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('appointments/index.html.twig', [
-            'appointments' => $appointmentsRepository->findAll(),
-        ]);
+            'appointments' => $appointmentsRepository->findBy([], ['appointmentDate' => 'DESC', 'appointmentTime' => 'DESC']),
+            'upcomingAppointments' => $appointmentsRepository->findByStatus('upcoming'),
+            'form' => $form->createView(),
+            'openAddModal' => $form->isSubmitted(),   // reopen the modal when there are errors
+        ], $form->isSubmitted() ? new Response(null, Response::HTTP_UNPROCESSABLE_ENTITY) : null);
     }
 
     #[Route('/new', name: 'app_appointments_new', methods: ['GET', 'POST'])]
@@ -32,6 +48,8 @@ final class AppointmentsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($appointment);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Appointment added.');
 
             return $this->redirectToRoute('app_appointments_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -59,6 +77,8 @@ final class AppointmentsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Appointment updated.');
+
             return $this->redirectToRoute('app_appointments_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -71,9 +91,11 @@ final class AppointmentsController extends AbstractController
     #[Route('/{id}', name: 'app_appointments_delete', methods: ['POST'])]
     public function delete(Request $request, Appointments $appointment, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$appointment->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $appointment->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($appointment);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Appointment deleted.');
         }
 
         return $this->redirectToRoute('app_appointments_index', [], Response::HTTP_SEE_OTHER);

@@ -14,12 +14,28 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/orders')]
 final class OrdersController extends AbstractController
 {
-    #[Route(name: 'app_orders_index', methods: ['GET'])]
-    public function index(OrdersRepository $ordersRepository): Response
+    #[Route(name: 'app_orders_index', methods: ['GET', 'POST'])]
+    public function index(OrdersRepository $ordersRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $order = new Orders();
+        $form = $this->createForm(OrdersType::class, $order);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($order);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Order added.');
+
+            return $this->redirectToRoute('app_orders_index', [], Response::HTTP_SEE_OTHER);
+        }
+
         return $this->render('orders/index.html.twig', [
-            'orders' => $ordersRepository->findAll(),
-        ]);
+            'orders' => $ordersRepository->findBy([], ['createdAt' => 'DESC']),
+            'newOrders' => $ordersRepository->findByStatus('placed'),
+            'form' => $form->createView(),
+            'openAddModal' => $form->isSubmitted(),   // reopen the modal when there are errors
+        ], $form->isSubmitted() ? new Response(null, Response::HTTP_UNPROCESSABLE_ENTITY) : null);
     }
 
     #[Route('/new', name: 'app_orders_new', methods: ['GET', 'POST'])]
@@ -32,6 +48,8 @@ final class OrdersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($order);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Order added.');
 
             return $this->redirectToRoute('app_orders_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -59,6 +77,8 @@ final class OrdersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
+            $this->addFlash('success', 'Order updated.');
+
             return $this->redirectToRoute('app_orders_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -71,9 +91,11 @@ final class OrdersController extends AbstractController
     #[Route('/{id}', name: 'app_orders_delete', methods: ['POST'])]
     public function delete(Request $request, Orders $order, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$order->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $order->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($order);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Order deleted.');
         }
 
         return $this->redirectToRoute('app_orders_index', [], Response::HTTP_SEE_OTHER);

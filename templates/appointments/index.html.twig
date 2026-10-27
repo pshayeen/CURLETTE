@@ -1,53 +1,185 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Appointments index{% endblock %}
+{% block title %}Appointments | Curlétte Admin{% endblock %}
 
 {% block body %}
-    <h1>Appointments index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>CustomerName</th>
-                <th>CustomerEmail</th>
-                <th>Service</th>
-                <th>AppointmentDate</th>
-                <th>AppointmentTime</th>
-                <th>Notes</th>
-                <th>Status</th>
-                <th>DepositAmount</th>
-                <th>PaymentReference</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for appointment in appointments %}
-            <tr>
-                <td>{{ appointment.id }}</td>
-                <td>{{ appointment.customerName }}</td>
-                <td>{{ appointment.customerEmail }}</td>
-                <td>{{ appointment.service }}</td>
-                <td>{{ appointment.appointmentDate ? appointment.appointmentDate|date('Y-m-d') : '' }}</td>
-                <td>{{ appointment.appointmentTime ? appointment.appointmentTime|date('H:i:s') : '' }}</td>
-                <td>{{ appointment.notes }}</td>
-                <td>{{ appointment.status }}</td>
-                <td>{{ appointment.depositAmount }}</td>
-                <td>{{ appointment.paymentReference }}</td>
-                <td>{{ appointment.createdAt ? appointment.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_appointments_show', {'id': appointment.id}) }}">show</a>
-                    <a href="{{ path('app_appointments_edit', {'id': appointment.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="12">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% set paymentLabels = {cash: 'Cash on Delivery', gcash: 'GCash', bank: 'Bank Transfer'} %}
 
-    <a href="{{ path('app_appointments_new') }}">Create new</a>
+    <div class="page-header page-header-row">
+        <div>
+            <h1>Appointments</h1>
+            <p>{{ appointments|length }} appointment{{ appointments|length == 1 ? '' : 's' }} in total.</p>
+        </div>
+        <button type="button" class="btn-main" data-bs-toggle="modal" data-bs-target="#addAppointmentModal">
+            + ADD APPOINTMENT
+        </button>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking</th>
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Date &amp; Time</th>
+                    <th>Notes</th>
+                    <th>Deposit</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                    <tr>
+                        <td><strong>#{{ appointment.id }}</strong></td>
+                        <td>
+                            <strong>{{ appointment.customerName }}</strong>
+                            <span class="muted">{{ appointment.customerEmail }}</span>
+                        </td>
+                        <td>{{ appointment.service }}</td>
+                        <td>
+                            {{ appointment.appointmentDate ? appointment.appointmentDate|date('M j, Y') : '—' }}
+                            <span class="muted">{{ appointment.appointmentTime ? appointment.appointmentTime|date('g:i A') : '' }}</span>
+                        </td>
+                        <td>
+                            {{ appointment.notes ? (appointment.notes|slice(0, 40) ~ (appointment.notes|length > 40 ? '…' : '')) : '—' }}
+                        </td>
+                        <td>
+                            <strong>PHP {{ appointment.depositAmount|number_format(2) }}</strong>
+                            <span class="muted">
+                                {{ paymentLabels[appointment.paymentMethod]|default(appointment.paymentMethod) }}{% if appointment.paymentReference %} · Ref #{{ appointment.paymentReference }}{% endif %}
+                            </span>
+                        </td>
+                        <td><span class="badge {{ appointment.status }}">{{ appointment.status }}</span></td>
+                        <td>
+                            <div class="row-actions">
+                                <a href="{{ path('app_appointments_show', {id: appointment.id}) }}" class="view-link">Show</a>
+                                <a href="{{ path('app_appointments_edit', {id: appointment.id}) }}" class="view-link">Edit</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="8"><span class="muted">No appointments yet.</span></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="section-title">Upcoming</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Booking</th>
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Date &amp; Time</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in upcomingAppointments %}
+                    <tr>
+                        <td><strong>#{{ appointment.id }}</strong></td>
+                        <td>{{ appointment.customerName }}</td>
+                        <td>{{ appointment.service }}</td>
+                        <td>
+                            {{ appointment.appointmentDate ? appointment.appointmentDate|date('M j, Y') : '—' }}
+                            <span class="muted">{{ appointment.appointmentTime ? appointment.appointmentTime|date('g:i A') : '' }}</span>
+                        </td>
+                        <td><a href="{{ path('app_appointments_edit', {id: appointment.id}) }}" class="view-link">Edit</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5"><span class="muted">No upcoming appointments.</span></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# ADD APPOINTMENT MODAL (fields rendered one by one, like the instructor's demo) #}
+    <div class="modal fade" id="addAppointmentModal" tabindex="-1" aria-labelledby="addAppointmentLabel" aria-hidden="true"
+         data-open-on-load="{{ openAddModal|default(false) ? 'true' : 'false' }}">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 640px;">
+            <div class="modal-content">
+                {{ form_start(form) }}
+                    <div class="modal-heading">
+                        <h2 id="addAppointmentLabel">Add Appointment</h2>
+                        <p>Book a new appointment for a customer.</p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div>
+                            {{ form_label(form.customerName) }}
+                            {{ form_widget(form.customerName, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.customerName) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.customerEmail) }}
+                            {{ form_widget(form.customerEmail, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.customerEmail) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.service) }}
+                            {{ form_widget(form.service, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.service) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.status) }}
+                            {{ form_widget(form.status, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.status) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.appointmentDate) }}
+                            {{ form_widget(form.appointmentDate, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.appointmentDate) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.appointmentTime) }}
+                            {{ form_widget(form.appointmentTime, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.appointmentTime) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.depositAmount) }}
+                            {{ form_widget(form.depositAmount, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.depositAmount) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.paymentMethod) }}
+                            {{ form_widget(form.paymentMethod, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.paymentMethod) }}
+                        </div>
+                        <div class="full">
+                            {{ form_label(form.paymentReference) }}
+                            {{ form_widget(form.paymentReference, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.paymentReference) }}
+                        </div>
+                        <div class="full">
+                            {{ form_label(form.notes) }}
+                            {{ form_widget(form.notes, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.notes) }}
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-outline" data-bs-dismiss="modal">CANCEL</button>
+                        <button type="submit" class="btn-main">ADD APPOINTMENT</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // the add form had errors, so open it again to show them
+    const addModal = document.getElementById('addAppointmentModal');
+    if (addModal.dataset.openOnLoad === 'true') {
+        new bootstrap.Modal(addModal).show();
+    }
+</script>
 {% endblock %}

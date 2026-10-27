@@ -44,6 +44,9 @@ class Appointments
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\Column(length: 20)]
+    private ?string $paymentMethod = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -165,6 +168,18 @@ class Appointments
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getPaymentMethod(): ?string
+    {
+        return $this->paymentMethod;
+    }
+
+    public function setPaymentMethod(string $paymentMethod): static
+    {
+        $this->paymentMethod = $paymentMethod;
 
         return $this;
     }

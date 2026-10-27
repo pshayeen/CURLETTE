@@ -1,50 +1,58 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Orders{% endblock %}
+{% block title %}Order #{{ order.id }} | Curlétte Admin{% endblock %}
 
 {% block body %}
-    <h1>Orders</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ order.id }}</td>
-            </tr>
-            <tr>
-                <th>CustomerName</th>
-                <td>{{ order.customerName }}</td>
-            </tr>
-            <tr>
-                <th>CustomerEmail</th>
-                <td>{{ order.customerEmail }}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>{{ order.status }}</td>
-            </tr>
-            <tr>
-                <th>Total</th>
-                <td>{{ order.total }}</td>
-            </tr>
-            <tr>
-                <th>PaymentMethod</th>
-                <td>{{ order.paymentMethod }}</td>
-            </tr>
-            <tr>
-                <th>PaymentReference</th>
-                <td>{{ order.paymentReference }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="page-header page-header-row">
+        <div>
+            <h1>Order #{{ order.id }}</h1>
+            <p>Placed on {{ order.createdAt ? order.createdAt|date('M j, Y') : '—' }}</p>
+        </div>
+        <span class="badge {{ order.status }}">{{ order.status }}</span>
+    </div>
 
-    <a href="{{ path('app_orders_index') }}">back to list</a>
+    <div class="table-wrap">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Customer</th>
+                    <td>{{ order.customerName }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ order.customerEmail }}</td>
+                </tr>
+                <tr>
+                    <th>Items</th>
+                    <td>
+                        {% for item in order.items %}
+                            <div>{{ item.productName }} × {{ item.quantity }} (PHP {{ item.unitPrice|number_format(2) }} each)</div>
+                        {% else %}
+                            <span class="muted">No items</span>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td><strong>PHP {{ order.total|number_format(2) }}</strong></td>
+                </tr>
+                <tr>
+                    <th>Payment method</th>
+                    <td>{{ order.paymentMethod }}</td>
+                </tr>
+                <tr>
+                    <th>Payment reference</th>
+                    <td>{{ order.paymentReference ?: '—' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <a href="{{ path('app_orders_edit', {'id': order.id}) }}">edit</a>
+    <div class="row-actions" style="margin-top: 20px;">
+        <a href="{{ path('app_orders_index') }}" class="view-link">← Back to orders</a>
+        <a href="{{ path('app_orders_edit', {id: order.id}) }}" class="view-link">Edit</a>
+        {{ include('orders/_delete_form.html.twig') }}
+    </div>
 
-    {{ include('orders/_delete_form.html.twig') }}
 {% endblock %}

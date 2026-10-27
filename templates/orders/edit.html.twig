@@ -1,13 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Orders{% endblock %}
+{% block title %}Edit Order | Curlétte Admin{% endblock %}
 
 {% block body %}
-    <h1>Edit Orders</h1>
 
-    {{ include('orders/_form.html.twig', {'button_label': 'Update'}) }}
+    <div class="page-header">
+        <h1>Edit Order #{{ order.id }}</h1>
+        <p>{{ order.customerName }}</p>
+    </div>
 
-    <a href="{{ path('app_orders_index') }}">back to list</a>
+    <div class="form-card">
+        {{ include('orders/_form.html.twig', {button_label: 'Save Changes'}) }}
+        <p class="form-back"><a href="{{ path('app_orders_index') }}">← Back to orders</a></p>
+    </div>
 
-    {{ include('orders/_delete_form.html.twig') }}
+    <div style="margin-top: 20px;">
+        {{ include('orders/_delete_form.html.twig') }}
+    </div>
+
 {% endblock %}

@@ -1,47 +1,163 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Orders index{% endblock %}
+{% block title %}Orders | Curlétte Admin{% endblock %}
 
 {% block body %}
-    <h1>Orders index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>CustomerName</th>
-                <th>CustomerEmail</th>
-                <th>Status</th>
-                <th>Total</th>
-                <th>PaymentMethod</th>
-                <th>PaymentReference</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for order in orders %}
-            <tr>
-                <td>{{ order.id }}</td>
-                <td>{{ order.customerName }}</td>
-                <td>{{ order.customerEmail }}</td>
-                <td>{{ order.status }}</td>
-                <td>{{ order.total }}</td>
-                <td>{{ order.paymentMethod }}</td>
-                <td>{{ order.paymentReference }}</td>
-                <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_orders_show', {'id': order.id}) }}">show</a>
-                    <a href="{{ path('app_orders_edit', {'id': order.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% set paymentLabels = {cash: 'Cash on Delivery', gcash: 'GCash', bank: 'Bank Transfer'} %}
 
-    <a href="{{ path('app_orders_new') }}">Create new</a>
+    <div class="page-header page-header-row">
+        <div>
+            <h1>Orders</h1>
+            <p>{{ orders|length }} order{{ orders|length == 1 ? '' : 's' }} in total.</p>
+        </div>
+        <button type="button" class="btn-main" data-bs-toggle="modal" data-bs-target="#addOrderModal">
+            + ADD ORDER
+        </button>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order.id }}</strong></td>
+                        <td>
+                            <strong>{{ order.customerName }}</strong>
+                            <span class="muted">{{ order.customerEmail }}</span>
+                        </td>
+                        <td>
+                            {% for item in order.items %}
+                                <div>{{ item.productName }} × {{ item.quantity }}</div>
+                            {% else %}
+                                <span class="muted">No items</span>
+                            {% endfor %}
+                        </td>
+                        <td><strong>PHP {{ order.total|number_format(2) }}</strong></td>
+                        <td>
+                            {{ paymentLabels[order.paymentMethod]|default(order.paymentMethod) }}
+                            {% if order.paymentReference %}
+                                <span class="muted">Ref #{{ order.paymentReference }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ order.createdAt ? order.createdAt|date('M j, Y') : '—' }}</td>
+                        <td><span class="badge {{ order.status }}">{{ order.status }}</span></td>
+                        <td>
+                            <div class="row-actions">
+                                <a href="{{ path('app_orders_show', {id: order.id}) }}" class="view-link">Show</a>
+                                <a href="{{ path('app_orders_edit', {id: order.id}) }}" class="view-link">Edit</a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="8"><span class="muted">No orders yet.</span></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="section-title">Newly placed</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in newOrders %}
+                    <tr>
+                        <td><strong>#{{ order.id }}</strong></td>
+                        <td>{{ order.customerName }}</td>
+                        <td><strong>PHP {{ order.total|number_format(2) }}</strong></td>
+                        <td>{{ order.createdAt ? order.createdAt|date('M j, Y') : '—' }}</td>
+                        <td><a href="{{ path('app_orders_edit', {id: order.id}) }}" class="view-link">Process</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5"><span class="muted">No new orders waiting.</span></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# ADD ORDER MODAL (fields rendered one by one, like the instructor's demo) #}
+    <div class="modal fade" id="addOrderModal" tabindex="-1" aria-labelledby="addOrderLabel" aria-hidden="true"
+         data-open-on-load="{{ openAddModal|default(false) ? 'true' : 'false' }}">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 640px;">
+            <div class="modal-content">
+                {{ form_start(form) }}
+                    <div class="modal-heading">
+                        <h2 id="addOrderLabel">Add Order</h2>
+                        <p>Record a new customer order.</p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div>
+                            {{ form_label(form.customerName) }}
+                            {{ form_widget(form.customerName, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.customerName) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.customerEmail) }}
+                            {{ form_widget(form.customerEmail, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.customerEmail) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.status) }}
+                            {{ form_widget(form.status, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.status) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.paymentMethod) }}
+                            {{ form_widget(form.paymentMethod, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.paymentMethod) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.total) }}
+                            {{ form_widget(form.total, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.total) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.paymentReference) }}
+                            {{ form_widget(form.paymentReference, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.paymentReference) }}
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-outline" data-bs-dismiss="modal">CANCEL</button>
+                        <button type="submit" class="btn-main">ADD ORDER</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // the add form had errors, so open it again to show them
+    const addModal = document.getElementById('addOrderModal');
+    if (addModal.dataset.openOnLoad === 'true') {
+        new bootstrap.Modal(addModal).show();
+    }
+</script>
 {% endblock %}

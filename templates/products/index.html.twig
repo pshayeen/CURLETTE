@@ -9,7 +9,9 @@
             <h1>Products</h1>
             <p>{{ products|length }} product{{ products|length == 1 ? '' : 's' }} in the catalog.</p>
         </div>
-        <a href="{{ path('app_products_new') }}" class="btn-main">+ ADD PRODUCT</a>
+        <button type="button" class="btn-main" data-bs-toggle="modal" data-bs-target="#addProductModal">
+            + ADD PRODUCT
+        </button>
     </div>
 
     <div class="table-wrap">
@@ -19,33 +21,155 @@
                     <th>Product</th>
                     <th>Price</th>
                     <th>Stock</th>
+                    <th>Update Stock</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for product in products %}
                     <tr>
+                        <td><strong>{{ product.productName }}</strong></td>
                         <td>
-                            <strong>{{ product.productName }}</strong>
-                            <span class="muted">{{ product.productDescription|slice(0, 60) }}{{ product.productDescription|length > 60 ? '…' }}</span>
+                            <form method="post" action="{{ path('app_products_update_price', {id: product.id}) }}" class="inline-form">
+                                <input type="hidden" name="_token" value="{{ csrf_token('price' ~ product.id) }}">
+                                <span>PHP</span>
+                                <input type="number" name="price" min="0.01" step="0.01" value="{{ product.price }}" required>
+                                <button type="submit" class="btn-small">Save</button>
+                            </form>
                         </td>
-                        <td><strong>PHP {{ product.price|number_format(2) }}</strong></td>
                         <td>
                             <span class="{{ product.stockQuantity <= 5 ? 'stock-low' }}">
                                 {{ product.stockQuantity }}{{ product.stockQuantity <= 5 ? ' (low)' }}
                             </span>
                         </td>
                         <td>
-                            <a href="{{ path('app_products_show', {id: product.id}) }}" class="view-link">View</a>
-                            <a href="{{ path('app_products_edit', {id: product.id}) }}" class="view-link">Edit</a>
-                            {{ include('products/_delete_form.html.twig') }}
+                            <form method="post" action="{{ path('app_products_update_stock', {id: product.id}) }}" class="inline-form stock">
+                                <input type="hidden" name="_token" value="{{ csrf_token('stock' ~ product.id) }}">
+                                <input type="number" name="stock_quantity" min="0" value="{{ product.stockQuantity }}" required>
+                                <button type="submit" class="btn-small">Save</button>
+                            </form>
+                        </td>
+                        <td>
+                            <div class="row-actions">
+                                <a href="{{ path('app_products_edit', {id: product.id}) }}" class="view-link">Edit</a>
+                                <button type="button" class="btn-small-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                        data-name="{{ product.productName }}"
+                                        data-action="{{ path('app_products_delete', {id: product.id}) }}"
+                                        data-token="{{ csrf_token('delete' ~ product.id) }}">
+                                    Remove
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 {% else %}
-                    <tr><td colspan="4"><span class="muted">No products yet.</span></td></tr>
+                    <tr><td colspan="5"><span class="muted">No products yet.</span></td></tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 
+    <h2 class="section-title">Low stock</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Stock</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in lowStockProducts %}
+                    <tr>
+                        <td><strong>{{ product.productName }}</strong></td>
+                        <td><span class="stock-low">{{ product.stockQuantity }}</span></td>
+                        <td><a href="{{ path('app_products_edit', {id: product.id}) }}" class="view-link">Restock</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="3"><span class="muted">Nothing is running low.</span></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# ADD PRODUCT MODAL (fields rendered one by one, like the instructor's demo) #}
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                {{ form_start(form) }}
+                    <div class="modal-heading">
+                        <h2 id="addProductLabel">Add Product</h2>
+                        <p>Add a new item to the shop catalog.</p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="full">
+                            {{ form_label(form.productName) }}
+                            {{ form_widget(form.productName, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.productName) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.price) }}
+                            {{ form_widget(form.price, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.price) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.stockQuantity) }}
+                            {{ form_widget(form.stockQuantity, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.stockQuantity) }}
+                        </div>
+                        <div class="full">
+                            {{ form_label(form.productDescription) }}
+                            {{ form_widget(form.productDescription, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.productDescription) }}
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-outline" data-bs-dismiss="modal">CANCEL</button>
+                        <button type="submit" class="btn-main">ADD PRODUCT</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    {# REMOVE CONFIRMATION MODAL (one modal, filled in for each product) #}
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content confirm-modal-content danger">
+                <div class="confirm-modal-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                <h2>Remove this product?</h2>
+                <p id="deleteLabel">This can’t be undone.</p>
+
+                <form method="post" id="deleteForm">
+                    <input type="hidden" name="_token" id="deleteToken">
+                    <div class="confirm-modal-actions">
+                        <button type="button" class="btn-outline" data-bs-dismiss="modal">GO BACK</button>
+                        <button type="submit" class="btn-main is-danger">YES, REMOVE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    // fill the remove modal with the product that was clicked
+    document.getElementById('deleteModal').addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        document.getElementById('deleteLabel').textContent =
+            'Remove “' + button.dataset.name + '” from the catalog? This can’t be undone.';
+        document.getElementById('deleteForm').action = button.dataset.action;
+        document.getElementById('deleteToken').value = button.dataset.token;
+    });
+
+    {% if openAddModal|default(false) %}
+    // the add form had errors, so open it again to show them
+    new bootstrap.Modal(document.getElementById('addProductModal')).show();
+    {% endif %}
+</script>
 {% endblock %}

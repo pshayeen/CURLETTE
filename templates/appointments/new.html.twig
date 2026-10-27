@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Appointments{% endblock %}
+{% block title %}Add Appointment | Curlétte Admin{% endblock %}
 
 {% block body %}
-    <h1>Create new Appointments</h1>
 
-    {{ include('appointments/_form.html.twig') }}
+    <div class="page-header">
+        <h1>Add Appointment</h1>
+        <p>Book a new appointment for a customer.</p>
+    </div>
 
-    <a href="{{ path('app_appointments_index') }}">back to list</a>
+    <div class="form-card">
+        {{ include('appointments/_form.html.twig', {button_label: 'Add Appointment'}) }}
+        <p class="form-back"><a href="{{ path('app_appointments_index') }}">← Back to appointments</a></p>
+    </div>
+
 {% endblock %}

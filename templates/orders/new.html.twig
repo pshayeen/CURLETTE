@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Orders{% endblock %}
+{% block title %}Add Order | Curlétte Admin{% endblock %}
 
 {% block body %}
-    <h1>Create new Orders</h1>
 
-    {{ include('orders/_form.html.twig') }}
+    <div class="page-header">
+        <h1>Add Order</h1>
+        <p>Record a new customer order.</p>
+    </div>
 
-    <a href="{{ path('app_orders_index') }}">back to list</a>
+    <div class="form-card">
+        {{ include('orders/_form.html.twig', {button_label: 'Add Order'}) }}
+        <p class="form-back"><a href="{{ path('app_orders_index') }}">← Back to orders</a></p>
+    </div>
+
 {% endblock %}
