@@ -18,6 +18,7 @@
         <table>
             <thead>
                 <tr>
+                    <th>Photo</th>
                     <th>Product</th>
                     <th>Price</th>
                     <th>Stock</th>
@@ -28,6 +29,16 @@
             <tbody>
                 {% for product in products %}
                     <tr>
+                        <td>
+                            {% if product.image %}
+                                <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.productName }}"
+                                     style="width: 44px; height: 44px; object-fit: contain; border-radius: 10px; background: #FFF7F3;">
+                            {% else %}
+                                <span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 10px; background: #FFF7F3; color: #B8A59E;">
+                                    <i class="bi bi-image"></i>
+                                </span>
+                            {% endif %}
+                        </td>
                         <td><strong>{{ product.productName }}</strong></td>
                         <td>
                             <form method="post" action="{{ path('app_products_update_price', {id: product.id}) }}" class="inline-form">
@@ -62,7 +73,7 @@
                         </td>
                     </tr>
                 {% else %}
-                    <tr><td colspan="5"><span class="muted">No products yet.</span></td></tr>
+                    <tr><td colspan="6"><span class="muted">No products yet.</span></td></tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -94,7 +105,8 @@
     </div>
 
     {# ADD PRODUCT MODAL (fields rendered one by one, like the instructor's demo) #}
-    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductLabel" aria-hidden="true">
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductLabel" aria-hidden="true"
+         data-open-on-load="{{ openAddModal|default(false) ? 'true' : 'false' }}">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 {{ form_start(form) }}
@@ -118,6 +130,12 @@
                             {{ form_label(form.stockQuantity) }}
                             {{ form_widget(form.stockQuantity, {attr: {class: 'form-control'}}) }}
                             {{ form_errors(form.stockQuantity) }}
+                        </div>
+                        <div class="full">
+                            {{ form_label(form.imageFile) }}
+                            {{ form_widget(form.imageFile, {attr: {class: 'form-control'}}) }}
+                            {{ form_help(form.imageFile) }}
+                            {{ form_errors(form.imageFile) }}
                         </div>
                         <div class="full">
                             {{ form_label(form.productDescription) }}
@@ -158,7 +176,6 @@
 
 {% block javascripts %}
 <script>
-    // fill the remove modal with the product that was clicked
     document.getElementById('deleteModal').addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         document.getElementById('deleteLabel').textContent =
@@ -167,9 +184,9 @@
         document.getElementById('deleteToken').value = button.dataset.token;
     });
 
-    {% if openAddModal|default(false) %}
-    // the add form had errors, so open it again to show them
-    new bootstrap.Modal(document.getElementById('addProductModal')).show();
-    {% endif %}
+    const addModal = document.getElementById('addProductModal');
+    if (addModal.dataset.openOnLoad === 'true') {
+        new bootstrap.Modal(addModal).show();
+    }
 </script>
 {% endblock %}

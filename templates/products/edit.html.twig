@@ -10,6 +10,11 @@
     </div>
 
     <div class="form-card">
+        {% if product.image %}
+            <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.productName }}"
+                 style="width: 120px; height: 120px; object-fit: contain; margin-bottom: 16px; border-radius: 14px; background: #FFF7F3;">
+        {% endif %}
+
         {{ include('products/_form.html.twig', {button_label: 'Save Changes'}) }}
         <p class="form-back"><a href="{{ path('app_products_index') }}">← Back to products</a></p>
     </div>

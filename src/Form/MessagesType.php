@@ -22,13 +22,13 @@ class MessagesType extends AbstractType
                 'label' => 'Phone',
                 'required' => false,
             ])
-            ->add('messageText', TextareaType::class, [
-                'label' => 'Message',
-                'attr' => ['rows' => 5],
-            ])
             ->add('isRead', CheckboxType::class, [
                 'label' => 'Mark as read',
                 'required' => false,
+            ])
+            ->add('messageText', TextareaType::class, [
+                'label' => 'Message',
+                'attr' => ['rows' => 5],
             ]);
     }
 

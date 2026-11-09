@@ -7,7 +7,7 @@
     <div class="page-header">
         <div>
             <h1>Dashboard</h1>
-            <p>Welcome back, {{ adminUsername }}.</p>
+            <p>Welcome back, {{ app.user ? app.user.fullName|default(app.user.userIdentifier) : 'Admin' }}.</p>
         </div>
     </div>
 
@@ -51,14 +51,15 @@
             {% for order in recentOrders %}
                 <div class="row">
                     <div>
-                        <strong>#{{ order.id }} — {{ order.full_name }}</strong>
-                        <small>{{ order.date }}</small>
+                        <strong>#{{ order.id }} — {{ order.customerName }}</strong>
+                        <small>{{ order.createdAt ? order.createdAt|date('M j, Y') : '—' }}</small>
                     </div>
                     <span class="badge {{ order.status }}">{{ order.status }}</span>
                 </div>
             {% else %}
                 <p>No orders yet.</p>
             {% endfor %}
+            <p class="panel-footer"><a href="{{ path('app_orders_index') }}" class="view-link">View all orders →</a></p>
         </div>
 
         <div class="panel">
@@ -66,13 +67,17 @@
             {% for appt in upcomingAppointments %}
                 <div class="row">
                     <div>
-                        <strong>{{ appt.full_name }} — {{ appt.service }}</strong>
-                        <small>{{ appt.date }} at {{ appt.time }}</small>
+                        <strong>{{ appt.customerName }} — {{ appt.service }}</strong>
+                        <small>
+                            {{ appt.appointmentDate ? appt.appointmentDate|date('M j, Y') : '—' }}
+                            at {{ appt.appointmentTime ? appt.appointmentTime|date('g:i A') : '—' }}
+                        </small>
                     </div>
                 </div>
             {% else %}
                 <p>No upcoming appointments.</p>
             {% endfor %}
+            <p class="panel-footer"><a href="{{ path('app_appointments_index') }}" class="view-link">View all appointments →</a></p>
         </div>
 
     </div>

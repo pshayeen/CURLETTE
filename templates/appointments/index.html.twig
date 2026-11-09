@@ -99,74 +99,158 @@
         </table>
     </div>
 
-    {# ADD APPOINTMENT MODAL (fields rendered one by one, like the instructor's demo) #}
-    <div class="modal fade" id="addAppointmentModal" tabindex="-1" aria-labelledby="addAppointmentLabel" aria-hidden="true"
-         data-open-on-load="{{ openAddModal|default(false) ? 'true' : 'false' }}">
-        <div class="modal-dialog modal-dialog-centered" style="max-width: 640px;">
-            <div class="modal-content">
-                {{ form_start(form) }}
-                    <div class="modal-heading">
-                        <h2 id="addAppointmentLabel">Add Appointment</h2>
-                        <p>Book a new appointment for a customer.</p>
-                    </div>
+    {% set paymentHelp = {gcash: 'Pay the deposit via GCash.', bank: 'Pay the deposit via bank transfer.', cash: 'The deposit was paid in cash.'} %}
 
-                    <div class="form-grid">
-                        <div>
-                            {{ form_label(form.customerName) }}
-                            {{ form_widget(form.customerName, {attr: {class: 'form-control'}}) }}
-                            {{ form_errors(form.customerName) }}
+    <div class="modal fade booking-modal" id="addAppointmentModal" tabindex="-1" aria-labelledby="addAppointmentLabel" aria-hidden="true"
+         data-open-on-load="{{ openAddModal|default(false) ? 'true' : 'false' }}">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-heading">
+                    <h2 id="addAppointmentLabel">Book an appointment</h2>
+                    <p>Choose the service, then pick a date and time for the customer.</p>
+                </div>
+
+                {{ form_start(form, {attr: {class: 'booking-form', id: 'bookingForm'}}) }}
+
+                    <section class="booking-section">
+                        <div class="booking-section-heading">
+                            <span>01</span>
+                            <div>
+                                <h2>Customer details</h2>
+                                <p>Who is this booking for?</p>
+                            </div>
                         </div>
-                        <div>
-                            {{ form_label(form.customerEmail) }}
-                            {{ form_widget(form.customerEmail, {attr: {class: 'form-control'}}) }}
-                            {{ form_errors(form.customerEmail) }}
+                        <div class="booking-details-grid">
+                            <div class="form-group">
+                                {{ form_label(form.customerName) }}
+                                {{ form_widget(form.customerName) }}
+                                {{ form_errors(form.customerName) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.customerEmail) }}
+                                {{ form_widget(form.customerEmail) }}
+                                {{ form_errors(form.customerEmail) }}
+                            </div>
                         </div>
-                        <div>
-                            {{ form_label(form.service) }}
-                            {{ form_widget(form.service, {attr: {class: 'form-control'}}) }}
-                            {{ form_errors(form.service) }}
+                    </section>
+
+                    <section class="booking-section">
+                        <div class="booking-section-heading">
+                            <span>02</span>
+                            <div>
+                                <h2>Choose a service</h2>
+                                <p>Click a service to select it.</p>
+                            </div>
                         </div>
-                        <div>
-                            {{ form_label(form.status) }}
-                            {{ form_widget(form.status, {attr: {class: 'form-control'}}) }}
-                            {{ form_errors(form.status) }}
+
+                        {{ form_widget(form.service, {attr: {hidden: 'hidden', 'data-service-field': ''}}) }}
+                        {{ form_errors(form.service) }}
+
+                        <div class="booking-service-grid">
+                            {% for service in services %}
+                                <article class="booking-service-card{{ form.service.vars.value == service.serviceName ? ' selected' }}" data-service-card="{{ service.serviceName }}">
+                                    <button type="button" class="service-card-main" data-service-select="{{ service.serviceName }}">
+                                        {% if service.image %}
+                                            <div class="service-card-img">
+                                                <img src="{{ asset('images/services/' ~ service.image) }}" alt="{{ service.serviceName }}">
+                                            </div>
+                                        {% else %}
+                                            <div class="service-card-img service-card-img-empty">
+                                                <img src="{{ asset('images/C-icon.png') }}" alt="">
+                                            </div>
+                                        {% endif %}
+                                        <span class="service-card-number">0{{ loop.index }}</span>
+                                        <span class="service-card-title">{{ service.serviceName }}</span>
+                                        <span class="service-card-description">{{ service.serviceDescription }}</span>
+                                        <span class="service-card-bottom">
+                                            <strong>PHP {{ service.price|number_format(0) }}</strong>
+                                            <span>{{ service.duration }}</span>
+                                        </span>
+                                    </button>
+                                </article>
+                            {% endfor %}
                         </div>
-                        <div>
-                            {{ form_label(form.appointmentDate) }}
-                            {{ form_widget(form.appointmentDate, {attr: {class: 'form-control'}}) }}
-                            {{ form_errors(form.appointmentDate) }}
+
+                        <p class="selected-service-message" id="selectedServiceMessage"{% if not form.service.vars.value %} hidden{% endif %}>
+                            <i class="bi bi-check-circle"></i> Selected: <strong>{{ form.service.vars.value }}</strong>
+                        </p>
+                    </section>
+
+                    <section class="booking-section">
+                        <div class="booking-section-heading">
+                            <span>03</span>
+                            <div>
+                                <h2>Choose your schedule</h2>
+                                <p>Pick a date and time that works best for the customer.</p>
+                            </div>
                         </div>
-                        <div>
-                            {{ form_label(form.appointmentTime) }}
-                            {{ form_widget(form.appointmentTime, {attr: {class: 'form-control'}}) }}
-                            {{ form_errors(form.appointmentTime) }}
+                        <div class="booking-details-grid">
+                            <div class="form-group">
+                                {{ form_label(form.appointmentDate) }}
+                                {{ form_widget(form.appointmentDate) }}
+                                {{ form_errors(form.appointmentDate) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.appointmentTime) }}
+                                {{ form_widget(form.appointmentTime) }}
+                                {{ form_errors(form.appointmentTime) }}
+                            </div>
                         </div>
-                        <div>
-                            {{ form_label(form.depositAmount) }}
-                            {{ form_widget(form.depositAmount, {attr: {class: 'form-control'}}) }}
-                            {{ form_errors(form.depositAmount) }}
+                    </section>
+
+                    <section class="booking-section">
+                        <div class="booking-section-heading">
+                            <span>04</span>
+                            <div>
+                                <h2>Anything we should know?</h2>
+                                <p>Optional — hair goals or special requests.</p>
+                            </div>
                         </div>
-                        <div>
-                            {{ form_label(form.paymentMethod) }}
-                            {{ form_widget(form.paymentMethod, {attr: {class: 'form-control'}}) }}
-                            {{ form_errors(form.paymentMethod) }}
-                        </div>
-                        <div class="full">
-                            {{ form_label(form.paymentReference) }}
-                            {{ form_widget(form.paymentReference, {attr: {class: 'form-control'}}) }}
-                            {{ form_errors(form.paymentReference) }}
-                        </div>
-                        <div class="full">
+                        <div class="form-group">
                             {{ form_label(form.notes) }}
-                            {{ form_widget(form.notes, {attr: {class: 'form-control'}}) }}
+                            {{ form_widget(form.notes) }}
                             {{ form_errors(form.notes) }}
                         </div>
+                    </section>
+
+                    <section class="booking-section">
+                        <div class="booking-section-heading">
+                            <span>05</span>
+                            <div>
+                                <h2>Secure the slot.</h2>
+                                <p>A PHP {{ depositAmount|number_format(2) }} deposit is required to confirm the booking.</p>
+                            </div>
+                        </div>
+
+                        <div class="payment-method-select">
+                            <p class="payment-method-label">Payment Method</p>
+                            {% for child in form.paymentMethod %}
+                                <label class="payment-option">
+                                    {{ form_widget(child) }}
+                                    <span class="payment-option-info">
+                                        <strong>{{ child.vars.label }}</strong>
+                                        <span>{{ paymentHelp[child.vars.value]|default('') }}</span>
+                                    </span>
+                                </label>
+                            {% endfor %}
+                            {{ form_errors(form.paymentMethod) }}
+                        </div>
+
+                        <div class="form-group">
+                            {{ form_label(form.paymentReference) }}
+                            {{ form_widget(form.paymentReference) }}
+                            {{ form_errors(form.paymentReference) }}
+                        </div>
+                    </section>
+
+                    <div class="booking-submit-area">
+                        <p><i class="bi bi-info-circle"></i> The appointment is saved after confirmation.</p>
+                        <div style="display: flex; gap: 12px;">
+                            <button type="button" class="btn-outline" data-bs-dismiss="modal">CANCEL</button>
+                            <button type="submit" class="btn-main booking-submit">CONFIRM BOOKING <i class="bi bi-arrow-right" style="margin-left: 6px;"></i></button>
+                        </div>
                     </div>
 
-                    <div class="modal-actions">
-                        <button type="button" class="btn-outline" data-bs-dismiss="modal">CANCEL</button>
-                        <button type="submit" class="btn-main">ADD APPOINTMENT</button>
-                    </div>
                 {{ form_end(form) }}
             </div>
         </div>
@@ -176,10 +260,40 @@
 
 {% block javascripts %}
 <script>
-    // the add form had errors, so open it again to show them
     const addModal = document.getElementById('addAppointmentModal');
+
     if (addModal.dataset.openOnLoad === 'true') {
         new bootstrap.Modal(addModal).show();
     }
+
+    const serviceField = addModal.querySelector('[data-service-field]');
+    const selectedMessage = document.getElementById('selectedServiceMessage');
+
+    function selectService(name) {
+        serviceField.value = name;
+
+        addModal.querySelectorAll('[data-service-card]').forEach(function (card) {
+            card.classList.toggle('selected', card.dataset.serviceCard === name);
+        });
+
+        selectedMessage.innerHTML = '<i class="bi bi-check-circle"></i> Selected: <strong></strong>';
+        selectedMessage.querySelector('strong').textContent = name;
+        selectedMessage.hidden = false;
+    }
+
+    addModal.querySelectorAll('[data-service-select]').forEach(function (button) {
+        button.addEventListener('click', function () {
+            selectService(button.dataset.serviceSelect);
+        });
+    });
+
+    document.getElementById('bookingForm').addEventListener('submit', function (event) {
+        if (!serviceField.value) {
+            event.preventDefault();
+            selectedMessage.innerHTML = '<i class="bi bi-exclamation-circle"></i> Please choose a service first.';
+            selectedMessage.hidden = false;
+            selectedMessage.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+    });
 </script>
 {% endblock %}

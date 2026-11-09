@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Messages;
-use App\Form\MessagesType;
 use App\Repository\MessagesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,27 +17,8 @@ final class MessagesController extends AbstractController
     public function index(MessagesRepository $messagesRepository): Response
     {
         return $this->render('messages/index.html.twig', [
-            'messages' => $messagesRepository->findAll(),
-        ]);
-    }
-
-    #[Route('/new', name: 'app_messages_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $message = new Messages();
-        $form = $this->createForm(MessagesType::class, $message);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($message);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_messages_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('messages/new.html.twig', [
-            'message' => $message,
-            'form' => $form,
+            'contactMessages' => $messagesRepository->findBy([], ['createdAt' => 'DESC']),
+            'unreadMessages' => $messagesRepository->findByReadStatus(false),
         ]);
     }
 
@@ -50,30 +30,27 @@ final class MessagesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_messages_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Messages $message, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/read', name: 'app_messages_toggle_read', methods: ['POST'])]
+    public function toggleRead(Request $request, Messages $message, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(MessagesType::class, $message);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($this->isCsrfTokenValid('read' . $message->getId(), $request->getPayload()->getString('_token'))) {
+            $message->setIsRead(!$message->isRead());
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_messages_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', $message->isRead() ? 'Message marked as read.' : 'Message marked as unread.');
         }
 
-        return $this->render('messages/edit.html.twig', [
-            'message' => $message,
-            'form' => $form,
-        ]);
+        return $this->redirectToRoute('app_messages_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{id}', name: 'app_messages_delete', methods: ['POST'])]
     public function delete(Request $request, Messages $message, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$message->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $message->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($message);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Message deleted.');
         }
 
         return $this->redirectToRoute('app_messages_index', [], Response::HTTP_SEE_OTHER);

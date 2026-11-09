@@ -1,45 +1,76 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Messages index{% endblock %}
+{% block title %}Messages | Curlétte Admin{% endblock %}
 
 {% block body %}
-    <h1>Messages index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>SenderName</th>
-                <th>SenderEmail</th>
-                <th>SenderPhone</th>
-                <th>MessageText</th>
-                <th>IsRead</th>
-                <th>CreatedAt</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for message in messages %}
-            <tr>
-                <td>{{ message.id }}</td>
-                <td>{{ message.senderName }}</td>
-                <td>{{ message.senderEmail }}</td>
-                <td>{{ message.senderPhone }}</td>
-                <td>{{ message.messageText }}</td>
-                <td>{{ message.isRead ? 'Yes' : 'No' }}</td>
-                <td>{{ message.createdAt ? message.createdAt|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_messages_show', {'id': message.id}) }}">show</a>
-                    <a href="{{ path('app_messages_edit', {'id': message.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="page-header">
+        <h1>Messages</h1>
+        <p>{{ contactMessages|length }} message{{ contactMessages|length == 1 ? '' : 's' }} in total, {{ unreadMessages|length }} unread.</p>
+    </div>
 
-    <a href="{{ path('app_messages_new') }}">Create new</a>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>From</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in contactMessages %}
+                    <tr>
+                        <td>
+                            <strong>{{ message.senderName }}</strong>
+                            <span class="muted">{{ message.senderEmail }}{% if message.senderPhone %} · {{ message.senderPhone }}{% endif %}</span>
+                        </td>
+                        <td>{{ message.messageText|slice(0, 60) }}{{ message.messageText|length > 60 ? '…' }}</td>
+                        <td>{{ message.createdAt ? message.createdAt|date('M j, Y') : '—' }}</td>
+                        <td>
+                            <span class="badge {{ message.isRead ? 'read' : 'unread' }}">{{ message.isRead ? 'Read' : 'Unread' }}</span>
+                        </td>
+                        <td>
+                            <div class="row-actions">
+                                <a href="{{ path('app_messages_show', {id: message.id}) }}" class="view-link">Show</a>
+                                {{ include('messages/_toggle_read_form.html.twig') }}
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5"><span class="muted">No messages yet.</span></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="section-title">Unread</h2>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>From</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for message in unreadMessages %}
+                    <tr>
+                        <td><strong>{{ message.senderName }}</strong></td>
+                        <td>{{ message.messageText|slice(0, 60) }}{{ message.messageText|length > 60 ? '…' }}</td>
+                        <td>{{ message.createdAt ? message.createdAt|date('M j, Y') : '—' }}</td>
+                        <td>{{ include('messages/_toggle_read_form.html.twig') }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="4"><span class="muted">No unread messages.</span></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 {% endblock %}

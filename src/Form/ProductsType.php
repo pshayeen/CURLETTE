@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Products;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -33,6 +34,20 @@ class ProductsType extends AbstractType
                 'label' => 'Stock',
                 'attr' => ['min' => 0],
                 'constraints' => [new Assert\PositiveOrZero(message: 'Stock cannot be negative.')],
+            ])
+            ->add('imageFile', FileType::class, [
+                'label' => 'Photo',
+                'mapped' => false,
+                'required' => false,
+                'help' => 'JPG, PNG or WebP, up to 3 MB. Leave empty to keep the current photo.',
+                'attr' => ['accept' => 'image/*'],
+                'constraints' => [
+                    new Assert\File(
+                        maxSize: '3M',
+                        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+                        mimeTypesMessage: 'Please upload a JPG, PNG or WebP image.',
+                    ),
+                ],
             ])
             ->add('productDescription', TextareaType::class, [
                 'label' => 'Description',

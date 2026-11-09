@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Service | Curlétte Admin{% endblock %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h1>Edit Service</h1>
+        <p>{{ service.serviceName }}</p>
+    </div>
+
+    <div class="form-card">
+        {% if service.image %}
+            <img src="{{ asset('images/services/' ~ service.image) }}" alt="{{ service.serviceName }}"
+                 style="width: 160px; height: 110px; object-fit: cover; margin-bottom: 16px; border-radius: 14px;">
+        {% endif %}
+
+        {{ include('services/_form.html.twig', {button_label: 'Save Changes'}) }}
+        <p class="form-back"><a href="{{ path('app_services_index') }}">← Back to services</a></p>
+    </div>
+
+{% endblock %}

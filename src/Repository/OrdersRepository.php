@@ -30,6 +30,48 @@ class OrdersRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Total income: the sum of every order that was not cancelled.
+     */
+    public function sumRevenue(): float
+    {
+        return (float) $this->createQueryBuilder('o')
+            ->select('COALESCE(SUM(o.total), 0)')
+            ->andWhere('o.status != :cancelled')
+            ->setParameter('cancelled', 'cancelled')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * Orders still waiting to be handled (placed or processing).
+     */
+    public function countPending(): int
+    {
+        return (int) $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->andWhere('o.status IN (:statuses)')
+            ->setParameter('statuses', ['placed', 'processing'])
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    /**
+     * @return Orders[] the most recent orders, newest first
+     */
+    public function findRecent(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('o')
+            ->orderBy('o.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
 
 //    public function findOneBySomeField($value): ?Orders
 //    {

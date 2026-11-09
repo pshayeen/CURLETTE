@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Add Service | Curlétte Admin{% endblock %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h1>Add Service</h1>
+        <p>Add a new service to your menu.</p>
+    </div>
+
+    <div class="form-card">
+        {{ include('services/_form.html.twig', {button_label: 'Add Service'}) }}
+        <p class="form-back"><a href="{{ path('app_services_index') }}">← Back to services</a></p>
+    </div>
+
+{% endblock %}

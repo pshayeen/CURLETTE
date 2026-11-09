@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ service.serviceName }} | Curlétte Admin{% endblock %}
+
+{% block body %}
+
+    <div class="page-header page-header-row">
+        <div>
+            <h1>{{ service.serviceName }}</h1>
+            <p>{{ service.duration }}</p>
+        </div>
+        <strong>PHP {{ service.price|number_format(2) }}</strong>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Service</th>
+                    <td>{{ service.serviceName }}</td>
+                </tr>
+                <tr>
+                    <th>Price</th>
+                    <td><strong>PHP {{ service.price|number_format(2) }}</strong></td>
+                </tr>
+                <tr>
+                    <th>Duration</th>
+                    <td>{{ service.duration }}</td>
+                </tr>
+                <tr>
+                    <th>Description</th>
+                    <td>{{ service.serviceDescription|nl2br }}</td>
+                </tr>
+                <tr>
+                    <th>What’s Included</th>
+                    <td>{{ service.serviceIncludes ? service.serviceIncludes|nl2br : '—' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row-actions" style="margin-top: 20px;">
+        <a href="{{ path('app_services_index') }}" class="view-link">← Back to services</a>
+        <a href="{{ path('app_services_edit', {id: service.id}) }}" class="view-link">Edit</a>
+    </div>
+
+{% endblock %}

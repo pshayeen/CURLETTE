@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Products;
 use App\Form\ProductsType;
 use App\Repository\ProductsRepository;
+use App\Service\ImageUploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,13 +16,18 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProductsController extends AbstractController
 {
     #[Route(name: 'app_products_index', methods: ['GET', 'POST'])]
-    public function index(ProductsRepository $productsRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function index(ProductsRepository $productsRepository, Request $request, EntityManagerInterface $entityManager, ImageUploader $imageUploader): Response
     {
         $product = new Products();
         $form = $this->createForm(ProductsType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('imageFile')->getData();
+            if ($imageFile) {
+                $product->setImage($imageUploader->upload($imageFile, 'products'));
+            }
+
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -39,13 +45,18 @@ final class ProductsController extends AbstractController
     }
 
     #[Route('/new', name: 'app_products_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, ImageUploader $imageUploader): Response
     {
         $product = new Products();
         $form = $this->createForm(ProductsType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('imageFile')->getData();
+            if ($imageFile) {
+                $product->setImage($imageUploader->upload($imageFile, 'products'));
+            }
+
             $entityManager->persist($product);
             $entityManager->flush();
 
@@ -60,21 +71,18 @@ final class ProductsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_products_show', methods: ['GET'])]
-    public function show(Products $product): Response
-    {
-        return $this->render('products/show.html.twig', [
-            'product' => $product,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_products_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Products $product, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Products $product, EntityManagerInterface $entityManager, ImageUploader $imageUploader): Response
     {
         $form = $this->createForm(ProductsType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('imageFile')->getData();
+            if ($imageFile) {
+                $product->setImage($imageUploader->upload($imageFile, 'products'));
+            }
+
             $entityManager->flush();
 
             $this->addFlash('success', 'Product updated.');
@@ -137,4 +145,3 @@ final class ProductsController extends AbstractController
         return $this->redirectToRoute('app_products_index', [], Response::HTTP_SEE_OTHER);
     }
 }
-

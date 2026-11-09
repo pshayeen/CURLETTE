@@ -6,8 +6,8 @@
     </div>
 
     <div class="topbar-actions">
-        <a class="topbar-link"><i class="bi bi-shop"></i> View Site</a>
-        <a class="logout-btn"><i class="bi bi-box-arrow-right"></i> Log Out</a>
+        <span class="topbar-link">Hi, {{ app.user ? (app.user.fullName|default(app.user.userIdentifier))|split(' ')|first : 'Admin' }}</span>
+        <a href="{{ path('app_logout') }}" class="logout-btn"><i class="bi bi-box-arrow-right"></i> Log Out</a>
     </div>
 
 </header>

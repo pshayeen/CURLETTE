@@ -1,0 +1,4 @@
+<form method="post" action="{{ path('app_messages_toggle_read', {id: message.id}) }}" style="display: inline;">
+    <input type="hidden" name="_token" value="{{ csrf_token('read' ~ message.id) }}">
+    <button type="submit" class="btn-small">{{ message.isRead ? 'Mark as unread' : 'Mark as read' }}</button>
+</form>

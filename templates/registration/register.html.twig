@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create account | Curlétte Admin{% endblock %}
+
+{% block layout %}
+
+    <section class="auth-page">
+        <div class="auth-card auth-card--wide">
+            
+            <h1>Create account</h1>
+            <p class="auth-sub">It only takes a minute.</p>
+
+            {{ form_start(registrationForm, {attr: {class: 'auth-form', novalidate: 'novalidate'}}) }}
+                <div class="auth-grid">
+                    <div class="full">
+                        {{ form_label(registrationForm.fullName) }}
+                        {{ form_widget(registrationForm.fullName) }}
+                        {{ form_errors(registrationForm.fullName) }}
+                    </div>
+                    <div>
+                        {{ form_label(registrationForm.username) }}
+                        {{ form_widget(registrationForm.username) }}
+                        {{ form_errors(registrationForm.username) }}
+                    </div>
+                    <div>
+                        {{ form_label(registrationForm.phoneNumber) }}
+                        {{ form_widget(registrationForm.phoneNumber) }}
+                        {{ form_errors(registrationForm.phoneNumber) }}
+                    </div>
+                    <div class="full">
+                        {{ form_label(registrationForm.email) }}
+                        {{ form_widget(registrationForm.email) }}
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+                    <div>
+                        {{ form_label(registrationForm.plainPassword.first) }}
+                        {{ form_widget(registrationForm.plainPassword.first) }}
+                        {{ form_errors(registrationForm.plainPassword.first) }}
+                    </div>
+                    <div>
+                        {{ form_label(registrationForm.plainPassword.second) }}
+                        {{ form_widget(registrationForm.plainPassword.second) }}
+                        {{ form_errors(registrationForm.plainPassword.second) }}
+                    </div>
+                </div>
+                <p class="auth-hint">Use at least 8 characters for your password.</p>
+
+                <div class="auth-check">
+                    {{ form_widget(registrationForm.agreeTerms) }}
+                    {{ form_label(registrationForm.agreeTerms) }}
+                </div>
+                {{ form_errors(registrationForm.agreeTerms) }}
+
+                <button type="submit" class="auth-submit">CREATE ACCOUNT</button>
+            {{ form_end(registrationForm) }}
+
+            <p class="auth-switch">Already have an account? <a href="{{ path('app_login') }}">Log in</a></p>
+        </div>
+    </section>
+
+{% endblock %}

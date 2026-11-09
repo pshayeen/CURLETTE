@@ -16,20 +16,21 @@ class MessagesRepository extends ServiceEntityRepository
         parent::__construct($registry, Messages::class);
     }
 
-//    /**
-//     * @return Messages[] Returns an array of Messages objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Messages[] messages that are read (true) or unread (false), newest first
+     */
+    public function findByReadStatus(bool $isRead): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.isRead = :isRead')
+            ->setParameter('isRead', $isRead)
+            ->orderBy('m.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+
 
 //    public function findOneBySomeField($value): ?Messages
 //    {

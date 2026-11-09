@@ -1,0 +1,187 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Services | Curlétte Admin{% endblock %}
+
+{% block body %}
+
+    <div class="page-header page-header-row">
+        <div>
+            <h1>Services</h1>
+            <p>
+                {% if search %}
+                    {{ services|length }} result{{ services|length == 1 ? '' : 's' }} for “{{ search }}”.
+                {% else %}
+                    {{ services|length }} service{{ services|length == 1 ? '' : 's' }} offered.
+                {% endif %}
+            </p>
+        </div>
+        <button type="button" class="btn-main" data-bs-toggle="modal" data-bs-target="#addServiceModal">
+            + ADD SERVICE
+        </button>
+    </div>
+
+    {# SEARCH (handled by the repository's searchByName method) #}
+    <div style="margin-bottom: 16px;">
+        <form method="get" action="{{ path('app_services_index') }}" class="inline-form">
+            <input type="text" name="q" value="{{ search }}" placeholder="Search services..." style="width: 240px;">
+            <button type="submit" class="btn-small">Search</button>
+            {% if search %}
+                <a href="{{ path('app_services_index') }}" class="view-link">Clear</a>
+            {% endif %}
+        </form>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Service</th>
+                    <th>What’s Included</th>
+                    <th>Price</th>
+                    <th>Duration</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                    <tr>
+                        <td>
+                            {% if service.image %}
+                                <img src="{{ asset('images/services/' ~ service.image) }}" alt="{{ service.serviceName }}"
+                                     style="width: 56px; height: 44px; object-fit: cover; border-radius: 10px;">
+                            {% else %}
+                                <span style="display: grid; place-items: center; width: 56px; height: 44px; border-radius: 10px; background: #FFF7F3; color: #B8A59E;">
+                                    <i class="bi bi-image"></i>
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ service.serviceName }}</strong>
+                            <span class="muted">{{ service.serviceDescription|slice(0, 70) }}{{ service.serviceDescription|length > 70 ? '…' }}</span>
+                        </td>
+                        <td>
+                            {% if service.serviceIncludes %}
+                                {{ service.serviceIncludes|slice(0, 60) }}{{ service.serviceIncludes|length > 60 ? '…' }}
+                            {% else %}
+                                <span class="muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td><strong>PHP {{ service.price|number_format(2) }}</strong></td>
+                        <td>{{ service.duration }}</td>
+                        <td>
+                            <div class="row-actions">
+                                <a href="{{ path('app_services_show', {id: service.id}) }}" class="view-link">Show</a>
+                                <a href="{{ path('app_services_edit', {id: service.id}) }}" class="view-link">Edit</a>
+                                <button type="button" class="btn-small-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                        data-name="{{ service.serviceName }}"
+                                        data-action="{{ path('app_services_delete', {id: service.id}) }}"
+                                        data-token="{{ csrf_token('delete' ~ service.id) }}">
+                                    Remove
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6">
+                            <span class="muted">{{ search ? 'No services match your search.' : 'No services yet.' }}</span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {# ADD SERVICE MODAL (fields rendered one by one, like the instructor's demo) #}
+    <div class="modal fade" id="addServiceModal" tabindex="-1" aria-labelledby="addServiceLabel" aria-hidden="true"
+         data-open-on-load="{{ openAddModal|default(false) ? 'true' : 'false' }}">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                {{ form_start(form) }}
+                    <div class="modal-heading">
+                        <h2 id="addServiceLabel">Add Service</h2>
+                        <p>Add a new service to your menu.</p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="full">
+                            {{ form_label(form.serviceName) }}
+                            {{ form_widget(form.serviceName, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.serviceName) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.price) }}
+                            {{ form_widget(form.price, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.price) }}
+                        </div>
+                        <div>
+                            {{ form_label(form.duration) }}
+                            {{ form_widget(form.duration, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.duration) }}
+                        </div>
+                        <div class="full">
+                            {{ form_label(form.serviceDescription) }}
+                            {{ form_widget(form.serviceDescription, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.serviceDescription) }}
+                        </div>
+                        <div class="full">
+                            {{ form_label(form.serviceIncludes) }}
+                            {{ form_widget(form.serviceIncludes, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.serviceIncludes) }}
+                        </div>
+                        <div class="full">
+                            {{ form_label(form.imageFile) }}
+                            {{ form_widget(form.imageFile, {attr: {class: 'form-control'}}) }}
+                            {{ form_help(form.imageFile) }}
+                            {{ form_errors(form.imageFile) }}
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn-outline" data-bs-dismiss="modal">CANCEL</button>
+                        <button type="submit" class="btn-main">ADD SERVICE</button>
+                    </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+    {# REMOVE CONFIRMATION MODAL (one modal, filled in for each service) #}
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content confirm-modal-content danger">
+                <div class="confirm-modal-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                <h2>Remove this service?</h2>
+                <p id="deleteLabel">This can’t be undone.</p>
+
+                <form method="post" id="deleteForm">
+                    <input type="hidden" name="_token" id="deleteToken">
+                    <div class="confirm-modal-actions">
+                        <button type="button" class="btn-outline" data-bs-dismiss="modal">GO BACK</button>
+                        <button type="submit" class="btn-main is-danger">YES, REMOVE</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    document.getElementById('deleteModal').addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        document.getElementById('deleteLabel').textContent =
+            'Remove “' + button.dataset.name + '” from your services? This can’t be undone.';
+        document.getElementById('deleteForm').action = button.dataset.action;
+        document.getElementById('deleteToken').value = button.dataset.token;
+    });
+
+    
+    const addModal = document.getElementById('addServiceModal');
+    if (addModal.dataset.openOnLoad === 'true') {
+        new bootstrap.Modal(addModal).show();
+    }
+</script>
+{% endblock %}

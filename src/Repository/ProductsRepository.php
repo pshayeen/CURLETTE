@@ -16,19 +16,33 @@ class ProductsRepository extends ServiceEntityRepository
         parent::__construct($registry, Products::class);
     }
 
-   /**
-    * @return Products[] Returns an array of Products objects
-    */
-   public function findLowStock($threshold = 5): array
-   {    
-       return $this->createQueryBuilder('p')
-           ->andWhere('p.stockQuantity = :threshold')
-           ->setParameter('threshold', $threshold)
-           ->orderBy('p.stockQuantity', 'ASC')
-           ->getQuery()
-           ->getResult()
-       ;
-   }
+    /**
+     * @return Products[] products with this much stock or less, lowest stock first
+     */
+    public function findLowStock(int $threshold = 5): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.stockQuantity <= :threshold')
+            ->setParameter('threshold', $threshold)
+            ->orderBy('p.stockQuantity', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Products[] the most recently added products, newest first
+     */
+    public function findLatest(int $limit = 4): array
+    {
+        return $this->createQueryBuilder('p')
+            ->orderBy('p.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 
 //    public function findOneBySomeField($value): ?Products
 //    {
