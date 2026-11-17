@@ -375,7 +375,7 @@
                 font-weight: 700;
             }
 
-            .content input[type=text], .content input[type=number], .content input[type=email],
+            .content input[type=text], .content input[type=number], .content input[type=email], .content input[type=tel],
             .content input[type=date], .content input[type=time], .content select, .content textarea {
                 width: 100%;
                 max-width: 480px;
@@ -412,6 +412,10 @@
 
             .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
             .form-grid .full { grid-column: 1 / -1; }
+
+            .password-card { max-width: 620px; }
+            .password-card .form-grid > div { margin-bottom: 14px; }
+            .form-hint { margin: -4px 0 18px; color: #765A50; font-size: 12px; line-height: 1.5; }
 
             /* BUTTONS AND LINKS */
             .content button {
@@ -557,7 +561,7 @@
             .content .modal-heading, .content .modal-actions { margin-bottom: 0; }
             .content .modal-actions .btn-outline, .content .modal-actions .btn-main { flex: 1; }
 
-            .content .modal input[type=text], .content .modal input[type=number], .content .modal input[type=email],
+            .content .modal input[type=text], .content .modal input[type=number], .content .modal input[type=email], .content .modal input[type=tel],
             .content .modal input[type=date], .content .modal input[type=time], .content .modal select, .content .modal textarea {
                 max-width: 100%;
             }
@@ -922,6 +926,10 @@
 
             .booking-modal .payment-option:has(input:checked) { border-color: var(--primary-color); background: var(--primary-bg-color); }
             .booking-modal .payment-option input[type="radio"] { margin-top: 3px; }
+
+            .booking-modal .fulfillment-select { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 0; }
+            .booking-modal .fulfillment-select .payment-method-label { grid-column: 1 / -1; margin-bottom: 0; }
+            @media (max-width: 700px) { .booking-modal .fulfillment-select { grid-template-columns: 1fr; } }
             .booking-modal .payment-option-info { display: flex; flex-direction: column; gap: 2px; }
             .booking-modal .payment-option-info strong { font-size: 13px; }
             .booking-modal .payment-option-info span { color: #8A7066; font-size: 11px; }
@@ -944,7 +952,68 @@
             }
 
 
+            .badge.admin { background: var(--primary); color: #fff; }
+            .badge.staff { background: var(--secondary); color: var(--primary); }
+            .badge.customer { background: #FBE8CE; color: #B4720A; }
+            .badge.walkin { background: #E4E7F4; color: #4A5391; }
+            .badge.online { background: #DCEFE1; color: #2F7D4F; }
+            .badge { white-space: nowrap; }
+            .source-cell { white-space: nowrap; }
+            .source-cell .badge { display: inline-block; }
+            .source-cell .muted { display: block; margin-top: 3px; }
+            .row-actions { white-space: nowrap; }
+            .badge.active { background: #DCEFE1; color: #2F7D4F; }
+            .badge.disabled { background: #F6DADA; color: #9B3A3A; }
 
+            .booking-modal .booking-product-card { min-height: 360px; }
+            .booking-modal .booking-product-card .service-card-img { background: #FFF7F3; }
+            .booking-modal .booking-product-card .service-card-img img { object-fit: contain; padding: 12px; }
+            .booking-modal .booking-product-card .service-card-img-empty img { padding: 0; }
+            .booking-modal .booking-product-card.is-sold-out { opacity: .55; }
+            .booking-modal .booking-product-card.is-sold-out .service-card-main { cursor: not-allowed; }
+
+            .booking-modal .product-qty { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 20px 18px; }
+
+            .booking-modal .product-qty button {
+                width: 30px;
+                height: 30px;
+                padding: 0;
+                border: 1px solid #D5C5BF;
+                border-radius: 50%;
+                background: #fff;
+                color: var(--primary-color);
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 1;
+                cursor: pointer;
+            }
+
+            .booking-modal .product-qty button:hover { background: var(--primary-color); color: #fff; }
+
+            .booking-modal .product-qty input {
+                width: 56px;
+                max-width: none;
+                min-height: 32px;
+                padding: 0 6px;
+                border: 1px solid #D5C5BF;
+                border-radius: 10px;
+                background: var(--primary-bg-color);
+                color: var(--font-color);
+                font-family: var(--font-body);
+                font-size: 13px;
+                font-weight: 700;
+                text-align: center;
+            }
+
+            .booking-modal .order-summary { margin-bottom: 18px; padding: 16px 18px; border-radius: 14px; background: #F6E7E4; }
+            .booking-modal .order-summary ul { margin: 0 0 12px; padding: 0; list-style: none; }
+            .booking-modal .order-summary li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid rgba(155, 95, 96, .15); font-size: 12px; }
+            .booking-modal .order-summary li.empty { border-bottom: 0; color: #8A7066; }
+            .booking-modal .order-summary-total { display: flex; align-items: baseline; justify-content: space-between; }
+            .booking-modal .order-summary-total span { font-size: 11px; font-weight: 800; letter-spacing: .4px; }
+            .booking-modal .order-summary-total strong { color: var(--primary-color); font-family: var(--font-heading); font-size: 26px; }
+            .booking-modal .selected-service-message.is-error { background: #F6DADA; color: #9B3A3A; }
+            
         </style>
     </head>
 

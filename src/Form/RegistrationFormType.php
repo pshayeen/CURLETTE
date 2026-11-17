@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Validator\PasswordRules;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -57,10 +58,10 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('phoneNumber', TelType::class, [
-                'label' => 'Phone number (optional)',
-                'required' => false,
+                'label' => 'Phone number',
                 'attr' => ['autocomplete' => 'tel', 'maxlength' => 30, 'placeholder' => '0912 345 6789'],
                 'constraints' => [
+                    new NotBlank(message: 'Please enter your phone number.'),
                     new Regex(
                         pattern: '/^[0-9+\-\s()]{7,20}$/',
                         message: 'Please enter a valid phone number.',
@@ -80,15 +81,7 @@ class RegistrationFormType extends AbstractType
                     'attr' => ['autocomplete' => 'new-password'],
                 ],
                 'invalid_message' => 'The two passwords do not match.',
-                'constraints' => [
-                    new NotBlank(message: 'Please enter a password.'),
-                    new Length(
-                        min: 8,
-                        minMessage: 'Your password should be at least {{ limit }} characters.',
-                        // max length allowed by Symfony for security reasons
-                        max: 4096,
-                    ),
-                ],
+                'constraints' => PasswordRules::constraints(),
             ])
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'I agree to the terms and privacy policy',

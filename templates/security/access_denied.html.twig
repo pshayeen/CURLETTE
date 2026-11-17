@@ -1,0 +1,50 @@
+{% extends is_granted('ROLE_STAFF') ? 'base.html.twig' : 'base_site.html.twig' %}
+
+{% block title %}Access denied | Curlétte{% endblock %}
+
+{% block body %}
+    <style>
+        .denied-wrap { display: flex; justify-content: center; padding: 70px 20px; }
+        .denied-card {
+            width: 100%; max-width: 520px; padding: 44px 36px; text-align: center;
+            border: 1px solid #EBDDD7; border-radius: 24px; background: #fff;
+            box-shadow: 0 18px 50px rgba(59, 36, 24, .08);
+        }
+        .denied-icon {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 68px; height: 68px; margin-bottom: 14px; border-radius: 50%;
+            background: #F3E1DE; color: #9B5F60; font-size: 30px;
+        }
+        .denied-code { margin: 0 0 4px; color: #9B5F60; font-size: 12px; font-weight: 800; letter-spacing: 2px; }
+        .denied-card h1 { margin: 0 0 12px; font-family: 'Cormorant Garamond', Garamond, serif; font-size: 38px; color: #3B2418; }
+        .denied-card p.denied-text { margin: 0 auto 26px; max-width: 380px; color: #765A50; font-size: 14px; line-height: 1.6; }
+        .denied-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    </style>
+
+    <div class="denied-wrap">
+        <div class="denied-card">
+            <div class="denied-icon"><i class="bi bi-shield-lock"></i></div>
+            <p class="denied-code">ERROR 403</p>
+            <h1>Access denied</h1>
+
+            <p class="denied-text">
+                {% if required == 'admin' %}
+                    This page is for administrators only. Your account doesn’t have permission to open it.
+                {% elseif required == 'staff' %}
+                    This area is for Curlétte staff only. Your customer account doesn’t have access to it.
+                {% else %}
+                    You don’t have permission to view this page or do this action.
+                {% endif %}
+            </p>
+
+            <div class="denied-actions">
+                {% if is_granted('ROLE_STAFF') %}
+                    <a href="{{ path('app_dashboard') }}" class="btn-main">BACK TO DASHBOARD</a>
+                {% else %}
+                    <a href="{{ path('app_home') }}" class="btn-main">BACK TO HOME</a>
+                    <a href="{{ path('app_account') }}" class="btn-outline">MY ACCOUNT</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

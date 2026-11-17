@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -44,22 +45,36 @@ class AppointmentsType extends AbstractType
             $paymentChoices['Cash'] = 'cash';
         }
 
+        if ($options['include_customer']) {
+            $builder
+                ->add('customerName', TextType::class, [
+                    'label' => 'CUSTOMER NAME',
+                    'empty_data' => '',
+                    'attr' => ['maxlength' => 100, 'placeholder' => 'Full name'],
+                    'constraints' => [new Assert\NotBlank(message: 'Please enter the customer name.')],
+                ])
+                ->add('customerEmail', EmailType::class, [
+                    'label' => 'CUSTOMER EMAIL',
+                    'empty_data' => '',
+                    'attr' => ['maxlength' => 180, 'placeholder' => 'name@email.com'],
+                    'constraints' => [
+                        new Assert\NotBlank(message: 'Please enter the customer email.'),
+                        new Assert\Email(message: 'Please enter a valid email address.'),
+                    ],
+                ])
+                ->add('customerPhone', TelType::class, [
+                    'label' => 'CUSTOMER PHONE',
+                    'required' => $options['require_phone'],
+                    'attr' => ['maxlength' => 30, 'placeholder' => '0912 345 6789'],
+                    'constraints' => array_filter([
+                        $options['require_phone'] ? new Assert\NotBlank(message: 'Please enter the customer phone number.') : null,
+                        new Assert\Regex(pattern: '/^[0-9+\-\s()]{7,20}$/', message: 'Please enter a valid phone number.'),
+                    ]),
+                ])
+            ;
+        }
+
         $builder
-            ->add('customerName', TextType::class, [
-                'label' => 'CUSTOMER NAME',
-                'empty_data' => '',
-                'attr' => ['maxlength' => 100, 'placeholder' => 'Full name'],
-                'constraints' => [new Assert\NotBlank(message: 'Please enter the customer name.')],
-            ])
-            ->add('customerEmail', EmailType::class, [
-                'label' => 'CUSTOMER EMAIL',
-                'empty_data' => '',
-                'attr' => ['maxlength' => 180, 'placeholder' => 'name@email.com'],
-                'constraints' => [
-                    new Assert\NotBlank(message: 'Please enter the customer email.'),
-                    new Assert\Email(message: 'Please enter a valid email address.'),
-                ],
-            ])
             ->add('service', ChoiceType::class, [
                 'label' => 'SERVICE',
                 'required' => false,
@@ -124,6 +139,8 @@ class AppointmentsType extends AbstractType
             'data_class' => Appointments::class,
             'services' => [],
             'include_status' => true,
+            'include_customer' => true,
+            'require_phone' => false,
         ]);
     }
 }

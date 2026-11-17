@@ -1,0 +1,81 @@
+{% extends 'base_site.html.twig' %}
+
+{% block title %}My Account | Curlétte Hair Studio{% endblock %}
+
+{% block body %}
+
+    <div class="booking-page">
+        <section class="booking-hero">
+            <div class="booking-heading">
+                <p class="home-label">YOUR CURLÉTTE ACCOUNT</p>
+                <h1>My <em>account.</em></h1>
+                <p>Keep your details up to date.</p>
+            </div>
+
+            <div class="booking-section">
+                {{ form_start(profileForm, {attr: {class: 'booking-form', novalidate: 'novalidate'}}) }}
+                    <div class="form-group">
+                        <label for="account_username">Username</label>
+                        <input type="text" id="account_username" value="{{ user.username }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(profileForm.fullName) }}
+                        {{ form_widget(profileForm.fullName) }}
+                        {{ form_errors(profileForm.fullName) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(profileForm.email) }}
+                        {{ form_widget(profileForm.email) }}
+                        {{ form_errors(profileForm.email) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(profileForm.phoneNumber) }}
+                        {{ form_widget(profileForm.phoneNumber) }}
+                        {{ form_errors(profileForm.phoneNumber) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(profileForm.deliveryAddress) }}
+                        {{ form_widget(profileForm.deliveryAddress) }}
+                        {{ form_errors(profileForm.deliveryAddress) }}
+                    </div>
+                    <button type="submit" class="btn-main">SAVE CHANGES</button>
+                {{ form_end(profileForm) }}
+            </div>
+
+            <div class="booking-section" style="margin-top: 22px;">
+                <div class="booking-section-heading">
+                    <span><i class="bi bi-key"></i></span>
+                    <div>
+                        <h2>Change password</h2>
+                        <p>Use at least 8 characters.</p>
+                    </div>
+                </div>
+
+                {{ form_start(passwordForm, {attr: {class: 'booking-form', novalidate: 'novalidate'}}) }}
+                    <div class="form-group">
+                        {{ form_label(passwordForm.currentPassword) }}
+                        {{ form_widget(passwordForm.currentPassword) }}
+                        {{ form_errors(passwordForm.currentPassword) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(passwordForm.plainPassword.first) }}
+                        {{ form_widget(passwordForm.plainPassword.first) }}
+                        {{ form_errors(passwordForm.plainPassword.first) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(passwordForm.plainPassword.second) }}
+                        {{ form_widget(passwordForm.plainPassword.second) }}
+                        {{ form_errors(passwordForm.plainPassword.second) }}
+                    </div>
+                    <button type="submit" class="btn-main">CHANGE PASSWORD</button>
+                {{ form_end(passwordForm) }}
+            </div>
+
+            <div class="center-btn" style="margin-top: 26px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                <a href="{{ path('app_account_appointments') }}" class="btn-outline btn-small">MY APPOINTMENTS</a>
+                <a href="{{ path('app_account_orders') }}" class="btn-outline btn-small">MY ORDERS</a>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}

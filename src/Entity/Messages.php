@@ -26,11 +26,17 @@ class Messages
     #[ORM\Column(type: Types::TEXT)]
     private ?string $messageText = null;
 
-    #[ORM\Column]
-    private ?bool $isRead = null;
+    #[ORM\Column(options: ['default' => false])]
+    private bool $isRead = false;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
-    private ?\DateTimeImmutable $createdAt = null;
+    private \DateTimeImmutable $createdAt;
+
+    public function __construct()
+    {
+        $this->isRead = false;
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -85,7 +91,7 @@ class Messages
         return $this;
     }
 
-    public function isRead(): ?bool
+    public function isRead(): bool
     {
         return $this->isRead;
     }
@@ -97,7 +103,7 @@ class Messages
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }

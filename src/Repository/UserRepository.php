@@ -34,16 +34,56 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @return User[] users whose username, full name or email contains the search text, A to Z
+     * Finds a user by username or email (used by the login form).
      */
-    public function searchByKeyword(string $term): array
+    public function findOneByUsernameOrEmail(string $identifier): ?User
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.username LIKE :term OR u.fullName LIKE :term OR u.email LIKE :term')
-            ->setParameter('term', '%' . $term . '%')
-            ->orderBy('u.username', 'ASC')
+            ->andWhere('u.username = :id OR u.email = :id')
+            ->setParameter('id', $identifier)
+            ->setMaxResults(1)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Number of users that have the given role stored (e.g. ROLE_STAFF).
+     */
+    public function countByRole(string $role): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', '%"' . $role . '"%')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return User[] users matching the search text and role, A to Z
+     */
+    public function search(?string $term, ?string $role): array
+    {
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->orderBy('u.username', 'ASC');
+
+        if ($term) {
+            $queryBuilder
+                ->andWhere('u.username LIKE :term OR u.fullname LIKE :term OR u.email LIKE :term')
+                ->setParameter('term', '%' . $term . '%');
+        }
+
+        if ('ROLE_USER' === $role) {
+            $queryBuilder
+                ->andWhere('u.roles NOT LIKE :admin AND u.roles NOT LIKE :staff')
+                ->setParameter('admin', '%"ROLE_ADMIN"%')
+                ->setParameter('staff', '%"ROLE_STAFF"%');
+        } elseif ($role) {
+            $queryBuilder
+                ->andWhere('u.roles LIKE :role')
+                ->setParameter('role', '%"' . $role . '"%');
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

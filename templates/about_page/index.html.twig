@@ -1,0 +1,102 @@
+{% extends 'base_site.html.twig' %}
+
+{% block title %}About Us | Curlétte Hair Studio{% endblock %}
+
+{% block body %}
+
+    <div class="booking-page">
+
+        <section class="booking-hero about-hero about-hero--compact">
+            <img src="{{ asset('images/salon.jpg') }}" alt="" class="section-bg">
+            <div class="about-hero-overlay"></div>
+            <div class="booking-heading">
+                <p class="home-label">ABOUT CURLÉTTE</p>
+                <h1>More than a salon. <em>A home for your curls.</em></h1>
+                <p>We help every curl pattern feel seen, understood, and beautifully cared for, one appointment at a time.</p>
+            </div>
+        </section>
+
+        <section class="ab-story">
+            <div class="ab-story-card">
+                <div class="ab-story-text">
+                    <span class="ab-eyebrow">OUR STORY</span>
+                    <h2>How Curlétte <em>began.</em></h2>
+                    <p>
+                        Curlétte started with a simple frustration: too many curly-haired
+                        clients left salons feeling like an afterthought, cut dry, styled
+                        straight, and sent home with products never made for their texture.
+                    </p>
+                    <p>
+                        So we built a studio where curls are the standard. Every stylist
+                        trains in curl-cutting and curl-styling, and every product on our
+                        shelves earns its place on textured hair.
+                    </p>
+                    <a href="{{ app.user ? path('app_booking') : path('app_login') }}" class="btn-main">BOOK YOUR VISIT</a>
+                </div>
+                <div class="ab-story-img">
+                    <img src="{{ asset('images/about-curlette.jpg') }}" alt="Curlétte client with healthy curls">
+                </div>
+            </div>
+        </section>
+
+        <section class="ab-team">
+            <header class="ab-head">
+                <h2>The hands behind the chair</h2>
+                <p>Meet the people who’ll actually be cutting your hair.</p>
+            </header>
+
+            <div class="ab-team-grid">
+                {% for person in team %}
+                    <article class="ab-person">
+                        <div class="ab-person-photo">
+                            <img src="{{ asset('images/' ~ person.image) }}" alt="{{ person.name }}" style="object-position: {{ person.focus|default('50% 20%') }};">
+                        </div>
+                        <div class="ab-person-body">
+                            <span>{{ person.role }}</span>
+                            <h3>{{ person.name }}</h3>
+                            <p>{{ person.text }}</p>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="ab-visit">
+            <div class="ab-visit-card">
+                <div class="ab-visit-head">
+                    <img src="{{ asset('images/C-icon.png') }}" alt="Curlétte">
+                    <div>
+                        <p class="home-label">VISIT US</p>
+                        <h2>Come say <em>hello.</em></h2>
+                    </div>
+                </div>
+
+                <div class="ab-visit-grid">
+                    <div class="ab-visit-item ab-visit-item--wide">
+                        <i class="bi bi-geo-alt"></i>
+                        <div>
+                            <span>ADDRESS</span>
+                            <p>123 Curl Street<br>Cebu City, 6000 Cebu, Philippines</p>
+                        </div>
+                    </div>
+                    <div class="ab-visit-item">
+                        <i class="bi bi-telephone"></i>
+                        <div>
+                            <span>PHONE</span>
+                            <p><a href="tel:09123456789">0912 345 6789</a></p>
+                        </div>
+                    </div>
+                    <div class="ab-visit-item">
+                        <i class="bi bi-envelope"></i>
+                        <div>
+                            <span>EMAIL</span>
+                            <p><a href="mailto:curlettehairstudio@email.com">curlettehairstudio@email.com</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+{% endblock %}

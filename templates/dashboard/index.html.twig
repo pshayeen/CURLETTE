@@ -7,41 +7,82 @@
     <div class="page-header">
         <div>
             <h1>Dashboard</h1>
-            <p>Welcome back, {{ app.user ? app.user.fullName|default(app.user.userIdentifier) : 'Admin' }}.</p>
+            <p>
+                Welcome back, {{ app.user ? (app.user.fullName|default(app.user.userIdentifier))|split(' ')|first : 'there' }}.
+                {{ is_granted('ROLE_ADMIN') ? 'Here is the whole system at a glance.' : 'Here is what is happening today.' }}
+            </p>
         </div>
     </div>
 
     <div class="stats">
-        <div class="stat-card money">
-            <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
-            <strong>PHP {{ stats.total_revenue|number_format(2) }}</strong>
-            <span>Total Income</span>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="bi bi-bag-check"></i></div>
-            <strong>{{ stats.pending_orders }}</strong>
-            <span>Pending Orders</span>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="bi bi-receipt"></i></div>
-            <strong>{{ stats.total_orders }}</strong>
-            <span>Total Orders</span>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="bi bi-calendar-check"></i></div>
-            <strong>{{ stats.upcoming_appointments }}</strong>
-            <span>Upcoming Appointments</span>
-        </div>
-        <div class="stat-card {{ stats.low_stock_count > 0 ? 'alert' }}">
-            <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
-            <strong>{{ stats.low_stock_count }}</strong>
-            <span>Low Stock Items</span>
-        </div>
-        <div class="stat-card {{ stats.unread_messages > 0 ? 'alert' }}">
-            <div class="stat-icon"><i class="bi bi-envelope"></i></div>
-            <strong>{{ stats.unread_messages }}</strong>
-            <span>Unread Messages</span>
-        </div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-people"></i></div>
+                <strong>{{ stats.total_users }}</strong>
+                <span>Total Users</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-person-badge"></i></div>
+                <strong>{{ stats.total_staff }}</strong>
+                <span>Total Staff</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-collection"></i></div>
+                <strong>{{ stats.total_records }}</strong>
+                <span>Total Records</span>
+            </div>
+            <div class="stat-card money">
+                <div class="stat-icon"><i class="bi bi-cash-stack"></i></div>
+                <strong>PHP {{ stats.total_revenue|number_format(2) }}</strong>
+                <span>Total Income</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-bag-check"></i></div>
+                <strong>{{ stats.pending_orders }}</strong>
+                <span>Pending Orders</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-receipt"></i></div>
+                <strong>{{ stats.total_orders }}</strong>
+                <span>Total Orders</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-calendar-check"></i></div>
+                <strong>{{ stats.upcoming_appointments }}</strong>
+                <span>Upcoming Appointments</span>
+            </div>
+            <div class="stat-card {{ stats.low_stock_count > 0 ? 'alert' }}">
+                <div class="stat-icon"><i class="bi bi-box-seam"></i></div>
+                <strong>{{ stats.low_stock_count }}</strong>
+                <span>Low Stock Items</span>
+            </div>
+            <div class="stat-card {{ stats.unread_messages > 0 ? 'alert' }}">
+                <div class="stat-icon"><i class="bi bi-envelope"></i></div>
+                <strong>{{ stats.unread_messages }}</strong>
+                <span>Unread Messages</span>
+            </div>
+        {% else %}
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-bag-heart"></i></div>
+                <strong>{{ stats.my_orders }}</strong>
+                <span>My Orders</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-calendar-heart"></i></div>
+                <strong>{{ stats.my_appointments }}</strong>
+                <span>My Appointments</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+                <strong>{{ stats.pending_orders }}</strong>
+                <span>Pending Orders</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="bi bi-calendar-event"></i></div>
+                <strong>{{ stats.upcoming_appointments }}</strong>
+                <span>Upcoming Appointments</span>
+            </div>
+        {% endif %}
     </div>
 
     <div class="panels">

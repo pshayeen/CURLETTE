@@ -1,0 +1,111 @@
+{% extends 'base_site.html.twig' %}
+
+{% block title %}Our Products | Curlétte Hair Studio{% endblock %}
+
+{% block body %}
+
+    <div class="booking-page">
+        <section class="booking-hero products-hero">
+            <img src="{{ asset('images/bg.png') }}" alt="" class="section-bg">
+            <div class="booking-heading">
+                <p class="home-label">CURLÉTTE PRODUCTS</p>
+                <h1>Curl care <em>essentials.</em></h1>
+                <p>Everything you need to cleanse, hydrate, define, and protect your curls — picked for every step of your routine.</p>
+            </div>
+
+            <div class="products-panel">
+                <div class="product-grid">
+                    {% for product in products %}
+                        <article class="product-card">
+                            <button type="button" class="product-card-trigger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#productModal{{ product.id }}"
+                                    aria-label="View details for {{ product.productName }}">
+                                <div class="product-img">
+                                    {% if product.image %}
+                                        <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.productName }}">
+                                    {% else %}
+                                        <img src="{{ asset('images/C-icon.png') }}" alt="" class="product-placeholder">
+                                    {% endif %}
+                                </div>
+                                <div class="product-info-preview">
+                                    <h3>{{ product.productName }}</h3>
+                                    <strong>PHP {{ product.price|number_format(2) }}</strong>
+                                </div>
+                            </button>
+
+                            {% if product.stockQuantity > 0 %}
+                                {% if app.user %}
+                                    <form method="post" action="{{ path('app_cart_add', {id: product.id}) }}" class="cart-btn-form">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('cart' ~ product.id) }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button class="cart-btn" type="submit" aria-label="Add {{ product.productName }} to cart">
+                                            <i class="bi bi-handbag"></i>
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <div class="cart-btn-form">
+                                        <a href="{{ path('app_login') }}" class="cart-btn" aria-label="Log in to add {{ product.productName }} to your cart">
+                                            <i class="bi bi-handbag"></i>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <span class="stock-status">OUT OF STOCK</span>
+                            {% endif %}
+                        </article>
+                    {% else %}
+                        <p>Our products are coming soon.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+
+    {% for product in products %}
+        <div class="modal fade detail-modal" id="productModal{{ product.id }}" tabindex="-1" aria-labelledby="productModalLabel{{ product.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content detail-modal-content">
+                    <button type="button" class="btn-close detail-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    {% if product.image %}
+                        <div class="detail-modal-img detail-modal-img--contain">
+                            <img src="{{ asset('images/products/' ~ product.image) }}" alt="">
+                        </div>
+                    {% endif %}
+                    <div class="detail-modal-body">
+                        <p class="booking-eyebrow">CURLÉTTE PRODUCT</p>
+                        <h2 id="productModalLabel{{ product.id }}">{{ product.productName }}</h2>
+                        <p class="detail-modal-description">{{ product.productDescription }}</p>
+                        <div class="detail-modal-meta">
+                            <div>
+                                <span>PRICE</span>
+                                <strong>PHP {{ product.price|number_format(2) }}</strong>
+                            </div>
+                            <div>
+                                <span>AVAILABILITY</span>
+                                <strong>{{ product.stockQuantity > 0 ? 'In stock' : 'Out of stock' }}</strong>
+                            </div>
+                        </div>
+                        {% if product.stockQuantity > 0 %}
+                            {% if app.user %}
+                                <form method="post" action="{{ path('app_cart_add', {id: product.id}) }}" class="detail-modal-add-form">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('cart' ~ product.id) }}">
+                                    <div class="qty-select">
+                                        <label for="qty-{{ product.id }}">Qty</label>
+                                        <input type="number" id="qty-{{ product.id }}" name="quantity" value="1" min="1" max="{{ product.stockQuantity }}">
+                                    </div>
+                                    <button type="submit" class="btn-main detail-modal-cta">ADD TO CART</button>
+                                </form>
+                            {% else %}
+                                <a href="{{ path('app_login') }}" class="btn-main detail-modal-cta">LOG IN TO ORDER</a>
+                            {% endif %}
+                        {% else %}
+                            <button type="button" class="btn-outline detail-modal-cta" disabled>OUT OF STOCK</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

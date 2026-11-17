@@ -4,14 +4,284 @@
 
 {% block body %}
 
-    <div class="page-header">
-        <h1>Add Order</h1>
-        <p>Record a new customer order.</p>
+    {% set paymentHelp = {gcash: 'Paid via GCash.', bank: 'Paid via bank transfer.', cash: 'The customer pays in cash on delivery.'} %}
+
+    <div class="page-header page-header-row">
+        <div>
+            <h1>Add an order</h1>
+            <p>Enter the customer’s details, then choose the products they ordered.</p>
+        </div>
+        <a href="{{ path('app_orders_index') }}" class="btn-outline">← BACK TO ORDERS</a>
     </div>
 
-    <div class="form-card">
-        {{ include('orders/_form.html.twig', {button_label: 'Add Order'}) }}
-        <p class="form-back"><a href="{{ path('app_orders_index') }}">← Back to orders</a></p>
+    <div class="booking-modal">
+        {{ form_start(form, {attr: {class: 'booking-form', id: 'orderForm'}}) }}
+
+            <section class="booking-section">
+                <div class="booking-section-heading">
+                    <span>01</span>
+                    <div>
+                        <h2>Customer details</h2>
+                        <p>Who is this order for?</p>
+                    </div>
+                </div>
+                <div class="booking-details-grid">
+                    <div class="form-group">
+                        {{ form_label(form.customerName) }}
+                        {{ form_widget(form.customerName) }}
+                        {{ form_errors(form.customerName) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.customerEmail) }}
+                        {{ form_widget(form.customerEmail) }}
+                        {{ form_errors(form.customerEmail) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form_label(form.customerPhone) }}
+                        {{ form_widget(form.customerPhone) }}
+                        {{ form_errors(form.customerPhone) }}
+                    </div>
+                        <div class="payment-method-select fulfillment-select" style="grid-column: 1 / -1;">
+                            <p class="payment-method-label">Order type</p>
+                            {% for child in form.fulfillmentMethod %}
+                                <label class="payment-option">
+                                    {{ form_widget(child) }}
+                                    <span class="payment-option-info">
+                                        <strong>{{ child.vars.label }}</strong>
+                                        <span>{{ child.vars.value == 'pickup' ? 'The customer picks up the order in the shop.' : 'The order is delivered to the customer.' }}</span>
+                                    </span>
+                                </label>
+                            {% endfor %}
+                            {{ form_errors(form.fulfillmentMethod) }}
+                        </div>
+                    <div class="form-group" style="grid-column: 1 / -1;" data-delivery-address>
+                        {{ form_label(form.deliveryAddress) }}
+                        {{ form_widget(form.deliveryAddress) }}
+                        {{ form_errors(form.deliveryAddress) }}
+                    </div>
+                </div>
+            </section>
+
+            <section class="booking-section">
+                <div class="booking-section-heading">
+                    <span>02</span>
+                    <div>
+                        <h2>Choose products</h2>
+                        <p>Click a product to add it, then set the quantity.</p>
+                    </div>
+                </div>
+
+                <div class="booking-service-grid">
+                    {% for product in products %}
+                        {% set quantity = selectedQuantities[product.id]|default(0) %}
+                        {% set soldOut = product.stockQuantity <= 0 %}
+                        <article class="booking-service-card booking-product-card{{ quantity > 0 ? ' selected' }}{{ soldOut ? ' is-sold-out' }}"
+                                 data-product-card data-price="{{ product.price }}" data-name="{{ product.productName }}" data-stock="{{ product.stockQuantity }}">
+                            <button type="button" class="service-card-main" data-product-toggle{{ soldOut ? ' disabled' }}>
+                                {% if product.image %}
+                                    <div class="service-card-img">
+                                        <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.productName }}">
+                                    </div>
+                                {% else %}
+                                    <div class="service-card-img service-card-img-empty">
+                                        <img src="{{ asset('images/C-icon.png') }}" alt="">
+                                    </div>
+                                {% endif %}
+                                <span class="service-card-number">{{ soldOut ? 'OUT OF STOCK' : product.stockQuantity ~ ' IN STOCK' }}</span>
+                                <span class="service-card-title">{{ product.productName }}</span>
+                                <span class="service-card-bottom">
+                                    <strong>PHP {{ product.price|number_format(2) }}</strong>
+                                </span>
+                            </button>
+                            {% if not soldOut %}
+                                <div class="product-qty">
+                                    <button type="button" data-qty-minus aria-label="Less">−</button>
+                                    <input type="number" name="quantities[{{ product.id }}]" value="{{ quantity }}" min="0" max="{{ product.stockQuantity }}" data-qty-input>
+                                    <button type="button" data-qty-plus aria-label="More">+</button>
+                                </div>
+                            {% endif %}
+                        </article>
+                    {% else %}
+                        <p class="muted">No products yet. An admin needs to add products first.</p>
+                    {% endfor %}
+                </div>
+
+                <p class="selected-service-message is-error" id="orderProductsMessage"{% if not itemsError %} hidden{% endif %}>
+                    <i class="bi bi-exclamation-circle"></i> {{ itemsError }}
+                </p>
+            </section>
+
+            <section class="booking-section">
+                <div class="booking-section-heading">
+                    <span>03</span>
+                    <div>
+                        <h2>Payment</h2>
+                        <p>Review the order and record how it was paid.</p>
+                    </div>
+                </div>
+
+                <div class="order-summary">
+                    <p class="payment-method-label">Order Summary</p>
+                    <ul id="orderSummaryList"></ul>
+                    <div class="order-summary-total">
+                        <span>TOTAL</span>
+                        <strong id="orderTotal">PHP 0.00</strong>
+                    </div>
+                </div>
+
+                <div class="payment-method-select">
+                    <p class="payment-method-label">Payment Method</p>
+                    {% for child in form.paymentMethod %}
+                        <label class="payment-option" data-payment-value="{{ child.vars.value }}">
+                            {{ form_widget(child) }}
+                            <span class="payment-option-info">
+                                <strong>{{ child.vars.label }}</strong>
+                                <span>{{ paymentHelp[child.vars.value]|default('') }}</span>
+                            </span>
+                        </label>
+                    {% endfor %}
+                    {{ form_errors(form.paymentMethod) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(form.paymentReference) }}
+                    {{ form_widget(form.paymentReference) }}
+                    {{ form_errors(form.paymentReference) }}
+                </div>
+            </section>
+
+            <div class="booking-submit-area">
+                <p><i class="bi bi-info-circle"></i> The order is saved under your name, and stock goes down.</p>
+                <div style="display: flex; gap: 12px;">
+                    <a href="{{ path('app_orders_index') }}" class="btn-outline">CANCEL</a>
+                    <button type="submit" class="btn-main booking-submit">PLACE ORDER <i class="bi bi-arrow-right" style="margin-left: 6px;"></i></button>
+                </div>
+            </div>
+
+        {{ form_end(form) }}
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    (function () {
+        const radios = document.querySelectorAll('input[name$="[fulfillmentMethod]"]');
+        const addressGroup = document.querySelector('[data-delivery-address]');
+        const cashOption = document.querySelector('[data-payment-value="cash"]');
+
+        if (!radios.length || !addressGroup) {
+            return;
+        }
+
+        const cashLabel = cashOption ? cashOption.querySelector('strong') : null;
+        const cashHelp = cashOption ? cashOption.querySelector('.payment-option-info span') : null;
+        const deliveryText = cashHelp ? cashHelp.textContent : '';
+
+        function sync() {
+            const checked = document.querySelector('input[name$="[fulfillmentMethod]"]:checked');
+            const pickup = checked && checked.value === 'pickup';
+
+            addressGroup.style.display = pickup ? 'none' : '';
+
+            if (cashLabel && cashHelp) {
+                cashHelp.textContent = pickup ? 'The customer pays in cash at the shop.' : deliveryText;
+            }
+        }
+
+        radios.forEach(function (radio) { radio.addEventListener('change', sync); });
+        sync();
+    })();
+</script>
+<script>
+    const orderForm = document.getElementById('orderForm');
+    const cards = orderForm.querySelectorAll('[data-product-card]');
+    const summaryList = document.getElementById('orderSummaryList');
+    const totalElement = document.getElementById('orderTotal');
+    const productsMessage = document.getElementById('orderProductsMessage');
+
+    function peso(amount) {
+        return 'PHP ' + amount.toLocaleString('en-PH', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function quantityOf(card) {
+        const input = card.querySelector('[data-qty-input]');
+        return input ? (parseInt(input.value, 10) || 0) : 0;
+    }
+
+    function refreshSummary() {
+        let total = 0;
+        summaryList.innerHTML = '';
+
+        cards.forEach(function (card) {
+            const quantity = quantityOf(card);
+            card.classList.toggle('selected', quantity > 0);
+
+            if (quantity > 0) {
+                const price = parseFloat(card.dataset.price);
+                total += price * quantity;
+
+                const row = document.createElement('li');
+                const name = document.createElement('span');
+                const amount = document.createElement('strong');
+                name.textContent = card.dataset.name + ' × ' + quantity;
+                amount.textContent = peso(price * quantity);
+                row.append(name, amount);
+                summaryList.append(row);
+            }
+        });
+
+        if (!summaryList.children.length) {
+            const empty = document.createElement('li');
+            empty.className = 'empty';
+            empty.textContent = 'No products chosen yet.';
+            summaryList.append(empty);
+        }
+
+        totalElement.textContent = peso(total);
+    }
+
+    cards.forEach(function (card) {
+        const input = card.querySelector('[data-qty-input]');
+        if (!input) {
+            return;
+        }
+
+        const maximum = parseInt(card.dataset.stock, 10);
+
+        function setQuantity(quantity) {
+            input.value = Math.max(0, Math.min(maximum, quantity));
+            productsMessage.hidden = true;
+            refreshSummary();
+        }
+
+        card.querySelector('[data-product-toggle]').addEventListener('click', function () {
+            setQuantity(quantityOf(card) > 0 ? 0 : 1);
+        });
+        card.querySelector('[data-qty-minus]').addEventListener('click', function () {
+            setQuantity(quantityOf(card) - 1);
+        });
+        card.querySelector('[data-qty-plus]').addEventListener('click', function () {
+            setQuantity(quantityOf(card) + 1);
+        });
+        input.addEventListener('input', function () {
+            setQuantity(quantityOf(card));
+        });
+    });
+
+    orderForm.addEventListener('submit', function (event) {
+        const chosen = Array.from(cards).some(function (card) {
+            return quantityOf(card) > 0;
+        });
+
+        if (!chosen) {
+            event.preventDefault();
+            productsMessage.innerHTML = '<i class="bi bi-exclamation-circle"></i> Please choose at least one product.';
+            productsMessage.hidden = false;
+            productsMessage.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+    });
+
+    refreshSummary();
+</script>
 {% endblock %}

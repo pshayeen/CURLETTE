@@ -1,0 +1,102 @@
+{% extends 'base_site.html.twig' %}
+
+{% block title %}My Orders | Curlétte Hair Studio{% endblock %}
+
+{% block body %}
+
+    {% set paymentLabels = {cash: 'Cash on Delivery / Cash on Pickup', gcash: 'GCash', bank: 'Bank Transfer'} %}
+
+    <div class="booking-page">
+        <section class="booking-hero">
+            <div class="booking-heading">
+                <p class="home-label">YOUR CURLÉTTE ACCOUNT</p>
+                <h1>My <em>orders.</em></h1>
+                <p>Everything you’ve ordered from the shop, past and pending.</p>
+            </div>
+
+            {% if orders is empty %}
+                <div class="cart-empty">
+                    <i class="bi bi-bag-x"></i>
+                    <h2>No orders yet.</h2>
+                    <p>Browse our curl care essentials and place your first order.</p>
+                    <a href="{{ path('app_products_page') }}" class="btn-main">SHOP PRODUCTS</a>
+                </div>
+            {% else %}
+                <div class="my-list">
+                    {% for order in orders %}
+                        <div class="my-list-item">
+                            <div class="my-list-item-header">
+                                <div>
+                                    <h3>Order #{{ order.id }}</h3>
+                                    <span class="muted">Placed on {{ order.createdAt ? order.createdAt|date('M j, Y') : '—' }}</span>
+                                </div>
+                                <span class="status-badge {{ order.status }}">{{ order.status }}</span>
+                            </div>
+
+                            <div class="cart-order-summary">
+                                {% for item in order.items %}
+                                    <div class="cart-order-summary-row">
+                                        <span>{{ item.productName }} × {{ item.quantity }}</span>
+                                        <strong>PHP {{ (item.unitPrice * item.quantity)|number_format(2) }}</strong>
+                                    </div>
+                                {% endfor %}
+                                <div class="cart-order-summary-row cart-order-summary-total">
+                                    <span>Total</span>
+                                    <strong>PHP {{ order.total|number_format(2) }}</strong>
+                                </div>
+                            </div>
+
+                            <p class="muted">
+                                Paid via {{ paymentLabels[order.paymentMethod]|default(order.paymentMethod) }}
+                                {% if order.paymentReference %} — Ref# {{ order.paymentReference }}{% endif %}
+                            </p>
+
+                            {% if order.status == 'placed' %}
+                                <div class="my-list-item-actions">
+                                    <button type="button" class="my-cancel-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#cancelConfirmModal"
+                                            data-action="{{ path('app_account_order_cancel', {id: order.id}) }}"
+                                            data-token="{{ csrf_token('cancel-order' ~ order.id) }}"
+                                            data-label="Order #{{ order.id }} will be cancelled and its items restocked. This can’t be undone.">
+                                        Cancel Order
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+    </div>
+
+    <div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content confirm-modal-content danger">
+                <div class="confirm-modal-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                <h2>Cancel this order?</h2>
+                <p id="cancelLabel"></p>
+
+                <form method="post" id="cancelForm">
+                    <input type="hidden" name="_token" id="cancelToken">
+                    <div class="confirm-modal-actions">
+                        <button type="button" class="btn-outline" data-bs-dismiss="modal">KEEP IT</button>
+                        <button type="submit" class="btn-main is-danger">YES, CANCEL</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    document.getElementById('cancelConfirmModal').addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        document.getElementById('cancelLabel').textContent = button.dataset.label;
+        document.getElementById('cancelForm').action = button.dataset.action;
+        document.getElementById('cancelToken').value = button.dataset.token;
+    });
+</script>
+{% endblock %}

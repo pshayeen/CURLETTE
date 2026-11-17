@@ -71,7 +71,6 @@
                         <td>{{ service.duration }}</td>
                         <td>
                             <div class="row-actions">
-                                <a href="{{ path('app_services_show', {id: service.id}) }}" class="view-link">Show</a>
                                 <a href="{{ path('app_services_edit', {id: service.id}) }}" class="view-link">Edit</a>
                                 <button type="button" class="btn-small-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                         data-name="{{ service.serviceName }}"

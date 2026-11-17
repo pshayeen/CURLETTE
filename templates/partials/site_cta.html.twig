@@ -1,0 +1,9 @@
+<section id="appointment" class="cta">
+    <img src="{{ asset('images/cta-bg.png') }}" alt="" class="cta-bg">
+    <div class="cta-overlay"></div>
+    <div class="cta-content">
+        <h2>{{ ctaHeading|default('Ready to love your curls?') }}</h2>
+        <p>{{ ctaText|default('Book your appointment today!') }}</p>
+        <a href="{{ app.user ? path('app_booking') : path('app_login') }}" class="btn-main">BOOK AN APPOINTMENT</a>
+    </div>
+</section>

@@ -1,0 +1,147 @@
+{% extends 'base_site.html.twig' %}
+
+{% block title %}Your Cart | Curlétte Hair Studio{% endblock %}
+
+{% block body %}
+
+    {% set paymentHelp = {cash: 'Pay in cash when your order is delivered or picked up.', gcash: 'Pay via GCash.', bank: 'Pay via bank transfer.'} %}
+
+    <div class="booking-page">
+        <section class="booking-hero">
+            <div class="booking-heading">
+                <p class="home-label">YOUR CURLÉTTE CART</p>
+                <h1>Your <em>cart.</em></h1>
+                <p>Review your items, then place your order whenever you’re ready.</p>
+            </div>
+
+            {% if items is empty %}
+                <div class="cart-empty">
+                    <i class="bi bi-handbag"></i>
+                    <h2>Your cart is empty.</h2>
+                    <p>Browse our curl care essentials and add something you’ll love.</p>
+                    <a href="{{ path('app_products_page') }}" class="btn-main">SHOP PRODUCTS</a>
+                </div>
+            {% else %}
+                <div class="cart-list">
+                    {% for line in items %}
+                        {% set product = line.product %}
+                        <div class="cart-item">
+                            <div class="cart-item-img">
+                                {% if product.image %}
+                                    <img src="{{ asset('images/products/' ~ product.image) }}" alt="">
+                                {% else %}
+                                    <img src="{{ asset('images/C-icon.png') }}" alt="">
+                                {% endif %}
+                            </div>
+                            <div class="cart-item-info">
+                                <h3>{{ product.productName }}</h3>
+                                <span class="cart-item-unit-price">PHP {{ product.price|number_format(2) }} each</span>
+                                <span class="cart-item-stock-note"{% if line.quantity < product.stockQuantity %} hidden{% endif %}>Max available in stock</span>
+                            </div>
+                            <form method="post" action="{{ path('app_cart_update', {id: product.id}) }}" class="cart-item-qty">
+                                <input type="hidden" name="_token" value="{{ csrf_token('cart' ~ product.id) }}">
+                                <button type="submit" name="quantity" value="{{ max(0, line.quantity - 1) }}" class="qty-btn" aria-label="Decrease quantity">−</button>
+                                <span class="qty-value">{{ line.quantity }}</span>
+                                <button type="submit" name="quantity" value="{{ line.quantity + 1 }}" class="qty-btn" aria-label="Increase quantity"{% if line.quantity >= product.stockQuantity %} disabled{% endif %}>+</button>
+                            </form>
+                            <div class="cart-item-total">PHP {{ line.lineTotal|number_format(2) }}</div>
+                            <form method="post" action="{{ path('app_cart_remove', {id: product.id}) }}" class="cart-item-remove-form">
+                                <input type="hidden" name="_token" value="{{ csrf_token('cart' ~ product.id) }}">
+                                <button type="submit" class="cart-item-remove" aria-label="Remove {{ product.productName }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="cart-summary">
+                    <div class="cart-summary-row">
+                        <span>Subtotal</span>
+                        <strong>PHP {{ total|number_format(2) }}</strong>
+                    </div>
+                    <p class="cart-summary-note">Taxes and any shipping are calculated at pickup / delivery.</p>
+
+                    {{ form_start(form, {attr: {id: 'checkoutForm', novalidate: 'novalidate'}}) }}
+                        <div class="payment-method-select">
+                            <p class="payment-method-label">Order Type</p>
+                            {% for child in form.fulfillmentMethod %}
+                                <label class="payment-option">
+                                    {{ form_widget(child, {attr: {class: 'js-fulfillment'}}) }}
+                                    <span class="payment-option-info">
+                                        <strong>{{ child.vars.label }}</strong>
+                                        <span>{{ child.vars.value == 'pickup' ? 'Pick up your order at the shop.' : 'We deliver your order to your address.' }}</span>
+                                    </span>
+                                </label>
+                            {% endfor %}
+                            {{ form_errors(form.fulfillmentMethod) }}
+                        </div>
+
+                        <div class="checkout-address" id="addressGroup">
+                            <div class="form-group">
+                                {{ form_label(form.deliveryAddress) }}
+                                {{ form_widget(form.deliveryAddress) }}
+                                {{ form_errors(form.deliveryAddress) }}
+                            </div>
+                            <label class="save-address-option">
+                                {{ form_widget(form.saveAddress) }}
+                                <span>{{ form.saveAddress.vars.label }}</span>
+                            </label>
+                        </div>
+
+                        <div class="payment-method-select">
+                            <p class="payment-method-label">Payment Method</p>
+                            {% for child in form.paymentMethod %}
+                                <label class="payment-option">
+                                    {{ form_widget(child, {attr: {class: 'js-payment-method'}}) }}
+                                    <span class="payment-option-info">
+                                        <strong>{{ child.vars.label }}</strong>
+                                        <span>{{ paymentHelp[child.vars.value]|default('') }}</span>
+                                    </span>
+                                </label>
+                            {% endfor %}
+                            {{ form_errors(form.paymentMethod) }}
+                        </div>
+
+                        <div class="form-group" id="referenceGroup"{% if form.paymentMethod.vars.value not in ['gcash', 'bank'] %} hidden{% endif %}>
+                            {{ form_label(form.paymentReference) }}
+                            {{ form_widget(form.paymentReference) }}
+                            {{ form_errors(form.paymentReference) }}
+                        </div>
+
+                        <button type="submit" class="btn-main cart-checkout-btn">PLACE ORDER</button>
+                    {{ form_end(form) }}
+                </div>
+            {% endif %}
+        </section>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    const addressGroup = document.getElementById('addressGroup');
+
+    if (addressGroup) {
+        const syncFulfillment = function () {
+            const checked = document.querySelector('.js-fulfillment:checked');
+            addressGroup.style.display = checked && checked.value === 'pickup' ? 'none' : '';
+        };
+
+        document.querySelectorAll('.js-fulfillment').forEach(function (radio) {
+            radio.addEventListener('change', syncFulfillment);
+        });
+        syncFulfillment();
+    }
+
+    const referenceGroup = document.getElementById('referenceGroup');
+
+    if (referenceGroup) {
+        document.querySelectorAll('.js-payment-method').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                referenceGroup.hidden = !(radio.value === 'gcash' || radio.value === 'bank');
+            });
+        });
+    }
+</script>
+{% endblock %}

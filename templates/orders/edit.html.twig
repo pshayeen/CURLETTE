@@ -15,7 +15,9 @@
     </div>
 
     <div style="margin-top: 20px;">
-        {{ include('orders/_delete_form.html.twig') }}
+        {% if is_granted('RECORD_DELETE', order) %}
+            {{ include('orders/_delete_form.html.twig') }}
+        {% endif %}
     </div>
 
 {% endblock %}

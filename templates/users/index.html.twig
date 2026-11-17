@@ -7,25 +7,24 @@
     <div class="page-header page-header-row">
         <div>
             <h1>Users</h1>
-            <p>
-                {% if search %}
-                    {{ users|length }} result{{ users|length == 1 ? '' : 's' }} for “{{ search }}”.
-                {% else %}
-                    {{ users|length }} user{{ users|length == 1 ? '' : 's' }} registered.
-                {% endif %}
-            </p>
+            <p>{{ users|length }} account{{ users|length == 1 ? '' : 's' }}{{ term or role ? ' found' : ' in total' }}.</p>
         </div>
         <button type="button" class="btn-main" data-bs-toggle="modal" data-bs-target="#addUserModal">
             + ADD USER
         </button>
     </div>
 
-    {# added: search, handled by the repository's searchByKeyword method #}
     <div style="margin-bottom: 16px;">
         <form method="get" action="{{ path('app_users_index') }}" class="inline-form">
-            <input type="text" name="q" value="{{ search }}" placeholder="Search by name, username or email..." style="width: 300px;">
-            <button type="submit" class="btn-small">Search</button>
-            {% if search %}
+            <input type="text" name="q" value="{{ term }}" placeholder="Search by name, username or email..." style="width: 300px;">
+            <select name="role" style="width: 140px;">
+                <option value="">All roles</option>
+                <option value="ROLE_ADMIN"{{ role == 'ROLE_ADMIN' ? ' selected' }}>Admin</option>
+                <option value="ROLE_STAFF"{{ role == 'ROLE_STAFF' ? ' selected' }}>Staff</option>
+                <option value="ROLE_USER"{{ role == 'ROLE_USER' ? ' selected' }}>Customer</option>
+            </select>
+            <button type="submit" class="btn-small">Filter</button>
+            {% if term or role %}
                 <a href="{{ path('app_users_index') }}" class="view-link">Clear</a>
             {% endif %}
         </form>
@@ -37,25 +36,45 @@
                 <tr>
                     <th>User</th>
                     <th>Username</th>
-                    <th>Phone</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Date Created</th>
                     <th>actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for user in users %}
+                {% set isSelf = app.user and app.user.id == user.id %}
                 <tr>
                     <td>
                         <strong>{{ user.fullName|default(user.username) }}</strong>
                         <span class="muted">{{ user.email ?: '—' }}</span>
                     </td>
                     <td>{{ user.username }}</td>
-                    <td>{{ user.phoneNumber ?: '—' }}</td>
+                    <td>
+                        {% if 'ROLE_ADMIN' in user.roles %}
+                            <span class="badge admin">Admin</span>
+                        {% elseif 'ROLE_STAFF' in user.roles %}
+                            <span class="badge staff">Staff</span>
+                        {% else %}
+                            <span class="badge customer">Customer</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge {{ user.active ? 'active' : 'disabled' }}">{{ user.active ? 'Active' : 'Disabled' }}</span>
+                    </td>
+                    <td>{{ user.createdAt ? user.createdAt|date('M j, Y') : '—' }}</td>
                     <td>
                         <div class="row-actions">
                             <a href="{{ path('app_users_edit', {'id': user.id}) }}" class="view-link">edit</a>
-                            {% if app.user and app.user.id == user.id %}
+                            {% if isSelf %}
                                 <span class="muted" style="margin: 0;">You</span>
                             {% else %}
+                                <form method="post" action="{{ path('app_users_toggle', {'id': user.id}) }}" style="display: inline;"
+                                      onsubmit="return confirm('{{ user.active ? 'Disable' : 'Enable' }} this account?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ user.id) }}">
+                                    <button type="submit" class="btn-small">{{ user.active ? 'Disable' : 'Enable' }}</button>
+                                </form>
                                 <button type="button" class="btn-small-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
                                         data-name="{{ user.username }}"
                                         data-action="{{ path('app_users_delete', {'id': user.id}) }}"
@@ -68,14 +87,13 @@
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="5">{{ search ? 'No users match your search.' : 'no records found' }}</td>
+                    <td colspan="6">{{ term or role ? 'No users match your search.' : 'no records found' }}</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
 
-    {# added: Add User modal, fields rendered one by one like the instructor's demo #}
     <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true"
          data-open-on-load="{{ openAddModal|default(false) ? 'true' : 'false' }}">
         <div class="modal-dialog modal-dialog-centered" style="max-width: 640px;">
@@ -83,7 +101,7 @@
                 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
                     <div class="modal-heading">
                         <h2 id="addUserLabel">Add User</h2>
-                        <p>Create an account that can log in.</p>
+                        <p>Create an admin or staff account.</p>
                     </div>
 
                     <div class="form-grid">
@@ -108,6 +126,11 @@
                             {{ form_errors(form.phoneNumber) }}
                         </div>
                         <div>
+                            {{ form_label(form.roles) }}
+                            {{ form_widget(form.roles, {attr: {class: 'form-control'}}) }}
+                            {{ form_errors(form.roles) }}
+                        </div>
+                        <div class="full">
                             {{ form_label(form.plainPassword) }}
                             {{ form_widget(form.plainPassword, {attr: {class: 'form-control'}}) }}
                             {{ form_errors(form.plainPassword) }}
@@ -123,7 +146,6 @@
         </div>
     </div>
 
-    {# added: one Remove confirmation modal, filled in for each user #}
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content confirm-modal-content danger">
@@ -149,7 +171,7 @@
     document.getElementById('deleteModal').addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         document.getElementById('deleteLabel').textContent =
-            'Remove “' + button.dataset.name + '”? They will no longer be able to log in.';
+            'Remove “' + button.dataset.name + '”? Their records stay, but they can no longer log in.';
         document.getElementById('deleteForm').action = button.dataset.action;
         document.getElementById('deleteToken').value = button.dataset.token;
     });

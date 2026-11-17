@@ -4,13 +4,13 @@
 
     <div class="sidebar-header">
         <img src="{{ asset('images/logo.png') }}" alt="Curlétte">
-        <span class="admin-tag">ADMIN</span>
+        <span class="admin-tag">{{ is_granted('ROLE_ADMIN') ? 'ADMIN' : 'STAFF' }}</span>
     </div>
 
     <nav>
         <ul>
             <li>
-                <a href="{{ path('app_dashboard') }}" class="{{ current == 'app_dashboard' or current == 'app_home' ? 'active' }}">
+                <a href="{{ path('app_dashboard') }}" class="{{ current == 'app_dashboard' ? 'active' }}">
                     <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
             </li>
@@ -25,23 +25,30 @@
                 </a>
             </li>
             <li>
-                <a href="{{ path('app_products_index') }}" class="{{ current starts with 'app_products' ? 'active' }}">
-                    <i class="bi bi-box-seam"></i> Products
-                </a>
-            </li>
-            <li>
-                <a href="{{ path('app_services_index') }}" class="{{ current starts with 'app_services' ? 'active' }}">
-                    <i class="bi bi-scissors"></i> Services
-                </a>
-            </li>
-            <li>
-                <a href="{{ path('app_users_index') }}" class="{{ current starts with 'app_users' ? 'active' }}">
-                    <i class="bi bi-people"></i> Users
-                </a>
-            </li>
-            <li>
                 <a href="{{ path('app_messages_index') }}" class="{{ current starts with 'app_messages' ? 'active' }}">
                     <i class="bi bi-envelope"></i> Messages
+                </a>
+            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+                <li>
+                    <a href="{{ path('app_products_index') }}" class="{{ current starts with 'app_products' ? 'active' }}">
+                        <i class="bi bi-box-seam"></i> Products
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_services_index') }}" class="{{ current starts with 'app_services' ? 'active' }}">
+                        <i class="bi bi-scissors"></i> Services
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('app_users_index') }}" class="{{ current starts with 'app_users' ? 'active' }}">
+                        <i class="bi bi-people"></i> Users
+                    </a>
+                </li>
+            {% endif %}
+            <li>
+                <a href="{{ path('app_profile') }}" class="{{ current == 'app_profile' ? 'active' }}">
+                    <i class="bi bi-person-circle"></i> My Profile
                 </a>
             </li>
         </ul>

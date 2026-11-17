@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Profile | Curlétte Admin{% endblock %}
+
+{% block body %}
+
+    <div class="page-header">
+        <h1>My Profile</h1>
+        <p>Your account details and password.</p>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <tbody>
+                <tr>
+                    <th>Full name</th>
+                    <td>{{ user.fullName ?: '—' }}</td>
+                </tr>
+                <tr>
+                    <th>Username</th>
+                    <td>{{ user.username }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ user.email ?: '—' }}</td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <td>{{ user.phoneNumber ?: '—' }}</td>
+                </tr>
+                <tr>
+                    <th>Role</th>
+                    <td>
+                        <span class="badge {{ is_granted('ROLE_ADMIN') ? 'admin' : 'staff' }}">{{ is_granted('ROLE_ADMIN') ? 'Admin' : 'Staff' }}</span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Date created</th>
+                    <td>{{ user.createdAt ? user.createdAt|date('M j, Y') : '—' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="section-title">Change password</h2>
+
+    <div class="form-card password-card">
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            <div class="form-grid">
+                <div class="full">
+                    {{ form_label(form.currentPassword) }}
+                    {{ form_widget(form.currentPassword, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.currentPassword) }}
+                </div>
+                <div>
+                    {{ form_label(form.plainPassword.first) }}
+                    {{ form_widget(form.plainPassword.first, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.plainPassword.first) }}
+                </div>
+                <div>
+                    {{ form_label(form.plainPassword.second) }}
+                    {{ form_widget(form.plainPassword.second, {attr: {class: 'form-control'}}) }}
+                    {{ form_errors(form.plainPassword.second) }}
+                </div>
+                <p class="form-hint full">Use at least 8 characters, including an uppercase letter, a lowercase letter, a number and a special character.</p>
+            </div>
+            <button type="submit" class="btn-main">CHANGE PASSWORD</button>
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

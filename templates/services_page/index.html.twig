@@ -1,0 +1,92 @@
+{% extends 'base_site.html.twig' %}
+
+{% block title %}Our Services | Curlétte Hair Studio{% endblock %}
+
+{% block body %}
+
+    <div class="booking-page">
+        <section class="booking-hero">
+            <div class="booking-heading">
+                <p class="home-label">CURLÉTTE SERVICES</p>
+                <h1>Our <em>services.</em></h1>
+                <p>Every treatment is tailored to your curl pattern. See what’s included, then book whenever you’re ready.</p>
+            </div>
+
+            <div class="service-grid services-page-grid">
+                {% for service in services %}
+                    <article class="service-card service-card--detailed">
+                        {% if service.image %}
+                            <div class="card-img">
+                                <img src="{{ asset('images/services/' ~ service.image) }}" alt="{{ service.serviceName }}">
+                            </div>
+                        {% else %}
+                            <div class="card-img card-img-empty">
+                                <img src="{{ asset('images/C-icon.png') }}" alt="">
+                            </div>
+                        {% endif %}
+                        <div class="card-info">
+                            <h3>{{ service.serviceName }}</h3>
+                            <p>{{ service.serviceDescription }}</p>
+                            <div class="card-bottom">
+                                <strong>PHP {{ service.price|number_format(0) }}</strong>
+                                <span class="card-duration">{{ service.duration }}</span>
+                            </div>
+                            <div class="card-actions">
+                                <button type="button" class="btn-outline card-action-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#serviceModal{{ service.id }}">
+                                    VIEW DETAILS
+                                </button>
+                                <a href="{{ app.user ? path('app_booking', {service: service.serviceName}) : path('app_login') }}" class="btn-main card-action-btn">
+                                    BOOK
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                {% else %}
+                    <p>Our services are coming soon.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+
+    {% for service in services %}
+        <div class="modal fade detail-modal" id="serviceModal{{ service.id }}" tabindex="-1" aria-labelledby="serviceModalLabel{{ service.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content detail-modal-content">
+                    <button type="button" class="btn-close detail-modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    {% if service.image %}
+                        <div class="detail-modal-img">
+                            <img src="{{ asset('images/services/' ~ service.image) }}" alt="">
+                        </div>
+                    {% endif %}
+                    <div class="detail-modal-body">
+                        <p class="booking-eyebrow">CURLÉTTE SERVICE 0{{ loop.index }}</p>
+                        <h2 id="serviceModalLabel{{ service.id }}">{{ service.serviceName }}</h2>
+                        <p class="detail-modal-description">{{ service.serviceDescription }}</p>
+                        <div class="detail-modal-meta">
+                            <div>
+                                <span>PRICE</span>
+                                <strong>PHP {{ service.price|number_format(0) }}</strong>
+                            </div>
+                            <div>
+                                <span>DURATION</span>
+                                <strong>{{ service.duration }}</strong>
+                            </div>
+                        </div>
+                        {% if service.serviceIncludes %}
+                            <div class="service-includes">
+                                <span>WHAT’S INCLUDED</span>
+                                <p>{{ service.serviceIncludes }}</p>
+                            </div>
+                        {% endif %}
+                        <a href="{{ app.user ? path('app_booking', {service: service.serviceName}) : path('app_login') }}" class="btn-main detail-modal-cta">
+                            BOOK THIS SERVICE
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+{% endblock %}

@@ -59,7 +59,7 @@ class OrdersRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Orders[] the most recent orders, newest first
+     * @return Orders[] the latest orders, newest first
      */
     public function findRecent(int $limit = 5): array
     {
@@ -67,8 +67,30 @@ class OrdersRepository extends ServiceEntityRepository
             ->orderBy('o.createdAt', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
+    }
+
+    /**
+     * @return Orders[] orders matching the search text and status, newest first
+     */
+    public function search(?string $term, ?string $status): array
+    {
+        $queryBuilder = $this->createQueryBuilder('o')
+            ->orderBy('o.createdAt', 'DESC');
+
+        if ($term) {
+            $queryBuilder
+                ->andWhere('o.customerName LIKE :term OR o.customerEmail LIKE :term')
+                ->setParameter('term', '%' . $term . '%');
+        }
+
+        if ($status) {
+            $queryBuilder
+                ->andWhere('o.status = :status')
+                ->setParameter('status', $status);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
 

@@ -3,7 +3,11 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Validator\PasswordRules;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -24,6 +28,7 @@ class UserType extends AbstractType
         $builder
             ->add('fullName', TextType::class, [
                 'label' => 'Full Name',
+                'empty_data' => '',
                 'attr' => ['maxlength' => 100],
                 'constraints' => [
                     new NotBlank(message: 'Please enter the full name.'),
@@ -42,6 +47,7 @@ class UserType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
+                'empty_data' => '',
                 'attr' => ['maxlength' => 180],
                 'constraints' => [
                     new NotBlank(message: 'Please enter an email.'),
@@ -49,36 +55,58 @@ class UserType extends AbstractType
                 ],
             ])
             ->add('phoneNumber', TelType::class, [
-                'label' => 'Phone (optional)',
-                'required' => false,
+                'label' => 'Phone',
+                'empty_data' => '',
                 'attr' => ['maxlength' => 30],
                 'constraints' => [
+                    new NotBlank(message: 'Please enter a phone number.'),
                     new Regex(pattern: '/^[0-9+\-\s()]{7,20}$/', message: 'Please enter a valid phone number.'),
                 ],
             ])
+                        ->add('roles', ChoiceType::class, [
+                'label' => 'Role',
+                'choices' => [
+                    'Staff' => 'ROLE_STAFF',
+                    'Admin' => 'ROLE_ADMIN',
+                    'Customer' => 'ROLE_USER',
+                ],
+                'disabled' => $options['lock_role'],
+            ])
+
             ->add('plainPassword', PasswordType::class, [
                 'label' => $passwordRequired ? 'Password' : 'New Password (leave empty to keep)',
+                // instead of being set onto the object directly,
+                // this is read and encoded in the controller
                 'mapped' => false,
                 'required' => $passwordRequired,
                 'attr' => ['autocomplete' => 'new-password'],
+                'help' => PasswordRules::HELP,
                 'constraints' => $passwordRequired
-                    ? [
-                        new NotBlank(message: 'Please enter a password.'),
-                        new Length(
-                            min: 8,
-                            minMessage: 'The password should be at least {{ limit }} characters.',
-                            max: 4096,
-                        ),
-                    ]
-                    : [
-                        new Length(
-                            min: 8,
-                            minMessage: 'The password should be at least {{ limit }} characters.',
-                            max: 4096,
-                        ),
-                    ],
+                    ? PasswordRules::constraints()
+                    : PasswordRules::constraints(false),
             ])
         ;
+
+        $builder->get('roles')->addModelTransformer(new CallbackTransformer(
+            function (?array $roles): string {
+                $roles = $roles ?? [];
+
+                if (in_array('ROLE_ADMIN', $roles, true)) {
+                    return 'ROLE_ADMIN';
+                }
+
+                return in_array('ROLE_STAFF', $roles, true) ? 'ROLE_STAFF' : 'ROLE_USER';
+            },
+            fn (?string $role): array => [$role ?: 'ROLE_USER'],
+        ));
+
+        if ($options['include_status']) {
+            $builder->add('isActive', CheckboxType::class, [
+                'label' => 'Account is active',
+                'required' => false,
+                'disabled' => $options['lock_role'],
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -86,6 +114,8 @@ class UserType extends AbstractType
         $resolver->setDefaults([
             'data_class' => User::class,
             'require_password' => true,
+            'include_status' => true,
+            'lock_role' => false,
         ]);
     }
 }

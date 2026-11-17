@@ -1,0 +1,69 @@
+{% set current = app.request.attributes.get('_route') %}
+{% set cartCount = cart.count %}
+
+<header class="header">
+    <nav class="nav" aria-label="Main navigation">
+        <div class="nav-box">
+
+            <a href="{{ path('app_home') }}" class="logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Curlétte Hair Studio">
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="{{ path('app_home') }}" class="{{ current == 'app_home' ? 'active' }}">HOME</a></li>
+                <li><a href="{{ path('app_services_page') }}" class="{{ current == 'app_services_page' ? 'active' }}">SERVICES</a></li>
+                <li><a href="{{ path('app_products_page') }}" class="{{ current == 'app_products_page' ? 'active' }}">PRODUCTS</a></li>
+                <li><a href="{{ path('app_about_page') }}" class="{{ current == 'app_about_page' ? 'active' }}">ABOUT US</a></li>
+                <li><a href="{{ path('app_contact_page') }}" class="{{ current == 'app_contact_page' ? 'active' }}">CONTACT</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="{{ app.user ? path('app_booking') : path('app_login') }}" class="btn-main">BOOK AN APPOINTMENT</a>
+
+                <a href="{{ app.user ? path('app_cart') : path('app_login') }}" class="icon-btn cart-btn-nav" aria-label="Shopping cart">
+                    <i class="bi bi-handbag"></i>
+                    <span class="cart-count-badge"{% if cartCount < 1 %} hidden{% endif %}>{{ cartCount > 9 ? '9+' : cartCount }}</span>
+                </a>
+
+                {% if app.user %}
+                    {% set displayName = app.user.fullName|default(app.user.userIdentifier) %}
+                    <div class="account-menu">
+                        <button type="button" class="icon-btn account-btn account-menu-toggle" aria-haspopup="true" aria-expanded="false" aria-label="Account menu">
+                            <span class="account-avatar">{{ displayName|first|upper }}</span>
+                            <i class="bi bi-chevron-down account-caret"></i>
+                        </button>
+
+                        <div class="account-dropdown" hidden>
+                            <div class="account-dropdown-header">
+                                <span class="account-dropdown-avatar">{{ displayName|first|upper }}</span>
+                                <div>
+                                    <span>LOGGED IN AS</span>
+                                    <strong>{{ displayName }}</strong>
+                                </div>
+                            </div>
+
+                            <a href="{{ path('app_account') }}"><i class="bi bi-person"></i><span>My Account</span></a>
+                            <a href="{{ path('app_account_appointments') }}"><i class="bi bi-calendar-check"></i><span>My Appointments</span></a>
+                            <a href="{{ path('app_account_orders') }}"><i class="bi bi-bag"></i><span>My Orders</span></a>
+
+                            {% if is_granted('ROLE_STAFF') %}
+                                <div class="account-dropdown-divider"></div>
+                                <a href="{{ path('app_dashboard') }}"><i class="bi bi-speedometer2"></i><span>{{ is_granted('ROLE_ADMIN') ? 'Admin Dashboard' : 'Staff Dashboard' }}</span></a>
+                            {% endif %}
+
+                            <div class="account-dropdown-divider"></div>
+
+                            <form method="post" action="{{ path('app_logout') }}" class="logout-form">
+                                <button type="submit" class="logout-link"><i class="bi bi-box-arrow-right"></i><span>Log Out</span></button>
+                            </form>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{{ path('app_login') }}" class="nav-login">LOG IN</a>
+                    <a href="{{ path('app_register') }}" class="btn-outline btn-small">SIGN UP</a>
+                {% endif %}
+            </div>
+
+        </div>
+    </nav>
+</header>

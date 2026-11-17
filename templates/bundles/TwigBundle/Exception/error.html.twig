@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ status_code }} | Curlétte Hair Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+               background: #FFF7F3; color: #3B2418; font-family: 'Manrope', sans-serif; }
+        .card { width: 100%; max-width: 480px; margin: 20px; padding: 44px 36px; text-align: center;
+                border: 1px solid #EBDDD7; border-radius: 24px; background: #fff; }
+        .code { margin: 0 0 4px; color: #9B5F60; font-size: 12px; font-weight: 800; letter-spacing: 2px; }
+        h1 { margin: 0 0 12px; font-family: 'Cormorant Garamond', Garamond, serif; font-size: 38px; }
+        p { margin: 0 0 26px; color: #765A50; font-size: 14px; line-height: 1.6; }
+        a { display: inline-block; padding: 13px 28px; border-radius: 40px; background: #9B5F60;
+            color: #fff; font-size: 13px; font-weight: 800; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <p class="code">ERROR {{ status_code }}</p>
+        {% if status_code == 403 %}
+            <h1>Access denied</h1>
+            <p>You don’t have permission to view this page.</p>
+        {% elseif status_code == 404 %}
+            <h1>Page not found</h1>
+            <p>The page you’re looking for doesn’t exist or may have been moved.</p>
+        {% else %}
+            <h1>Something went wrong</h1>
+            <p>We hit a problem on our side. Please try again in a moment.</p>
+        {% endif %}
+        <a href="/">BACK TO HOME</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,155 @@
+{% extends 'base_site.html.twig' %}
+
+{% block title %}Curlétte Hair Studio{% endblock %}
+
+{% block body %}
+
+    <section id="home" class="home">
+        <img src="{{ asset('images/model.png') }}" alt="" class="home-bg">
+        <div class="home-overlay"></div>
+        <div class="home-box">
+            <div class="home-content">
+                <p class="home-label">MADE FOR YOUR CURLS</p>
+                <h1>
+                    Healthy curls,<br>
+                    <em>confident you.</em>
+                </h1>
+                <p class="home-text">
+                    Your curls deserve the best care.
+                    We offer personalized services and products
+                    to help you bring out their natural beauty.
+                </p>
+                <div class="home-buttons">
+                    <a href="{{ app.user ? path('app_booking') : path('app_login') }}" class="btn-main">BOOK AN APPOINTMENT</a>
+                    <a href="{{ path('app_products_page') }}" class="btn-outline">SHOP PRODUCTS</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="services">
+        <img src="{{ asset('images/bg.png') }}" alt="" class="section-bg">
+        <div class="section-box">
+            <header class="section-title">
+                <h2>OUR SERVICES</h2>
+                <p>Personalized treatments for every curl.</p>
+            </header>
+
+            <div class="service-grid">
+                {% for service in services %}
+                    <a href="{{ path('app_services_page') }}" class="service-card">
+                        {% if service.image %}
+                            <div class="card-img">
+                                <img src="{{ asset('images/services/' ~ service.image) }}" alt="{{ service.serviceName }}">
+                            </div>
+                        {% else %}
+                            <div class="card-img card-img-empty">
+                                <img src="{{ asset('images/C-icon.png') }}" alt="">
+                            </div>
+                        {% endif %}
+                        <div class="card-info">
+                            <h3>{{ service.serviceName }}</h3>
+                            <p>{{ service.serviceDescription }}</p>
+                            <strong>PHP {{ service.price|number_format(0) }}</strong>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="center-btn">
+                <a href="{{ path('app_services_page') }}" class="btn-outline btn-small">VIEW ALL SERVICES</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="products" class="products">
+        <div class="products-box">
+            <div class="products-text">
+                <span>CURLÉTTE PRODUCTS</span>
+                <h2>
+                    Curl care<br>
+                    <em>essentials.</em>
+                </h2>
+                <p>
+                    Curl-friendly essentials made to nourish,
+                    define, and protect your natural texture.
+                </p>
+                <a href="{{ path('app_products_page') }}" class="btn-main">VIEW ALL PRODUCTS</a>
+            </div>
+
+            <div class="product-grid">
+                {% for product in products %}
+                    <article class="product-card">
+                        <div class="product-img">
+                            {% if product.image %}
+                                <img src="{{ asset('images/products/' ~ product.image) }}" alt="{{ product.productName }}">
+                            {% else %}
+                                <img src="{{ asset('images/C-icon.png') }}" alt="" class="product-placeholder">
+                            {% endif %}
+                        </div>
+                        <div class="product-info">
+                            <h3>{{ product.productName }}</h3>
+                            <strong>PHP {{ product.price|number_format(2) }}</strong>
+                            {% if product.stockQuantity <= 0 %}
+                                <span class="stock-status">OUT OF STOCK</span>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="about-box">
+            <div class="about-text">
+                <span>ABOUT CURLÉTTE</span>
+                <h2>
+                    More than a salon.<br>
+                    <em>A home for your curls.</em>
+                </h2>
+                <p>
+                    At Curlétte Hair Studio, we believe that every curl is unique
+                    and deserves the right care. We created Curlétte as a welcoming
+                    space where people with curly hair can feel empowered,
+                    understood, and confident in their natural texture.
+                </p>
+                <a href="{{ path('app_about_page') }}" class="btn-outline btn-small">LEARN MORE ABOUT US</a>
+            </div>
+            <div class="about-img">
+                <img src="{{ asset('images/salon.jpg') }}" alt="Curlétte Hair Studio">
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <img src="{{ asset('images/pattern.png') }}" alt="" class="pattern">
+        <img src="{{ asset('images/pattern.png') }}" alt="" class="pattern2">
+
+        <header class="testimonial-title">
+            <h2>What our clients say about us?</h2>
+        </header>
+
+        <div class="testimonial-track">
+            {% for pass in 1..2 %}
+                {% for testimonial in testimonials %}
+                    <article class="testimonial-card"{% if pass == 2 %} aria-hidden="true"{% endif %}>
+                        <div class="testimonial-img">
+                            <img src="{{ asset('images/' ~ testimonial.image) }}" alt="{{ pass == 1 ? 'Curlétte client' : '' }}">
+                        </div>
+                        <div class="testimonial-info">
+                            <div class="stars" aria-label="5 out of 5 stars">
+                                {% for star in 1..5 %}<i class="bi bi-star-fill"></i>{% endfor %}
+                            </div>
+                            <p>“{{ testimonial.text }}”</p>
+                            <strong>— {{ testimonial.name }}</strong>
+                        </div>
+                    </article>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </section>
+
+    {{ include('partials/site_cta.html.twig') }}
+
+{% endblock %}

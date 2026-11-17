@@ -20,6 +20,9 @@ class Appointments
     #[ORM\Column(length: 180)]
     private ?string $customerEmail = null;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $customerPhone = null;
+
     #[ORM\Column(length: 100)]
     private ?string $service = null;
 
@@ -46,6 +49,14 @@ class Appointments
 
     #[ORM\Column(length: 20)]
     private ?string $paymentMethod = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?User $createdBy = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?User $customer = null;
 
     public function getId(): ?int
     {
@@ -180,6 +191,42 @@ class Appointments
     public function setPaymentMethod(string $paymentMethod): static
     {
         $this->paymentMethod = $paymentMethod;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?User
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?User $customer): static
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getCustomerPhone(): ?string
+    {
+        return $this->customerPhone;
+    }
+
+    public function setCustomerPhone(?string $customerPhone): static
+    {
+        $this->customerPhone = $customerPhone;
 
         return $this;
     }

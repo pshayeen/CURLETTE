@@ -1,0 +1,94 @@
+{% extends 'base_site.html.twig' %}
+
+{% block title %}My Appointments | Curlétte Hair Studio{% endblock %}
+
+{% block body %}
+
+    {% set paymentLabels = {cash: 'Cash', gcash: 'GCash', bank: 'Bank Transfer'} %}
+
+    <div class="booking-page">
+        <section class="booking-hero">
+            <div class="booking-heading">
+                <p class="home-label">YOUR CURLÉTTE ACCOUNT</p>
+                <h1>My <em>appointments.</em></h1>
+                <p>Every visit you’ve booked with us, past and upcoming.</p>
+            </div>
+
+            {% if appointments is empty %}
+                <div class="cart-empty">
+                    <i class="bi bi-calendar-x"></i>
+                    <h2>No appointments yet.</h2>
+                    <p>When you book a visit, it’ll show up here.</p>
+                    <a href="{{ path('app_booking') }}" class="btn-main">BOOK AN APPOINTMENT</a>
+                </div>
+            {% else %}
+                <div class="my-list">
+                    {% for appointment in appointments %}
+                        <div class="my-list-item">
+                            <div class="my-list-item-header">
+                                <div>
+                                    <h3>Booking #{{ appointment.id }} — {{ appointment.service }}</h3>
+                                    <span class="muted">
+                                        {{ appointment.appointmentDate ? appointment.appointmentDate|date('M j, Y') : '—' }}
+                                        at {{ appointment.appointmentTime ? appointment.appointmentTime|date('g:i A') : '—' }}
+                                    </span>
+                                    {% if appointment.notes %}
+                                        <span class="muted">{{ appointment.notes }}</span>
+                                    {% endif %}
+                                    <span class="muted">
+                                        Deposit: PHP {{ appointment.depositAmount|number_format(2) }} via {{ paymentLabels[appointment.paymentMethod]|default(appointment.paymentMethod) }}
+                                        {% if appointment.paymentReference %} — Ref# {{ appointment.paymentReference }}{% endif %}
+                                    </span>
+                                </div>
+                                <span class="status-badge {{ appointment.status }}">{{ appointment.status }}</span>
+                            </div>
+
+                            {% if appointment.status == 'upcoming' %}
+                                <div class="my-list-item-actions">
+                                    <button type="button" class="my-cancel-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#cancelConfirmModal"
+                                            data-action="{{ path('app_account_appointment_cancel', {id: appointment.id}) }}"
+                                            data-token="{{ csrf_token('cancel-appointment' ~ appointment.id) }}"
+                                            data-label="Your {{ appointment.service }} appointment on {{ appointment.appointmentDate ? appointment.appointmentDate|date('M j, Y') : '' }} will be cancelled. This can’t be undone.">
+                                        Cancel Appointment
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+    </div>
+
+    <div class="modal fade" id="cancelConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content confirm-modal-content danger">
+                <div class="confirm-modal-icon"><i class="bi bi-exclamation-triangle"></i></div>
+                <h2>Cancel this appointment?</h2>
+                <p id="cancelLabel"></p>
+
+                <form method="post" id="cancelForm">
+                    <input type="hidden" name="_token" id="cancelToken">
+                    <div class="confirm-modal-actions">
+                        <button type="button" class="btn-outline" data-bs-dismiss="modal">KEEP IT</button>
+                        <button type="submit" class="btn-main is-danger">YES, CANCEL</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    document.getElementById('cancelConfirmModal').addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        document.getElementById('cancelLabel').textContent = button.dataset.label;
+        document.getElementById('cancelForm').action = button.dataset.action;
+        document.getElementById('cancelToken').value = button.dataset.token;
+    });
+</script>
+{% endblock %}

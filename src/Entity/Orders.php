@@ -22,6 +22,15 @@ class Orders
     #[ORM\Column(length: 180)]
     private ?string $customerEmail = null;
 
+    #[ORM\Column(length: 30, nullable: true)]
+    private ?string $customerPhone = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $deliveryAddress = null;
+
+    #[ORM\Column(length: 20, options: ['default' => 'delivery'])]
+    private ?string $fulfillmentMethod = 'delivery';
+
     #[ORM\Column(length: 20)]
     private ?string $status = null;
 
@@ -42,6 +51,14 @@ class Orders
      */
     #[ORM\OneToMany(targetEntity: OrderItems::class, mappedBy: 'customerOrder', orphanRemoval: true)]
     private Collection $items;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?User $createdBy = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?User $customer = null;
 
     public function __construct()
     {
@@ -163,6 +180,71 @@ class Orders
                 $item->setCustomerOrder(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?User
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?User $customer): static
+    {
+        $this->customer = $customer;
+
+        return $this;
+    }
+
+    public function getCustomerPhone(): ?string
+    {
+        return $this->customerPhone;
+    }
+
+    public function setCustomerPhone(?string $customerPhone): static
+    {
+        $this->customerPhone = $customerPhone;
+
+        return $this;
+    }
+
+    public function getFulfillmentMethod(): ?string
+    {
+        return $this->fulfillmentMethod;
+    }
+
+    public function setFulfillmentMethod(string $fulfillmentMethod): static
+    {
+        $this->fulfillmentMethod = $fulfillmentMethod;
+
+        return $this;
+    }
+
+    public function isPickup(): bool
+    {
+        return 'pickup' === $this->fulfillmentMethod;
+    }
+
+    public function getDeliveryAddress(): ?string
+    {
+        return $this->deliveryAddress;
+    }
+
+    public function setDeliveryAddress(?string $deliveryAddress): static
+    {
+        $this->deliveryAddress = $deliveryAddress;
 
         return $this;
     }

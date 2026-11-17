@@ -1,43 +1,65 @@
-{% extends 'base.html.twig' %}
+{% extends 'base_site.html.twig' %}
 
-{% block title %}Log in | Curlétte Admin{% endblock %}
+{% block title %}Log in | Curlétte Hair Studio{% endblock %}
 
-{% block layout %}
+{% block body %}
 
-    <section class="auth-page">
-        <div class="auth-card">
+    <section class="sign-page">
+        <div class="sign-shell">
 
-            <h1>Log in</h1>
-            <p class="auth-sub">Enter your username and password.</p>
-
-            {% if error %}
-                <div class="auth-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-            {% endif %}
-
-            {% if app.user %}
-                <div class="auth-note">
-                    You are logged in as {{ app.user.userIdentifier }}. <a href="{{ logout_path() }}">Log out</a>
+            <aside class="sign-aside">
+                <img src="{{ asset('images/salon.jpg') }}" alt="" class="sign-aside-bg">
+                <div class="sign-aside-text">
+                    <p class="home-label">WELCOME BACK</p>
+                    <h2>Healthy curls,<br><em>confident you.</em></h2>
                 </div>
-            {% endif %}
+            </aside>
 
-            <form method="post" class="auth-form">
-                <label for="inputUsername">Username</label>
-                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" autocomplete="username" required autofocus>
+            <div class="sign-main">
+                <a href="{{ path('app_home') }}" class="sign-brand">
+                    <img src="{{ asset('images/logo.png') }}" alt="Curlétte Hair Studio">
+                </a>
 
-                <label for="inputPassword">Password</label>
-                <input type="password" name="password" id="inputPassword" autocomplete="current-password" required>
+                <h1>Log in</h1>
+                <p class="sign-sub">Book appointments and order products with your account.</p>
 
-                <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+                {% if error %}
+                    <div class="sign-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
 
-                <div class="auth-check">
-                    <input type="checkbox" name="_remember_me" id="rememberMe">
-                    <label for="rememberMe">Remember me</label>
-                </div>
+                {% if app.user %}
+                    <div class="sign-note">
+                        You are logged in as {{ app.user.userIdentifier }}.
+                        <form method="post" action="{{ path('app_logout') }}" style="display: inline;">
+                            <button type="submit" class="sign-link-button">Log out</button>
+                        </form>
+                    </div>
+                {% endif %}
 
-                <button type="submit" class="auth-submit">LOG IN</button>
-            </form>
+                <form method="post" class="sign-form">
+                    <div class="form-group">
+                        <label for="username">Email or username</label>
+                        <input type="text" id="username" name="_username" value="{{ last_username }}" autocomplete="username" required autofocus>
+                    </div>
 
-            <p class="auth-switch">No account yet? <a href="{{ path('app_register') }}">Create one</a></p>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="_password" autocomplete="current-password" required>
+                    </div>
+
+                    <label class="sign-check">
+                        <input type="checkbox" name="_remember_me">
+                        <span>Remember me</span>
+                    </label>
+
+                    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="btn-main sign-submit">LOG IN</button>
+                </form>
+
+                <p class="sign-switch">No account yet? <a href="{{ path('app_register') }}">Create one</a></p>
+            </div>
+
         </div>
     </section>
 

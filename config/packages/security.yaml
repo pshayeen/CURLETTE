@@ -1,4 +1,8 @@
 security:
+    role_hierarchy:
+        ROLE_STAFF: ROLE_USER
+        ROLE_ADMIN: ROLE_STAFF
+
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         App\Entity\User:
@@ -20,7 +24,9 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            user_checker: App\Security\UserChecker
             custom_authenticator: App\Security\LoginAuthenticator
+            access_denied_handler: App\Security\AccessDeniedHandler
             logout:
                 path: app_logout
                 # where to redirect after logout
@@ -42,8 +48,9 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/dashboard, roles: ROLE_USER }
+        - { path: '^/(users|products|services)(/|$)', roles: ROLE_ADMIN }
+        - { path: '^/(dashboard|orders|appointments|messages|profile)(/|$)', roles: ROLE_STAFF }
+        - { path: '^/(book-appointment|cart|account)(/|$)', roles: ROLE_USER }
 
 when@test:
     security:

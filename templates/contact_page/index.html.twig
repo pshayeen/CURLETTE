@@ -1,0 +1,67 @@
+{% extends 'base_site.html.twig' %}
+
+{% block title %}Contact | Curlétte Hair Studio{% endblock %}
+
+{% block body %}
+
+    <div class="booking-page">
+        <section class="booking-hero">
+            <div class="booking-heading">
+                <p class="home-label">GET IN TOUCH</p>
+                <h1>Let’s talk <em>curls.</em></h1>
+                <p>Questions about a service, a product, or just want to say hi? Send us a message and we’ll get back to you.</p>
+            </div>
+
+            <div class="contact-split">
+                <div class="contact-form-col booking-section">
+                    {% for message in app.flashes('contact_success') %}
+                        <div class="auth-success">{{ message }}</div>
+                    {% endfor %}
+
+                    {{ form_start(contactForm, {attr: {class: 'booking-form', novalidate: 'novalidate'}}) }}
+                        <div class="form-group">
+                            {{ form_label(contactForm.senderName) }}
+                            {{ form_widget(contactForm.senderName) }}
+                            {{ form_errors(contactForm.senderName) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(contactForm.senderEmail) }}
+                            {{ form_widget(contactForm.senderEmail) }}
+                            {{ form_errors(contactForm.senderEmail) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(contactForm.senderPhone) }}
+                            {{ form_widget(contactForm.senderPhone) }}
+                            {{ form_errors(contactForm.senderPhone) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(contactForm.messageText) }}
+                            {{ form_widget(contactForm.messageText) }}
+                            {{ form_errors(contactForm.messageText) }}
+                        </div>
+                        <button type="submit" class="btn-main">SEND MESSAGE</button>
+                    {{ form_end(contactForm) }}
+                </div>
+
+                <div class="contact-info-col">
+                    <div class="about-visit-panel contact-info-panel">
+                        <div class="about-visit-address">
+                            <i class="bi bi-geo-alt"></i>
+                            <p>123 Curl Street, Cebu City, 6000 Cebu, Philippines</p>
+                        </div>
+                        <div class="about-visit-contact contact-info-links">
+                            <a href="tel:09123456789"><i class="bi bi-telephone"></i> 0912 345 6789</a>
+                            <a href="mailto:curlettehairstudio@email.com"><i class="bi bi-envelope"></i> curlettehairstudio@email.com</a>
+                        </div>
+                        <p class="contact-response-note">We usually reply within 1 business day.</p>
+                        <div class="contact-social">
+                            <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+{% endblock %}

@@ -1,6 +1,10 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        cart: '@App\Service\CartService'
 
 when@test:
     twig:
         strict_variables: true
+
+

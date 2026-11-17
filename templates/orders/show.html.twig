@@ -24,6 +24,20 @@
                     <td>{{ order.customerEmail }}</td>
                 </tr>
                 <tr>
+                    <th>Phone</th>
+                    <td>{{ order.customerPhone ?: '—' }}</td>
+                </tr>
+                <tr>
+                    <th>Order type</th>
+                    <td>{{ order.pickup ? 'Walk-in pickup' : 'Delivery' }}</td>
+                </tr>
+                {% if not order.pickup %}
+                <tr>
+                    <th>Delivery address</th>
+                    <td>{{ order.deliveryAddress ?: '—' }}</td>
+                </tr>
+                {% endif %}
+                <tr>
                     <th>Items</th>
                     <td>
                         {% for item in order.items %}
@@ -52,7 +66,9 @@
     <div class="row-actions" style="margin-top: 20px;">
         <a href="{{ path('app_orders_index') }}" class="view-link">← Back to orders</a>
         <a href="{{ path('app_orders_edit', {id: order.id}) }}" class="view-link">Edit</a>
-        {{ include('orders/_delete_form.html.twig') }}
+        {% if is_granted('RECORD_DELETE', order) %}
+            {{ include('orders/_delete_form.html.twig') }}
+        {% endif %}
     </div>
 
 {% endblock %}
