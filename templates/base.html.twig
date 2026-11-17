@@ -2,6 +2,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#9B5F60">
         <title>{% block title %}Admin | Curlétte{% endblock %}</title>
         <link rel="icon" href="{{ asset('images/C-icon.png') }}" type="image/png">
 
@@ -1014,6 +1016,96 @@
             .booking-modal .order-summary-total strong { color: var(--primary-color); font-family: var(--font-heading); font-size: 26px; }
             .booking-modal .selected-service-message.is-error { background: #F6DADA; color: #9B3A3A; }
             
+
+            /* MOBILE RESPONSIVENESS - ADMIN / STAFF */
+            .sidebar-toggle {
+                display: none;
+                align-items: center;
+                justify-content: center;
+                width: 40px;
+                height: 40px;
+                border: 1px solid rgba(255,255,255,.45);
+                border-radius: 10px;
+                background: rgba(255,255,255,.14);
+                color: #fff;
+                font-size: 20px;
+                cursor: pointer;
+            }
+
+            .sidebar nav a { min-height: 42px; }
+            .content, .main { min-width: 0; }
+            .table-wrap { max-width: 100%; -webkit-overflow-scrolling: touch; }
+            .table-wrap table { min-width: 640px; }
+            .content img { max-width: 100%; height: auto; }
+
+            @media (max-width: 800px) {
+                .layout { display: flex; flex-direction: column; }
+                .sidebar {
+                    position: relative;
+                    z-index: 30;
+                    width: 100%;
+                    height: auto;
+                    min-height: 0;
+                    padding: 0 14px 12px;
+                }
+                .sidebar-header {
+                    height: 62px;
+                    margin: 0 -14px;
+                    padding: 0 16px;
+                    justify-content: flex-start;
+                }
+                .sidebar-header img { height: 34px; }
+                .sidebar-toggle { display: inline-flex; margin-left: auto; }
+                .sidebar nav { display: none; padding: 12px 0 2px; }
+                .sidebar.is-open nav { display: block; }
+                .sidebar nav ul {
+                    display: grid;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 6px;
+                }
+                .sidebar nav li { margin: 0; min-width: 0; }
+                .sidebar nav a { padding: 11px 10px; font-size: 12px; }
+                .main { width: 100%; }
+                .topbar {
+                    position: static;
+                    min-height: 58px;
+                    height: auto;
+                    padding: 10px 16px;
+                    gap: 10px;
+                }
+                .topbar-search { display: none; }
+                .topbar-actions { width: 100%; justify-content: space-between; gap: 10px; }
+                .topbar-link { font-size: 12px; }
+                .logout-btn { padding: 9px 12px; white-space: nowrap; }
+                .content { padding: 24px 16px 36px; }
+                .page-header { margin-bottom: 20px; }
+                .page-header h1 { font-size: clamp(27px, 7vw, 34px); line-height: 1.1; }
+                .page-header-row { align-items: flex-start; flex-direction: column; gap: 12px; }
+                .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+                .stat-card { min-width: 0; padding: 16px 14px; }
+                .stat-card strong { overflow-wrap: anywhere; font-size: clamp(20px, 5vw, 28px); }
+                .panels { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+                .footer { padding: 14px 16px; gap: 8px; flex-wrap: wrap; font-size: 11px; }
+                .content form { max-width: 100%; }
+                .content input, .content select, .content textarea { max-width: 100%; }
+                .content .modal { padding: 12px; }
+            }
+
+            @media (max-width: 480px) {
+                .content { padding: 20px 12px 30px; }
+                .stats { grid-template-columns: 1fr 1fr; gap: 9px; }
+                .stat-card { padding: 13px 11px; border-radius: 14px; }
+                .stat-card span { font-size: 11px; line-height: 1.35; }
+                .stat-icon { margin-bottom: 8px; }
+                .sidebar nav ul { grid-template-columns: 1fr 1fr; }
+                .sidebar nav a { gap: 7px; font-size: 11px; }
+                .topbar { padding-inline: 12px; }
+                .footer { flex-direction: column; }
+                .auth-page { padding: 20px 12px; }
+                .auth-card { padding: 25px 18px; border-radius: 18px; }
+                .content .btn-main, .content .btn-outline { max-width: 100%; }
+            }
+
         </style>
     </head>
 
@@ -1046,6 +1138,18 @@
         {% endblock %}
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            (() => {
+                const sidebar = document.querySelector('.sidebar');
+                const toggle = document.querySelector('.sidebar-toggle');
+                if (!sidebar || !toggle) return;
+                toggle.addEventListener('click', () => {
+                    const isOpen = sidebar.classList.toggle('is-open');
+                    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                    toggle.innerHTML = isOpen ? '<i class="bi bi-x-lg"></i>' : '<i class="bi bi-list"></i>';
+                });
+            })();
+        </script>
         {% block javascripts %}{% endblock %}
 
     </body>

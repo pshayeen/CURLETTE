@@ -5,9 +5,12 @@
     <div class="sidebar-header">
         <img src="{{ asset('images/logo.png') }}" alt="Curlétte">
         <span class="admin-tag">{{ is_granted('ROLE_ADMIN') ? 'ADMIN' : 'STAFF' }}</span>
+        <button class="sidebar-toggle" type="button" aria-label="Toggle dashboard navigation" aria-expanded="false" aria-controls="dashboard-navigation">
+            <i class="bi bi-list"></i>
+        </button>
     </div>
 
-    <nav>
+    <nav id="dashboard-navigation">
         <ul>
             <li>
                 <a href="{{ path('app_dashboard') }}" class="{{ current == 'app_dashboard' ? 'active' }}">

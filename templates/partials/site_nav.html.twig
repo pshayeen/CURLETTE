@@ -9,7 +9,11 @@
                 <img src="{{ asset('images/logo.png') }}" alt="Curlétte Hair Studio">
             </a>
 
-            <ul class="nav-links">
+            <button class="mobile-nav-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="curlette-navigation">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <ul class="nav-links" id="curlette-navigation">
                 <li><a href="{{ path('app_home') }}" class="{{ current == 'app_home' ? 'active' }}">HOME</a></li>
                 <li><a href="{{ path('app_services_page') }}" class="{{ current == 'app_services_page' ? 'active' }}">SERVICES</a></li>
                 <li><a href="{{ path('app_products_page') }}" class="{{ current == 'app_products_page' ? 'active' }}">PRODUCTS</a></li>
